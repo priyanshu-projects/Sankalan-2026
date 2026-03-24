@@ -12,7 +12,7 @@ a:"Students from colleges and universities across the country can participate. S
 },
 
 {
-q:"How do I register for events?",
+q:"How the fuck I register for events?",
 a:"Participants can register through the official Sankalan website. Each event may have a separate registration form or registration link."
 },
 
