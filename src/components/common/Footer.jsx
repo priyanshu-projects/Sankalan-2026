@@ -70,15 +70,25 @@ export default function Footer() {
           {/* Social icons */}
           <div className="flex gap-6 mt-6 text-cyan-400">
 
-            <a className="hover:text-white transition hover:scale-110">
+            <a href="https://www.instagram.com/sankalan.ducs/"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="hover:text-white transition hover:scale-110">
               <Instagram size={22}/>
             </a>
+            
 
-            <a className="hover:text-white transition hover:scale-110">
+            <a href="https://www.facebook.com/DUCS.Sankalan/" 
+               target="_blank"
+               rel="noopener noreferrer"
+               className="hover:text-white transition hover:scale-110">
               <Facebook size={22}/>
             </a>
 
-            <a className="hover:text-white transition hover:scale-110">
+            <a href="https://www.linkedin.com/school/department-of-computer-science-university-of-delhi/"
+               target="_blank"
+               rel="noopener noreferrer"
+               className="hover:text-white transition hover:scale-110">
               <Linkedin size={22}/>
             </a>
 
