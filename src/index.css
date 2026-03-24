@@ -1,0 +1,36 @@
+@import "tailwindcss";
+/* clickable links hover effect */
+
+a:hover {
+  transform: scale(1.05);
+  color: #22d3ee;
+  filter: drop-shadow(0 0 6px #22d3ee);
+  transition: all 0.2s ease;
+}
+
+/* icons hover */
+
+svg:hover {
+  transform: scale(1.2);
+  color: #22d3ee;
+  filter: drop-shadow(0 0 6px #22d3ee);
+  transition: all 0.2s ease;
+}
+nav a {
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background: #22d3ee;
+  left: 0;
+  bottom: -4px;
+  transition: width 0.3s;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
