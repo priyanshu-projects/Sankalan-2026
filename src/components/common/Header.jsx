@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+// agar assets folder use kar raha hai to uncomment kar:
+import logo from "../../assets/logo.png";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -10,9 +12,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
 
         {/* Logo */}
-        <h1 className="text-xl md:text-2xl font-bold tracking-widest text-cyan-400" style={{fontFamily:"Orbitron"}}>
-          SANKALAN 2025
-        </h1>
+        <img 
+          src={logo}     // agar assets se import kar raha hai to ye use kar
+          alt="Sankalan Logo"
+          className="h-28 md:h-32 object-contain"
+        />
 
         {/* Desktop menu */}
         <div className="hidden md:flex gap-8 text-sm tracking-widest font-medium">
