@@ -6,13 +6,13 @@ export default function Intro({ onFinish }) {
 
   useEffect(() => {
     // 1. black screen → image flash
-    const t1 = setTimeout(() => setShowImage(true), 600);
+    const t1 = setTimeout(() => setShowImage(true), 1000);
 
     // 2. zoom start
-    const t2 = setTimeout(() => setZoom(true), 1200);
+    const t2 = setTimeout(() => setZoom(true), 2000);
 
     // 3. finish intro
-    const t3 = setTimeout(() => onFinish(), 2500);
+    const t3 = setTimeout(() => onFinish(), 3000);
 
     return () => {
       clearTimeout(t1);
@@ -27,7 +27,7 @@ export default function Intro({ onFinish }) {
       {/* Image */}
       {showImage && (
         <img
-          src="/ironman.jpeg"   // ⚠️ image public folder me honi chahiye
+          src="/ironman.png"   // ⚠️ image public folder me honi chahiye
           alt="intro"
           className={`
             transition-all duration-[1200ms] ease-in-out
