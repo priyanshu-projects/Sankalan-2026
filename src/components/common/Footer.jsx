@@ -1,109 +1,207 @@
-import { Instagram, Facebook, Linkedin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-gray-300 mt-20 border-t border-cyan-500/10">
-
-      <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-10">
-
-        {/* Logo + about */}
+    <footer
+      style={{
+        position: "relative",
+        zIndex: 1,
+        borderTop: "1px solid rgba(0,245,196,0.15)",
+        background: "rgba(3,4,10,0.9)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "4rem 2rem",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "2.5rem",
+        }}
+      >
+        {/* LOGO + ABOUT */}
         <div>
-
-          <h2 className="text-xl font-bold text-cyan-400 tracking-widest drop-shadow-[0_0_8px_#00ffff]">
+          <h2
+            style={{
+              fontFamily: "'Orbitron', monospace",
+              fontSize: "1.1rem",
+              fontWeight: 900,
+              color: "#00f5c4",
+              letterSpacing: "0.08em",
+              textShadow: "0 0 20px rgba(0,245,196,0.5)",
+              marginBottom: "1rem",
+            }}
+          >
             SANKALAN 2025
           </h2>
-
-          <p className="mt-4 text-sm text-gray-400 leading-relaxed max-w-sm">
+          <p
+            style={{
+              fontSize: "0.88rem",
+              color: "#7a7f99",
+              lineHeight: 1.8,
+              maxWidth: "280px",
+            }}
+          >
             Sankalan is the annual tech fest of the Department of Computer
             Science Society celebrating innovation, technology and creativity.
           </p>
-
         </div>
 
-
-        {/* Quick links */}
+        {/* QUICK LINKS */}
         <div>
-
-          <h3 className="text-white font-semibold mb-4 tracking-widest">
-            QUICK LINKS
+          <h3
+            style={{
+              fontFamily: "'Orbitron', monospace",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: "#e8eaf0",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Quick Links
           </h3>
-
-          <div className="flex flex-col gap-3 text-sm">
-
-            <a href="#home" className="hover:text-cyan-400 transition">
-              Home
-            </a>
-
-            <a href="#events" className="hover:text-cyan-400 transition">
-              Events
-            </a>
-
-            <a href="#team" className="hover:text-cyan-400 transition">
-              Team
-            </a>
-
-            <a href="#faq" className="hover:text-cyan-400 transition">
-              FAQ
-            </a>
-
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.8rem",
+            }}
+          >
+            {[
+              { name: "Home",     path: "/"        },
+              { name: "Events",   path: "/events"  },
+              { name: "Results",  path: "/results" },
+              { name: "Updates",  path: "/updates" },
+              { name: "Sponsors", path: "/sponsors"},
+              { name: "Team",     path: "/team"    },
+              { name: "FAQ",      path: "/faq"     },
+            ].map((link, i) => (
+              <Link
+                key={i}
+                to={link.path}
+                style={{
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize: "0.78rem",
+                  color: "#7a7f99",
+                  textDecoration: "none",
+                  letterSpacing: "0.05em",
+                  transition: "color 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "#00f5c4")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "#7a7f99")
+                }
+              >
+                <span style={{ color: "#00f5c4", fontSize: "0.7rem" }}>
+                  ›
+                </span>
+                {link.name}
+              </Link>
+            ))}
           </div>
-
         </div>
 
-
-        {/* Contact */}
+        {/* ADDRESS ONLY — no social icons */}
         <div>
-
-          <h3 className="text-white font-semibold mb-4 tracking-widest">
-            CONTACT
+          <h3
+            style={{
+              fontFamily: "'Orbitron', monospace",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: "#e8eaf0",
+              marginBottom: "1.2rem",
+            }}
+          >
+            Find Us
           </h3>
-
-          <p className="text-sm text-gray-400">
+          <p
+            style={{
+              fontSize: "0.88rem",
+              color: "#7a7f99",
+              lineHeight: 1.9,
+            }}
+          >
             Department of Computer Science Society
-          </p>
-
-          <p className="text-sm text-gray-400 mt-2">
+            <br />
             University of Delhi
+            <br />
+            Delhi — 110007
           </p>
-
-
-          {/* Social icons */}
-          <div className="flex gap-6 mt-6 text-cyan-400">
-
-            <a href="https://www.instagram.com/sankalan.ducs/"
-               target="_blank"
-               rel="noopener noreferrer"
-               className="hover:text-white transition hover:scale-110">
-              <Instagram size={22}/>
-            </a>
-            
-
-            <a href="https://www.facebook.com/DUCS.Sankalan/" 
-               target="_blank"
-               rel="noopener noreferrer"
-               className="hover:text-white transition hover:scale-110">
-              <Facebook size={22}/>
-            </a>
-
-            <a href="https://www.linkedin.com/school/department-of-computer-science-university-of-delhi/"
-               target="_blank"
-               rel="noopener noreferrer"
-               className="hover:text-white transition hover:scale-110">
-              <Linkedin size={22}/>
-            </a>
-
-          </div>
-
+          <a
+            href="mailto:sankalan@cs.du.ac.in"
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: "0.78rem",
+              color: "#00f5c4",
+              textDecoration: "none",
+              display: "block",
+              marginTop: "0.8rem",
+              transition: "opacity 0.2s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            sankalan@cs.du.ac.in
+          </a>
         </div>
-
       </div>
 
+      {/* BOTTOM BAR */}
+      <div
+        style={{
+          borderTop: "1px solid rgba(0,245,196,0.1)",
+          padding: "1.5rem 2rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "0.78rem",
+            color: "#7a7f99",
+          }}
+        >
+          © 2025 Sankalan — Department of Computer Science Society
+        </p>
 
-      {/* bottom bar */}
-      <div className="border-t border-cyan-500/10 text-center py-6 text-sm text-gray-500">
-        © 2025 Sankalan — Department of Computer Science Society
+        <div style={{ display: "flex", gap: "1.5rem" }}>
+          {["Privacy", "Code of Conduct"].map((item, i) => (
+            <a
+              key={i}
+              href="#"
+              style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: "0.78rem",
+                color: "#7a7f99",
+                textDecoration: "none",
+                transition: "color 0.2s",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.color = "#00f5c4")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "#7a7f99")
+              }
+            >
+              {item}
+            </a>
+          ))}
+        </div>
       </div>
-
     </footer>
   );
 }
