@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Mail, Instagram, Linkedin, MessageCircle } from "lucide-react";
 
+// ── Replace with your actual Web3Forms access key ─────────────────────────────
+const WEB3FORMS_KEY = "2f581325-df7c-41d6-8ec8-8c1a102ec31c";
+
 const contactLinks = [
   {
     icon: <Mail size={18} />,
@@ -44,15 +47,49 @@ export default function Contact() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
-  const [focused, setFocused] = useState("");
+  const [loading, setLoading]     = useState(false); // ← new
+  const [error, setError]         = useState(false);  // ← new
+  const [focused, setFocused]     = useState("");
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = (e) => {
+  // ── Replaced handleSubmit ─────────────────────────────────────────────────
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(false);
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          name: form.name,
+          email: form.email,
+          topic: form.topic,
+          message: form.message,
+          // optional — shows subject in your email inbox
+          subject: `Sankalan 2025 — ${form.topic} from ${form.name}`,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const focusStyle = {
@@ -60,13 +97,11 @@ export default function Contact() {
     boxShadow: "0 0 20px rgba(0,245,196,0.1)",
     outline: "none",
   };
-
   const blurStyle = {
     borderColor: "rgba(0,245,196,0.15)",
     boxShadow: "none",
     outline: "none",
   };
-
   const baseInput = {
     width: "100%",
     padding: "1rem 1.2rem",
@@ -78,12 +113,18 @@ export default function Contact() {
     transition: "border-color 0.3s, box-shadow 0.3s",
     boxSizing: "border-box",
   };
+  const labelStyle = {
+    display: "block",
+    fontFamily: "'Space Mono', monospace",
+    fontSize: "0.65rem",
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    color: "#7a7f99",
+    marginBottom: "0.5rem",
+  };
 
   return (
-    <section
-      id="contact"
-      style={{ position: "relative", zIndex: 1 }}
-    >
+    <section id="contact" style={{ position: "relative", zIndex: 1 }}>
       <div
         style={{
           maxWidth: "1200px",
@@ -128,8 +169,7 @@ export default function Contact() {
             color: "#e8eaf0",
           }}
         >
-          Contact{" "}
-          <span style={{ color: "#00f5c4" }}>Us</span>
+          Contact <span style={{ color: "#00f5c4" }}>Us</span>
         </h2>
 
         {/* TWO COLUMN */}
@@ -152,9 +192,9 @@ export default function Contact() {
                 maxWidth: "480px",
               }}
             >
-              Have questions about events, sponsorships, or anything else
-              about Sankalan? Drop us a message — our team will get back
-              to you within 24 hours.
+              Have questions about events, sponsorships, or anything else about
+              Sankalan? Drop us a message — our team will get back to you within
+              24 hours.
             </p>
 
             {/* ADDRESS */}
@@ -185,9 +225,7 @@ export default function Contact() {
             </div>
 
             {/* CONTACT LINKS */}
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "0" }}
-            >
+            <div style={{ display: "flex", flexDirection: "column" }}>
               {contactLinks.map((item, i) => (
                 <a
                   key={i}
@@ -214,15 +252,13 @@ export default function Contact() {
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = "#00f5c4";
-                    e.currentTarget.style.background =
-                      "rgba(0,245,196,0.05)";
+                    e.currentTarget.style.background = "rgba(0,245,196,0.05)";
                     e.currentTarget.style.borderLeftColor = "#00f5c4";
                     e.currentTarget.style.paddingLeft = "1.8rem";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.color = "#7a7f99";
-                    e.currentTarget.style.background =
-                      "rgba(255,255,255,0.02)";
+                    e.currentTarget.style.background = "rgba(255,255,255,0.02)";
                     e.currentTarget.style.borderLeftColor =
                       "rgba(0,245,196,0.1)";
                     e.currentTarget.style.paddingLeft = "1.2rem";
@@ -256,8 +292,8 @@ export default function Contact() {
                   marginBottom: "1rem",
                 }}
               >
-                Ready to compete? Register for Sankalan 2025 on Unstop
-                and secure your spot today.
+                Ready to compete? Register for Sankalan 2025 on Unstop and
+                secure your spot today.
               </p>
               <a
                 href="https://unstop.com"
@@ -295,7 +331,7 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* ── RIGHT — QUESTION FORM ── */}
+          {/* ── RIGHT — FORM ── */}
           <div
             style={{
               background: "rgba(255,255,255,0.02)",
@@ -317,8 +353,7 @@ export default function Contact() {
                   marginBottom: "0.5rem",
                 }}
               >
-                Have a{" "}
-                <span style={{ color: "#00f5c4" }}>Question?</span>
+                Have a <span style={{ color: "#00f5c4" }}>Question?</span>
               </h3>
               <p
                 style={{
@@ -334,8 +369,8 @@ export default function Contact() {
               </p>
             </div>
 
+            {/* ── SUCCESS STATE ── */}
             {submitted ? (
-              /* SUCCESS STATE */
               <div
                 style={{
                   textAlign: "center",
@@ -346,7 +381,6 @@ export default function Contact() {
                   gap: "1rem",
                 }}
               >
-                {/* CHECK ICON */}
                 <div
                   style={{
                     width: "64px",
@@ -391,6 +425,7 @@ export default function Contact() {
                 <button
                   onClick={() => {
                     setSubmitted(false);
+                    setError(false); // ← new
                     setForm({ name: "", email: "", topic: "", message: "" });
                   }}
                   style={{
@@ -406,20 +441,19 @@ export default function Contact() {
                     marginTop: "0.5rem",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background =
-                      "rgba(0,245,196,0.08)";
+                    e.currentTarget.style.background = "rgba(0,245,196,0.08)";
                     e.currentTarget.style.borderColor = "#00f5c4";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = "none";
-                    e.currentTarget.style.borderColor =
-                      "rgba(0,245,196,0.3)";
+                    e.currentTarget.style.borderColor = "rgba(0,245,196,0.3)";
                   }}
                 >
                   Send another →
                 </button>
               </div>
             ) : (
+              /* ── FORM ── */
               <form
                 onSubmit={handleSubmit}
                 style={{
@@ -430,19 +464,7 @@ export default function Contact() {
               >
                 {/* NAME */}
                 <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontFamily: "'Space Mono', monospace",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase",
-                      color: "#7a7f99",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    Your Name
-                  </label>
+                  <label style={labelStyle}>Your Name</label>
                   <input
                     type="text"
                     name="name"
@@ -461,19 +483,7 @@ export default function Contact() {
 
                 {/* EMAIL */}
                 <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontFamily: "'Space Mono', monospace",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase",
-                      color: "#7a7f99",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    Email Address
-                  </label>
+                  <label style={labelStyle}>Email Address</label>
                   <input
                     type="email"
                     name="email"
@@ -492,19 +502,7 @@ export default function Contact() {
 
                 {/* TOPIC */}
                 <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontFamily: "'Space Mono', monospace",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase",
-                      color: "#7a7f99",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    Topic
-                  </label>
+                  <label style={labelStyle}>Topic</label>
                   <select
                     name="topic"
                     value={form.topic}
@@ -541,19 +539,7 @@ export default function Contact() {
 
                 {/* MESSAGE */}
                 <div>
-                  <label
-                    style={{
-                      display: "block",
-                      fontFamily: "'Space Mono', monospace",
-                      fontSize: "0.65rem",
-                      letterSpacing: "0.2em",
-                      textTransform: "uppercase",
-                      color: "#7a7f99",
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    Your Message
-                  </label>
+                  <label style={labelStyle}>Your Message</label>
                   <textarea
                     name="message"
                     placeholder="Type your question or message here..."
@@ -573,14 +559,43 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* SUBMIT */}
+                {/* ── ERROR MESSAGE ── */}
+                {error && (
+                  <div
+                    style={{
+                      padding: "0.8rem 1rem",
+                      background: "rgba(255,62,108,0.08)",
+                      border: "1px solid rgba(255,62,108,0.25)",
+                      clipPath:
+                        "polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)",
+                      fontFamily: "'Space Mono', monospace",
+                      fontSize: "0.68rem",
+                      color: "#ff3e6c",
+                      letterSpacing: "0.05em",
+                      lineHeight: 1.7,
+                    }}
+                  >
+                    ⚠ Something went wrong. Please try again or email us at{" "}
+                    <a
+                      href="mailto:sankalan@cs.du.ac.in"
+                      style={{ color: "#00f5c4", textDecoration: "none" }}
+                    >
+                      sankalan@cs.du.ac.in
+                    </a>
+                  </div>
+                )}
+
+                {/* ── SUBMIT ── */}
                 <button
                   type="submit"
+                  disabled={loading}
                   style={{
                     marginTop: "0.4rem",
                     width: "100%",
                     padding: "1rem",
-                    background: "#00f5c4",
+                    background: loading
+                      ? "rgba(0,245,196,0.5)"
+                      : "#00f5c4",
                     color: "#03040a",
                     fontFamily: "'Orbitron', monospace",
                     fontSize: "0.78rem",
@@ -588,30 +603,64 @@ export default function Contact() {
                     letterSpacing: "0.2em",
                     textTransform: "uppercase",
                     border: "none",
-                    cursor: "pointer",
+                    cursor: loading ? "not-allowed" : "pointer",
                     clipPath:
                       "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
-                    boxShadow: "0 0 30px rgba(0,245,196,0.3)",
+                    boxShadow: loading
+                      ? "none"
+                      : "0 0 30px rgba(0,245,196,0.3)",
                     transition: "all 0.3s",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "0.6rem",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 50px rgba(0,245,196,0.5)";
+                    if (!loading) {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 0 50px rgba(0,245,196,0.5)";
+                    }
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                      "0 0 30px rgba(0,245,196,0.3)";
+                    e.currentTarget.style.boxShadow = loading
+                      ? "none"
+                      : "0 0 30px rgba(0,245,196,0.3)";
                   }}
                 >
-                  Send Message →
+                  {loading ? (
+                    <>
+                      {/* Spinner */}
+                      <span
+                        style={{
+                          width: "14px",
+                          height: "14px",
+                          border: "2px solid rgba(3,4,10,0.3)",
+                          borderTopColor: "#03040a",
+                          borderRadius: "50%",
+                          display: "inline-block",
+                          animation: "spin 0.8s linear infinite",
+                        }}
+                      />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Message →"
+                  )}
                 </button>
               </form>
             )}
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+      `}</style>
     </section>
   );
 }
