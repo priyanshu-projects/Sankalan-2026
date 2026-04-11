@@ -1,7 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 
-// ── API URL ──────────────────────────────────────────────────────────────────
 const API = "https://sankalan-2026-production.up.railway.app/api";
+
+// ── custom hook ──────────────────────────────────────────────────────────────
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
 
 // ── Initials Avatar ───────────────────────────────────────────────────────────
 function InitialsAvatar({ name, color, rgb, size = 90 }) {
@@ -31,7 +43,6 @@ function InitialsAvatar({ name, color, rgb, size = 90 }) {
 
 // ── Avatar Frame ──────────────────────────────────────────────────────────────
 function AvatarFrame({ member, size = 90 }) {
-  // DB se image_url aata hai, hardcoded mein image tha
   const name  = member.name;
   const image = member.image_url || member.image;
   const color = member.color;
@@ -63,7 +74,6 @@ function AvatarFrame({ member, size = 90 }) {
     );
   }
 
-  // TBA ghost
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%",
@@ -146,7 +156,7 @@ function SocialLinks({ linkedin, email, color, rgb }) {
 }
 
 // ── Detail Card ───────────────────────────────────────────────────────────────
-function DetailCard({ member }) {
+function DetailCard({ member, isMobile }) {
   const { name, role, tag, color, rgb } = member;
   const isTBA = !name;
 
@@ -155,11 +165,11 @@ function DetailCard({ member }) {
       background: "rgba(255,255,255,0.02)",
       border: `1px solid rgba(${rgb},0.2)`,
       clipPath: "polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%)",
-      padding: "2.8rem 2.5rem",
+      padding: isMobile ? "1.8rem 1.2rem" : "2.8rem 2.5rem",
       position: "relative", overflow: "hidden",
       animation: "fadeInUp 0.45s ease both",
     }}>
-      {/* Top accent line */}
+      {/* Top accent */}
       <div style={{
         position: "absolute", top: 0, left: 0, right: 0,
         height: "2px",
@@ -200,7 +210,7 @@ function DetailCard({ member }) {
       }}>
         {/* Avatar + spinning ring */}
         <div style={{ position: "relative", marginBottom: "1.5rem" }}>
-          <AvatarFrame member={member} size={120} />
+          <AvatarFrame member={member} size={isMobile ? 90 : 120} />
           <div style={{
             position: "absolute", inset: -10, borderRadius: "50%",
             border: `1px solid rgba(${rgb},0.12)`,
@@ -230,15 +240,20 @@ function DetailCard({ member }) {
         ) : (
           <>
             <h3 style={{
-              fontFamily: "'Orbitron', monospace", fontSize: "1.15rem",
+              fontFamily: "'Orbitron', monospace",
+              fontSize: isMobile ? "0.95rem" : "1.15rem",
               fontWeight: 900, color: "#e8eaf0",
-              letterSpacing: "0.04em", marginBottom: "0.5rem", lineHeight: 1.2,
+              letterSpacing: "0.04em",
+              margin: "0 0 0.5rem 0",
+              lineHeight: 1.2,
             }}>{name}</h3>
 
             <p style={{
-              fontFamily: "'Space Mono', monospace", fontSize: "0.68rem",
+              fontFamily: "'Space Mono', monospace",
+              fontSize: isMobile ? "0.6rem" : "0.68rem",
               color: color, letterSpacing: "0.15em",
-              textTransform: "uppercase", marginBottom: "0.6rem",
+              textTransform: "uppercase",
+              margin: "0 0 0.6rem 0",
             }}>{role}</p>
 
             <span style={{
@@ -265,7 +280,7 @@ function DetailCard({ member }) {
             <p style={{
               fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
               color: "rgba(232,234,240,0.25)",
-              letterSpacing: "0.08em", lineHeight: 1.6,
+              letterSpacing: "0.08em", lineHeight: 1.6, margin: 0,
             }}>
               Sankalan 2026 · DUCS<br />University of Delhi
             </p>
@@ -277,7 +292,7 @@ function DetailCard({ member }) {
 }
 
 // ── List Row ──────────────────────────────────────────────────────────────────
-function ListRow({ member, isActive, onClick, index }) {
+function ListRow({ member, isActive, onClick, index, isMobile }) {
   const ref = useRef();
 
   useEffect(() => {
@@ -308,7 +323,9 @@ function ListRow({ member, isActive, onClick, index }) {
         transition: `opacity 0.45s ${Math.min(index, 12) * 0.05}s ease,
                      transform 0.45s ${Math.min(index, 12) * 0.05}s ease,
                      border-color 0.25s, background 0.25s`,
-        padding: isTBA ? "0.65rem 1.1rem" : "0.9rem 1.2rem",
+        padding: isTBA
+          ? (isMobile ? "0.55rem 0.8rem" : "0.65rem 1.1rem")
+          : (isMobile ? "0.75rem 0.9rem" : "0.9rem 1.2rem"),
         background: isActive
           ? `rgba(${rgb},0.1)`
           : isTBA ? "rgba(255,255,255,0.01)"
@@ -320,7 +337,8 @@ function ListRow({ member, isActive, onClick, index }) {
         }`,
         clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
         cursor: isTBA ? "default" : "pointer",
-        display: "flex", alignItems: "center", gap: "1rem",
+        display: "flex", alignItems: "center",
+        gap: isMobile ? "0.7rem" : "1rem",
         position: "relative", overflow: "hidden",
       }}
       onMouseEnter={(e) => {
@@ -344,28 +362,34 @@ function ListRow({ member, isActive, onClick, index }) {
         }} />
       )}
 
-      <AvatarFrame member={member} size={isTBA ? 34 : 44} />
+      <AvatarFrame member={member} size={isTBA ? 28 : (isMobile ? 36 : 44)} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         {isTBA ? (
           <div style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "0.6rem",
+            fontFamily: "'Space Mono', monospace",
+            fontSize: isMobile ? "0.55rem" : "0.6rem",
             color: "rgba(255,255,255,0.12)",
             letterSpacing: "0.2em", textTransform: "uppercase",
           }}>To be announced</div>
         ) : (
           <>
             <div style={{
-              fontFamily: "'Orbitron', monospace", fontSize: "0.75rem",
+              fontFamily: "'Orbitron', monospace",
+              fontSize: isMobile ? "0.65rem" : "0.75rem",
               fontWeight: 700, color: isActive ? color : "#e8eaf0",
               letterSpacing: "0.04em",
-              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+              whiteSpace: "nowrap", overflow: "hidden",
+              textOverflow: "ellipsis",
               transition: "color 0.25s",
             }}>{member.name}</div>
             <div style={{
-              fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
-              color: "#7a7f99", marginTop: "0.18rem", letterSpacing: "0.05em",
-              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+              fontFamily: "'Space Mono', monospace",
+              fontSize: isMobile ? "0.52rem" : "0.58rem",
+              color: "#7a7f99", marginTop: "0.18rem",
+              letterSpacing: "0.05em",
+              whiteSpace: "nowrap", overflow: "hidden",
+              textOverflow: "ellipsis",
             }}>{member.role}</div>
           </>
         )}
@@ -382,12 +406,141 @@ function ListRow({ member, isActive, onClick, index }) {
   );
 }
 
-// ── Split Panel ───────────────────────────────────────────────────────────────
-function SplitPanel({ members, accentColor, accentRgb, loading }) {
-  const firstNamed = members.find((m) => m.name) || members[0];
-  const [selected, setSelected] = useState(null);
+// ── Mobile Member Card (replaces split panel on mobile) ───────────────────────
+function MobileMemberCard({ member, onClick }) {
+  const isTBA = !member.name;
+  const { color, rgb } = member;
 
-  // members load hone ke baad selected set karo
+  return (
+    <div
+      onClick={() => !isTBA && onClick(member)}
+      style={{
+        padding: "1rem",
+        background: "rgba(255,255,255,0.025)",
+        border: `1px solid rgba(${rgb},0.15)`,
+        clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
+        cursor: isTBA ? "default" : "pointer",
+        display: "flex", alignItems: "center", gap: "0.8rem",
+        position: "relative", overflow: "hidden",
+        transition: "all 0.25s",
+      }}
+      onMouseEnter={(e) => {
+        if (!isTBA) {
+          e.currentTarget.style.borderColor = color;
+          e.currentTarget.style.background = `rgba(${rgb},0.06)`;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isTBA) {
+          e.currentTarget.style.borderColor = `rgba(${rgb},0.15)`;
+          e.currentTarget.style.background = "rgba(255,255,255,0.025)";
+        }
+      }}
+    >
+      <div style={{
+        position: "absolute", top: 0, left: 0, right: 0,
+        height: "2px",
+        background: `linear-gradient(90deg, ${color}, transparent)`,
+      }} />
+
+      <AvatarFrame member={member} size={48} />
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        {isTBA ? (
+          <div style={{
+            fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
+            color: "rgba(255,255,255,0.12)", letterSpacing: "0.2em",
+          }}>TBA</div>
+        ) : (
+          <>
+            <div style={{
+              fontFamily: "'Orbitron', monospace", fontSize: "0.72rem",
+              fontWeight: 700, color: "#e8eaf0",
+              whiteSpace: "nowrap", overflow: "hidden",
+              textOverflow: "ellipsis", marginBottom: "0.2rem",
+            }}>{member.name}</div>
+            <div style={{
+              fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
+              color: color, letterSpacing: "0.06em",
+              whiteSpace: "nowrap", overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}>{member.role}</div>
+          </>
+        )}
+      </div>
+
+      {!isTBA && (
+        <span style={{ color: `rgba(${rgb},0.5)`, fontSize: "0.8rem" }}>›</span>
+      )}
+    </div>
+  );
+}
+
+// ── Mobile Bottom Sheet ───────────────────────────────────────────────────────
+function MobileSheet({ member, onClose }) {
+  if (!member) return null;
+
+  return (
+    <>
+      {/* overlay */}
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed", inset: 0,
+          background: "rgba(3,4,10,0.8)",
+          backdropFilter: "blur(4px)",
+          WebkitBackdropFilter: "blur(4px)",
+          zIndex: 200,
+        }}
+      />
+
+      {/* sheet */}
+      <div style={{
+        position: "fixed",
+        bottom: 0, left: 0, right: 0,
+        zIndex: 201,
+        maxHeight: "80vh",
+        overflowY: "auto",
+        background: "#0a0c14",
+        borderTop: `1px solid rgba(${member.rgb},0.3)`,
+        borderRadius: "16px 16px 0 0",
+        padding: "1.5rem 1.2rem 2rem",
+        animation: "slideUp 0.3s ease",
+      }}>
+        {/* drag handle */}
+        <div style={{
+          width: "40px", height: "3px",
+          background: "rgba(255,255,255,0.15)",
+          borderRadius: "2px",
+          margin: "0 auto 1.5rem",
+        }} />
+
+        {/* close btn */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute", top: "1rem", right: "1rem",
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "#7a7f99", cursor: "pointer",
+            width: "28px", height: "28px",
+            borderRadius: "50%", fontSize: "0.75rem",
+            display: "flex", alignItems: "center",
+            justifyContent: "center",
+          }}
+        >✕</button>
+
+        <DetailCard member={member} isMobile={true} />
+      </div>
+    </>
+  );
+}
+
+// ── Split Panel (tablet + desktop) ───────────────────────────────────────────
+function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTablet }) {
+  const [selected, setSelected] = useState(null);
+  const [sheetMember, setSheetMember] = useState(null);
+
   useEffect(() => {
     if (members.length > 0) {
       setSelected(members.find((m) => m.name) || members[0]);
@@ -397,9 +550,10 @@ function SplitPanel({ members, accentColor, accentRgb, loading }) {
   if (loading) {
     return (
       <div style={{
-        display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem",
+        display: "grid",
+        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+        gap: "2rem",
       }}>
-        {/* Left skeleton */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {[...Array(5)].map((_, i) => (
             <div key={i} style={{
@@ -418,20 +572,53 @@ function SplitPanel({ members, accentColor, accentRgb, loading }) {
             </div>
           ))}
         </div>
-        {/* Right skeleton */}
-        <div style={{
-          height: "350px",
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(0,245,196,0.06)",
-          clipPath: "polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%)",
-        }} />
+        {!isMobile && (
+          <div style={{
+            height: "350px",
+            background: "rgba(255,255,255,0.02)",
+            border: "1px solid rgba(0,245,196,0.06)",
+            clipPath: "polygon(16px 0%,100% 0%,calc(100% - 16px) 100%,0% 100%)",
+          }} />
+        )}
       </div>
     );
   }
 
+  // ── MOBILE: grid of cards + bottom sheet ──
+  if (isMobile) {
+    return (
+      <>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "0.6rem",
+        }}>
+          {members.map((member) => (
+            <MobileMemberCard
+              key={member.id}
+              member={member}
+              onClick={(m) => setSheetMember(m)}
+            />
+          ))}
+        </div>
+
+        <MobileSheet
+          member={sheetMember}
+          onClose={() => setSheetMember(null)}
+        />
+      </>
+    );
+  }
+
+  // ── TABLET / DESKTOP: split panel ──
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "start" }}>
-      {/* Left — list */}
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: isTablet ? "220px 1fr" : "1fr 1fr",
+      gap: isTablet ? "1.5rem" : "2rem",
+      alignItems: "start",
+    }}>
+      {/* Left list */}
       <div>
         <div style={{
           fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
@@ -439,7 +626,7 @@ function SplitPanel({ members, accentColor, accentRgb, loading }) {
           color: "#7a7f99", marginBottom: "1rem",
           display: "flex", alignItems: "center", gap: "0.8rem",
         }}>
-          <span>Select a member</span>
+          <span style={{ whiteSpace: "nowrap" }}>Select member</span>
           <div style={{
             flex: 1, height: "1px",
             background: `linear-gradient(90deg, rgba(${accentRgb},0.2), transparent)`,
@@ -457,19 +644,20 @@ function SplitPanel({ members, accentColor, accentRgb, loading }) {
               isActive={selected?.id === member.id}
               onClick={() => setSelected(member)}
               index={i}
+              isMobile={false}
             />
           ))}
         </div>
       </div>
 
-      {/* Right — detail */}
+      {/* Right detail */}
       <div style={{ position: "sticky", top: "6rem" }}>
         <div style={{
           height: "2px",
           background: `linear-gradient(90deg, ${accentColor}, rgba(${accentRgb},0.1))`,
           marginBottom: "1.5rem",
         }} />
-        {selected && <DetailCard key={selected.id} member={selected} />}
+        {selected && <DetailCard key={selected.id} member={selected} isMobile={false} />}
       </div>
     </div>
   );
@@ -477,33 +665,30 @@ function SplitPanel({ members, accentColor, accentRgb, loading }) {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function Team() {
-  const [activeTab,   setActiveTab]   = useState("admin");
-  const [adminPanel,  setAdminPanel]  = useState([]);
-  const [eventHeads,  setEventHeads]  = useState([]);
-  const [loading,     setLoading]     = useState(true);
-  const [error,       setError]       = useState(null);
+  const [activeTab,  setActiveTab]  = useState("admin");
+  const [adminPanel, setAdminPanel] = useState([]);
+  const [eventHeads, setEventHeads] = useState([]);
+  const [loading,    setLoading]    = useState(true);
+  const [error,      setError]      = useState(null);
   const headerRef = useRef();
 
-  // ── Fetch on mount ──
+  const width    = useWindowWidth();
+  const isMobile = width < 600;
+  const isTablet = width >= 600 && width < 1024;
+
   useEffect(() => {
     const fetchTeam = async () => {
       try {
         setLoading(true);
         setError(null);
-
         const [adminRes, eventsRes] = await Promise.all([
           fetch(`${API}/team/admin`),
           fetch(`${API}/team/events`),
         ]);
-
-        if (!adminRes.ok || !eventsRes.ok) {
-          throw new Error("Failed to fetch team");
-        }
-
+        if (!adminRes.ok || !eventsRes.ok) throw new Error("Failed to fetch team");
         const adminData  = await adminRes.json();
         const eventsData = await eventsRes.json();
 
-        // DB se color/rgb nahi aata — add kar do
         const withColors = (arr, color, rgb) =>
           arr.map((m) => ({ ...m, color, rgb }));
 
@@ -516,11 +701,9 @@ export default function Team() {
         setLoading(false);
       }
     };
-
     fetchTeam();
   }, []);
 
-  // ── Header reveal ──
   useEffect(() => {
     const obs = new IntersectionObserver(
       ([entry]) => {
@@ -556,32 +739,47 @@ export default function Team() {
 
       <div style={{
         maxWidth: "1200px", margin: "0 auto",
-        padding: "6rem 2rem", position: "relative", zIndex: 1,
+        padding: isMobile
+          ? "4rem 1rem 3rem"
+          : isTablet
+          ? "5rem 1.5rem 4rem"
+          : "6rem 2rem",
+        position: "relative", zIndex: 1,
       }}>
-        {/* Header */}
+
+        {/* ── HEADER ── */}
         <div ref={headerRef} style={{
           opacity: 0, transform: "translateY(30px)",
           transition: "opacity 0.7s ease, transform 0.7s ease",
-          marginBottom: "3rem",
+          marginBottom: isMobile ? "2rem" : "3rem",
         }}>
           <p style={{
             display: "flex", alignItems: "center", gap: "0.8rem",
             fontFamily: "'Space Mono', monospace",
             fontSize: "0.72rem", letterSpacing: "0.3em",
-            textTransform: "uppercase", color: "#00f5c4", marginBottom: "0.8rem",
+            textTransform: "uppercase", color: "#00f5c4",
+            margin: "0 0 0.8rem 0",
           }}>
-            <span style={{ display: "block", width: "30px", height: "1px", background: "#00f5c4", flexShrink: 0 }} />
+            <span style={{
+              display: "block", width: "30px", height: "1px",
+              background: "#00f5c4", flexShrink: 0,
+            }} />
             The People Behind It
           </p>
 
           <div style={{
-            display: "flex", alignItems: "flex-end",
-            justifyContent: "space-between", flexWrap: "wrap", gap: "1.5rem",
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: isMobile ? "flex-start" : "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: isMobile ? "1rem" : "1.5rem",
           }}>
             <h2 style={{
               fontFamily: "'Orbitron', monospace",
-              fontSize: "clamp(2rem, 5vw, 3.5rem)",
-              fontWeight: 900, lineHeight: 1.1, color: "#e8eaf0",
+              fontSize: "clamp(1.8rem, 5vw, 3.5rem)",
+              fontWeight: 900, lineHeight: 1.1,
+              color: "#e8eaf0", margin: 0,
             }}>
               Meet the <span style={{ color: "#00f5c4" }}>Team</span>
             </h2>
@@ -589,27 +787,37 @@ export default function Team() {
             <div style={{
               display: "flex", gap: "1.5rem",
               fontFamily: "'Space Mono', monospace",
-              fontSize: "0.72rem", color: "#7a7f99",
+              fontSize: isMobile ? "0.65rem" : "0.72rem",
+              color: "#7a7f99",
             }}>
               <span>
-                <span style={{ fontFamily: "'Orbitron', monospace", color: "#00f5c4", fontWeight: 700, fontSize: "1rem" }}>
+                <span style={{
+                  fontFamily: "'Orbitron', monospace",
+                  color: "#00f5c4", fontWeight: 700,
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                }}>
                   {loading ? "—" : namedAdmins.length}
                 </span>{" "}Admin
               </span>
               <span>
-                <span style={{ fontFamily: "'Orbitron', monospace", color: "#7b5fff", fontWeight: 700, fontSize: "1rem" }}>
+                <span style={{
+                  fontFamily: "'Orbitron', monospace",
+                  color: "#7b5fff", fontWeight: 700,
+                  fontSize: isMobile ? "0.9rem" : "1rem",
+                }}>
                   {loading ? "—" : namedHeads.length}
                 </span>
-                {" "}/ {loading ? "—" : eventHeads.length} Event Heads
+                {" "}/ {loading ? "—" : eventHeads.length} Heads
               </span>
             </div>
           </div>
         </div>
 
-        {/* Error */}
+        {/* ── ERROR ── */}
         {error && (
           <div style={{
-            padding: "2rem", marginBottom: "2rem",
+            padding: isMobile ? "1rem" : "2rem",
+            marginBottom: "2rem",
             background: "rgba(255,62,108,0.05)",
             border: "1px solid rgba(255,62,108,0.2)",
             clipPath: "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
@@ -621,42 +829,60 @@ export default function Team() {
           </div>
         )}
 
-        {/* Tab Switcher */}
+        {/* ── TAB SWITCHER ── */}
         <div style={{
-          display: "inline-flex", marginBottom: "3rem",
+          display: "flex",
+          marginBottom: isMobile ? "2rem" : "3rem",
           border: "1px solid rgba(0,245,196,0.15)",
           clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
           overflow: "hidden",
+          width: isMobile ? "100%" : "fit-content",
         }}>
           {[
-            { key: "admin",  label: "🏛️ Administrative & DUCSS", color: "#00f5c4", rgb: "0,245,196"   },
-            { key: "events", label: "⚡ Event Heads",             color: "#7b5fff", rgb: "123,95,255" },
+            { key: "admin",  label: isMobile ? "🏛️ Admin" : "🏛️ Administrative & DUCSS", color: "#00f5c4", rgb: "0,245,196"   },
+            { key: "events", label: isMobile ? "⚡ Heads"  : "⚡ Event Heads",              color: "#7b5fff", rgb: "123,95,255" },
           ].map((tab, i) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               style={{
                 fontFamily: "'Orbitron', monospace",
-                fontSize: "0.68rem", fontWeight: 700,
-                letterSpacing: "0.08em", textTransform: "uppercase",
-                padding: "0.9rem 1.8rem", border: "none",
-                cursor: "pointer", transition: "all 0.3s",
-                background: activeTab === tab.key ? `rgba(${tab.rgb},0.12)` : "transparent",
+                fontSize: isMobile ? "0.58rem" : "0.68rem",
+                fontWeight: 700,
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                padding: isMobile ? "0.8rem 1rem" : "0.9rem 1.8rem",
+                border: "none",
+                flex: isMobile ? 1 : "none",
+                cursor: "pointer",
+                transition: "all 0.3s",
+                background: activeTab === tab.key
+                  ? `rgba(${tab.rgb},0.12)`
+                  : "transparent",
                 color: activeTab === tab.key ? tab.color : "#7a7f99",
-                borderRight: i === 0 ? "1px solid rgba(0,245,196,0.15)" : "none",
-                boxShadow: activeTab === tab.key ? `inset 0 -2px 0 ${tab.color}` : "none",
+                borderRight: i === 0
+                  ? "1px solid rgba(0,245,196,0.15)"
+                  : "none",
+                boxShadow: activeTab === tab.key
+                  ? `inset 0 -2px 0 ${tab.color}`
+                  : "none",
+                whiteSpace: "nowrap",
               }}
-            >{tab.label}</button>
+            >
+              {tab.label}
+            </button>
           ))}
         </div>
 
-        {/* Panels */}
+        {/* ── PANELS ── */}
         {activeTab === "admin" && (
           <SplitPanel
             members={adminPanel}
             accentColor="#00f5c4"
             accentRgb="0,245,196"
             loading={loading}
+            isMobile={isMobile}
+            isTablet={isTablet}
           />
         )}
         {activeTab === "events" && (
@@ -665,6 +891,8 @@ export default function Team() {
             accentColor="#7b5fff"
             accentRgb="123,95,255"
             loading={loading}
+            isMobile={isMobile}
+            isTablet={isTablet}
           />
         )}
       </div>
@@ -674,10 +902,6 @@ export default function Team() {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pulse {
-          0%,100% { opacity:1; transform:scale(1); }
-          50%      { opacity:0.4; transform:scale(1.4); }
-        }
         @keyframes spin {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
@@ -686,14 +910,15 @@ export default function Team() {
           0%   { left: -100%; }
           100% { left: 200%;  }
         }
+        @keyframes slideUp {
+          from { transform: translateY(100%); }
+          to   { transform: translateY(0); }
+        }
         #team ::-webkit-scrollbar { width: 3px; }
         #team ::-webkit-scrollbar-track { background: transparent; }
         #team ::-webkit-scrollbar-thumb {
           background: rgba(0,245,196,0.2);
           border-radius: 2px;
-        }
-        @media (max-width: 768px) {
-          #team .split-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

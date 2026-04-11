@@ -1,5 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Orbitron:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Orbitron:wght@400;700;900&display=swap');
 
+/* ── Reset & Base ─────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: #03040a;
+  color: #e8eaf0;
+  font-family: 'Space Mono', monospace;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Font Utilities ───────────────────────────────────────────── */
 .font-orbitron {
   font-family: 'Orbitron', monospace;
 }
@@ -8,10 +30,65 @@
   font-family: 'Space Mono', monospace;
 }
 
-.font-syne {
-  font-family: 'Syne', sans-serif;
-}
-
+/* ── Clip Utilities ───────────────────────────────────────────── */
 .clip-btn {
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+
+/* ── Scrollbar — global ───────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #03040a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 245, 196, 0.2);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 245, 196, 0.4);
+}
+
+/* ── Selection ────────────────────────────────────────────────── */
+::selection {
+  background: rgba(0, 245, 196, 0.2);
+  color: #00f5c4;
+}
+
+::-moz-selection {
+  background: rgba(0, 245, 196, 0.2);
+  color: #00f5c4;
+}
+
+/* ── Images ───────────────────────────────────────────────────── */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ── Links ────────────────────────────────────────────────────── */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────── */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ── Prevent horizontal overflow ──────────────────────────────── */
+section, div, nav, footer, header {
+  max-width: 100%;
+}
+
+/* ── Mobile tap highlight remove ─────────────────────────────── */
+* {
+  -webkit-tap-highlight-color: transparent;
 }

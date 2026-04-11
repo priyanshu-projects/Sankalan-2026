@@ -1,9 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 
-// ── API URL ──────────────────────────────────────────────────────────────────
 const API = "https://sankalan-2026-production.up.railway.app/api";
 
-// ── Helper ───────────────────────────────────────────────────────────────────
+// ── custom hook ──────────────────────────────────────────────────────────────
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 function getRgb(color) {
   return color === "#00f5c4" ? "0,245,196" : "123,95,255";
 }
@@ -18,16 +30,18 @@ function formatDate(dateStr) {
 }
 
 // ── Loading Skeleton ──────────────────────────────────────────────────────────
-function LoadingSkeleton() {
+function LoadingSkeleton({ isMobile, isTablet }) {
+  const cols = isMobile ? "1fr" : isTablet ? "1fr 1fr" : "repeat(3, 1fr)";
   return (
     <div style={{
       display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-      gap: "1rem", marginBottom: "3rem",
+      gridTemplateColumns: cols,
+      gap: isMobile ? "0.8rem" : "1rem",
+      marginBottom: "3rem",
     }}>
       {[...Array(6)].map((_, i) => (
         <div key={i} style={{
-          height: "200px",
+          height: isMobile ? "160px" : "200px",
           background: "rgba(255,255,255,0.02)",
           border: "1px solid rgba(0,245,196,0.06)",
           clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
@@ -45,6 +59,40 @@ function LoadingSkeleton() {
   );
 }
 
+// ── Countdown Unit ───────────────────────────────────────────────────────────
+function CountUnit({ label, val, isMobile }) {
+  return (
+    <div style={{
+      minWidth: isMobile ? "58px" : "72px",
+      padding: isMobile ? "0.8rem 0.4rem" : "1rem 0.5rem",
+      background: "rgba(255,255,255,0.03)",
+      border: "1px solid rgba(0,245,196,0.15)",
+      clipPath: "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
+      textAlign: "center",
+      flex: "1 1 0",
+    }}>
+      <div style={{
+        fontFamily: "'Orbitron', monospace",
+        fontSize: isMobile ? "1.3rem" : "1.8rem",
+        fontWeight: 900, color: "#00f5c4",
+        textShadow: "0 0 20px rgba(0,245,196,0.4)",
+        lineHeight: 1,
+      }}>
+        {String(val ?? "00").padStart(2, "0")}
+      </div>
+      <div style={{
+        fontFamily: "'Space Mono', monospace",
+        fontSize: isMobile ? "0.48rem" : "0.55rem",
+        letterSpacing: "0.2em",
+        textTransform: "uppercase",
+        color: "#7a7f99", marginTop: "0.4rem",
+      }}>
+        {label}
+      </div>
+    </div>
+  );
+}
+
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function Results() {
   const sectionRef = useRef();
@@ -55,25 +103,23 @@ export default function Results() {
   const [loading,       setLoading]       = useState(true);
   const [error,         setError]         = useState(null);
 
-  // ── Fetch events from API ──
+  const width    = useWindowWidth();
+  const isMobile = width < 600;
+  const isTablet = width >= 600 && width < 1024;
+
+  // ── Fetch ──
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
         setError(null);
-
         const [techRes, nonTechRes] = await Promise.all([
           fetch(`${API}/events/tech`),
           fetch(`${API}/events/nontech`),
         ]);
-
-        if (!techRes.ok || !nonTechRes.ok) {
-          throw new Error("Failed to fetch events");
-        }
-
+        if (!techRes.ok || !nonTechRes.ok) throw new Error("Failed to fetch events");
         const techData    = await techRes.json();
         const nonTechData = await nonTechRes.json();
-
         setTechEvents(techData.data);
         setNonTechEvents(nonTechData.data);
       } catch (err) {
@@ -83,11 +129,10 @@ export default function Results() {
         setLoading(false);
       }
     };
-
     fetchEvents();
   }, []);
 
-  // ── Countdown to fest start ──
+  // ── Countdown ──
   useEffect(() => {
     const target = new Date("2026-04-24T09:00:00");
     const tick = () => {
@@ -130,62 +175,90 @@ export default function Results() {
 
   const activeResults = activeTab === "tech" ? techEvents : nonTechEvents;
 
+  // grid columns
+  const gridCols = isMobile ? "1fr" : isTablet ? "1fr 1fr" : "repeat(3, 1fr)";
+
   return (
     <section
       id="results"
       ref={sectionRef}
       style={{ position: "relative", zIndex: 1 }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "6rem 2rem" }}>
+      <div style={{
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: isMobile
+          ? "4rem 1rem 3rem"
+          : isTablet
+          ? "5rem 1.5rem 4rem"
+          : "6rem 2rem",
+      }}>
 
-        {/* SECTION TAG */}
+        {/* ── SECTION TAG ── */}
         <p style={{
           display: "flex", alignItems: "center", gap: "0.8rem",
           fontFamily: "'Space Mono', monospace",
           fontSize: "0.72rem", letterSpacing: "0.3em",
-          textTransform: "uppercase", color: "#00f5c4", marginBottom: "0.8rem",
+          textTransform: "uppercase", color: "#00f5c4",
+          margin: "0 0 0.8rem 0",
         }}>
-          <span style={{ display: "block", width: "30px", height: "1px", background: "#00f5c4", flexShrink: 0 }} />
+          <span style={{
+            display: "block", width: "30px", height: "1px",
+            background: "#00f5c4", flexShrink: 0,
+          }} />
           Leaderboard
         </p>
 
-        {/* TITLE */}
+        {/* ── TITLE + COUNTS ── */}
         <div style={{
-          display: "flex", alignItems: "flex-end",
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: isMobile ? "flex-start" : "flex-end",
           justifyContent: "space-between",
-          flexWrap: "wrap", gap: "2rem", marginBottom: "3rem",
+          flexWrap: "wrap",
+          gap: isMobile ? "1rem" : "2rem",
+          marginBottom: "2.5rem",
         }}>
           <h2 style={{
             fontFamily: "'Orbitron', monospace",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-            fontWeight: 900, lineHeight: 1.1, color: "#e8eaf0",
+            fontSize: "clamp(1.8rem, 5vw, 3.5rem)",
+            fontWeight: 900, lineHeight: 1.1,
+            color: "#e8eaf0", margin: 0,
           }}>
             Event <span style={{ color: "#00f5c4" }}>Results</span>
           </h2>
 
-          {/* COUNTS */}
           <div style={{
             display: "flex", gap: "1.5rem",
             fontFamily: "'Space Mono', monospace",
             fontSize: "0.75rem", color: "#7a7f99",
           }}>
             <span>
-              <span style={{ fontFamily: "'Orbitron', monospace", color: "#00f5c4", fontWeight: 700, fontSize: "1rem" }}>
+              <span style={{
+                fontFamily: "'Orbitron', monospace",
+                color: "#00f5c4", fontWeight: 700,
+                fontSize: isMobile ? "0.9rem" : "1rem",
+              }}>
                 {loading ? "—" : techEvents.length}
               </span>{" "}Tech
             </span>
             <span>
-              <span style={{ fontFamily: "'Orbitron', monospace", color: "#7b5fff", fontWeight: 700, fontSize: "1rem" }}>
+              <span style={{
+                fontFamily: "'Orbitron', monospace",
+                color: "#7b5fff", fontWeight: 700,
+                fontSize: isMobile ? "0.9rem" : "1rem",
+              }}>
                 {loading ? "—" : nonTechEvents.length}
               </span>{" "}Non-Tech
             </span>
           </div>
         </div>
 
-        {/* ERROR */}
+        {/* ── ERROR ── */}
         {error && (
           <div style={{
-            padding: "2rem", marginBottom: "2rem",
+            padding: isMobile ? "1.2rem" : "2rem",
+            marginBottom: "2rem",
             background: "rgba(255,62,108,0.05)",
             border: "1px solid rgba(255,62,108,0.2)",
             clipPath: "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
@@ -197,10 +270,15 @@ export default function Results() {
           </div>
         )}
 
-        {/* COMING SOON HERO BANNER */}
+        {/* ── COMING SOON HERO BANNER ── */}
         <div style={{
           position: "relative", overflow: "hidden",
-          padding: "3.5rem 3rem", marginBottom: "4rem",
+          padding: isMobile
+            ? "2rem 1.2rem"
+            : isTablet
+            ? "2.5rem 2rem"
+            : "3.5rem 3rem",
+          marginBottom: isMobile ? "2.5rem" : "4rem",
           background: "rgba(255,255,255,0.02)",
           border: "1px solid rgba(0,245,196,0.2)",
           clipPath: "polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%)",
@@ -220,43 +298,61 @@ export default function Results() {
           <div style={{
             position: "absolute", top: "50%", left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "400px", height: "200px",
+            width: isMobile ? "200px" : "400px",
+            height: isMobile ? "100px" : "200px",
             background: "radial-gradient(ellipse, rgba(0,245,196,0.07) 0%, transparent 70%)",
             pointerEvents: "none",
           }} />
 
           {/* Trophy */}
-          <div style={{ fontSize: "3rem", marginBottom: "1rem", position: "relative", zIndex: 1 }}>
+          <div style={{
+            fontSize: isMobile ? "2rem" : "3rem",
+            marginBottom: "1rem",
+            position: "relative", zIndex: 1,
+          }}>
             🏆
           </div>
 
           {/* Headline */}
           <h3 style={{
             fontFamily: "'Orbitron', monospace",
-            fontSize: "clamp(1.2rem, 3vw, 2rem)",
+            fontSize: isMobile
+              ? "clamp(1rem, 4vw, 1.3rem)"
+              : "clamp(1.2rem, 3vw, 2rem)",
             fontWeight: 900, color: "#e8eaf0",
-            marginBottom: "0.8rem", position: "relative", zIndex: 1,
+            margin: "0 0 0.8rem 0",
+            position: "relative", zIndex: 1,
+            lineHeight: 1.3,
           }}>
             Results Go Live on{" "}
-            <span style={{ color: "#00f5c4" }}>25th April, 2026</span>
+            <span style={{ color: "#00f5c4" }}>
+              {isMobile ? <><br />25th April, 2026</> : "25th April, 2026"}
+            </span>
           </h3>
 
           <p style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: "0.82rem", color: "#7a7f99",
-            lineHeight: 1.8, maxWidth: "560px",
-            margin: "0 auto 2.5rem",
+            fontSize: isMobile ? "0.7rem" : "0.82rem",
+            color: "#7a7f99",
+            lineHeight: 1.8,
+            maxWidth: "560px",
+            margin: "0 auto",
+            marginBottom: isMobile ? "1.5rem" : "2.5rem",
             position: "relative", zIndex: 1,
           }}>
             Winners will be announced live at the Valedictory Ceremony
             and published here immediately after. Stay tuned — glory awaits.
           </p>
 
-          {/* Countdown */}
+          {/* ── Countdown ── */}
           <div style={{
-            display: "flex", gap: "1.2rem",
-            justifyContent: "center", flexWrap: "wrap",
+            display: "flex",
+            gap: isMobile ? "0.5rem" : "1.2rem",
+            justifyContent: "center",
+            flexWrap: "nowrap",
             position: "relative", zIndex: 1,
+            maxWidth: isMobile ? "320px" : "500px",
+            margin: "0 auto",
           }}>
             {[
               { label: "Days",  val: timeLeft.days  },
@@ -264,111 +360,124 @@ export default function Results() {
               { label: "Mins",  val: timeLeft.mins  },
               { label: "Secs",  val: timeLeft.secs  },
             ].map((unit, i) => (
-              <div key={i} style={{
-                minWidth: "72px", padding: "1rem 0.5rem",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(0,245,196,0.15)",
-                clipPath: "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
-                textAlign: "center",
-              }}>
-                <div style={{
-                  fontFamily: "'Orbitron', monospace",
-                  fontSize: "1.8rem", fontWeight: 900,
-                  color: "#00f5c4",
-                  textShadow: "0 0 20px rgba(0,245,196,0.4)", lineHeight: 1,
-                }}>
-                  {String(unit.val ?? "00").padStart(2, "0")}
-                </div>
-                <div style={{
-                  fontFamily: "'Space Mono', monospace",
-                  fontSize: "0.55rem", letterSpacing: "0.2em",
-                  textTransform: "uppercase", color: "#7a7f99", marginTop: "0.4rem",
-                }}>
-                  {unit.label}
-                </div>
-              </div>
+              <CountUnit
+                key={i}
+                label={unit.label}
+                val={unit.val}
+                isMobile={isMobile}
+              />
             ))}
           </div>
 
           {/* Notify badge */}
           <div style={{
-            marginTop: "2rem",
-            display: "inline-flex", alignItems: "center", gap: "0.6rem",
+            marginTop: isMobile ? "1.5rem" : "2rem",
+            display: "inline-flex", alignItems: "center",
+            gap: "0.6rem",
             fontFamily: "'Space Mono', monospace",
-            fontSize: "0.68rem", letterSpacing: "0.15em",
+            fontSize: isMobile ? "0.58rem" : "0.68rem",
+            letterSpacing: "0.12em",
             textTransform: "uppercase", color: "#7b5fff",
             border: "1px solid rgba(123,95,255,0.25)",
             background: "rgba(123,95,255,0.06)",
-            padding: "0.5rem 1.2rem",
+            padding: isMobile ? "0.4rem 0.8rem" : "0.5rem 1.2rem",
             clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
             position: "relative", zIndex: 1,
+            flexWrap: "wrap",
+            justifyContent: "center",
+            textAlign: "center",
           }}>
             <span style={{
               width: "6px", height: "6px", borderRadius: "50%",
               background: "#7b5fff", display: "inline-block",
+              flexShrink: 0,
               animation: "pulse 1.5s infinite",
             }} />
             Follow @ducs.sankalan for live updates
           </div>
         </div>
 
-        {/* TAB SWITCHER */}
+        {/* ── TAB SWITCHER ── */}
         <div style={{
-          display: "inline-flex", gap: "0", marginBottom: "1.5rem",
+          display: "flex",
+          marginBottom: "1.5rem",
           border: "1px solid rgba(0,245,196,0.15)",
           clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
           overflow: "hidden",
+          width: isMobile ? "100%" : "fit-content",
         }}>
           {[
-            { key: "tech",    label: "⚡ Tech Events",    color: "#00f5c4", rgb: "0,245,196"   },
-            { key: "nontech", label: "🎭 Non-Tech Events", color: "#7b5fff", rgb: "123,95,255" },
+            { key: "tech",    label: isMobile ? "⚡ Tech"    : "⚡ Tech Events",    color: "#00f5c4", rgb: "0,245,196"   },
+            { key: "nontech", label: isMobile ? "🎭 Non-Tech" : "🎭 Non-Tech Events", color: "#7b5fff", rgb: "123,95,255" },
           ].map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               style={{
                 fontFamily: "'Orbitron', monospace",
-                fontSize: "0.72rem", fontWeight: 700,
-                letterSpacing: "0.1em", textTransform: "uppercase",
-                padding: "0.9rem 2rem", border: "none",
-                cursor: "pointer", transition: "all 0.3s",
-                background: activeTab === tab.key ? `rgba(${tab.rgb},0.12)` : "transparent",
+                fontSize: isMobile ? "0.62rem" : "0.72rem",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                padding: isMobile ? "0.8rem 1rem" : "0.9rem 2rem",
+                border: "none",
+                flex: isMobile ? 1 : "none",
+                cursor: "pointer",
+                transition: "all 0.3s",
+                background: activeTab === tab.key
+                  ? `rgba(${tab.rgb},0.12)`
+                  : "transparent",
                 color: activeTab === tab.key ? tab.color : "#7a7f99",
-                borderRight: tab.key === "tech" ? "1px solid rgba(0,245,196,0.15)" : "none",
-                boxShadow: activeTab === tab.key ? `inset 0 -2px 0 ${tab.color}` : "none",
+                borderRight: tab.key === "tech"
+                  ? "1px solid rgba(0,245,196,0.15)"
+                  : "none",
+                boxShadow: activeTab === tab.key
+                  ? `inset 0 -2px 0 ${tab.color}`
+                  : "none",
+                whiteSpace: "nowrap",
               }}
-            >{tab.label}</button>
+            >
+              {tab.label}
+            </button>
           ))}
         </div>
 
-        {/* AWAITING LABEL */}
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
+        {/* ── AWAITING LABEL ── */}
+        <div style={{
+          display: "flex", alignItems: "center",
+          gap: "1rem", marginBottom: "1.5rem",
+        }}>
           <div style={{
             width: "7px", height: "7px", borderRadius: "50%",
             background: activeTab === "tech" ? "#00f5c4" : "#7b5fff",
             boxShadow: `0 0 10px ${activeTab === "tech" ? "#00f5c4" : "#7b5fff"}`,
             animation: "pulse 1.5s infinite",
+            flexShrink: 0,
           }} />
           <p style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: "0.7rem", letterSpacing: "0.2em",
+            fontSize: isMobile ? "0.62rem" : "0.7rem",
+            letterSpacing: "0.15em",
             textTransform: "uppercase", color: "#7a7f99",
+            margin: 0,
           }}>
             {loading
               ? "Loading events..."
-              : `Awaiting results for ${activeResults.length} ${activeTab === "tech" ? "tech" : "non-tech"} events`
-            }
+              : `Awaiting results for ${activeResults.length} ${
+                  activeTab === "tech" ? "tech" : "non-tech"
+                } events`}
           </p>
         </div>
 
-        {/* RESULT CARDS GRID */}
+        {/* ── RESULT CARDS GRID ── */}
         {loading ? (
-          <LoadingSkeleton />
+          <LoadingSkeleton isMobile={isMobile} isTablet={isTablet} />
         ) : (
           <div key={activeTab} style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "1rem", marginBottom: "3rem",
+            gridTemplateColumns: gridCols,
+            gap: isMobile ? "0.8rem" : "1rem",
+            marginBottom: isMobile ? "2rem" : "3rem",
           }}>
             {activeResults.map((item, i) => {
               const rgb     = getRgb(item.color);
@@ -379,16 +488,18 @@ export default function Results() {
                   key={item.id}
                   className="result-card"
                   style={{
-                    padding: "1.5rem",
+                    padding: isMobile ? "1rem" : "1.5rem",
                     background: "rgba(255,255,255,0.02)",
                     border: `1px solid rgba(${rgb},0.12)`,
                     clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
                     opacity: 0, transform: "translateY(20px)",
                     transition: `opacity 0.5s ${i * 0.07}s ease,
                                  transform 0.5s ${i * 0.07}s ease`,
-                    display: "flex", gap: "1.2rem",
+                    display: "flex",
+                    gap: isMobile ? "0.8rem" : "1.2rem",
                     alignItems: "flex-start",
-                    cursor: "default", position: "relative", overflow: "hidden",
+                    cursor: "default",
+                    position: "relative", overflow: "hidden",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = item.color;
@@ -410,35 +521,43 @@ export default function Results() {
 
                   {/* ICON */}
                   <div style={{
-                    width: "42px", height: "42px", borderRadius: "50%",
+                    width: isMobile ? "36px" : "42px",
+                    height: isMobile ? "36px" : "42px",
+                    borderRadius: "50%",
                     background: `rgba(${rgb},0.1)`,
                     border: `1px solid rgba(${rgb},0.2)`,
                     display: "flex", alignItems: "center",
-                    justifyContent: "center", fontSize: "1.2rem",
+                    justifyContent: "center",
+                    fontSize: isMobile ? "1rem" : "1.2rem",
                     flexShrink: 0, marginTop: "0.2rem",
                   }}>
                     {item.icon}
                   </div>
 
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     {/* TOP ROW */}
                     <div style={{
-                      display: "flex", alignItems: "flex-start",
+                      display: "flex",
+                      alignItems: "flex-start",
                       justifyContent: "space-between",
-                      marginBottom: "0.5rem", gap: "0.5rem", flexWrap: "wrap",
+                      marginBottom: "0.5rem",
+                      gap: "0.5rem",
+                      flexWrap: "wrap",
                     }}>
-                      <div>
+                      <div style={{ minWidth: 0 }}>
                         <h3 style={{
                           fontFamily: "'Orbitron', monospace",
-                          fontSize: "0.82rem", fontWeight: 700,
-                          color: "#e8eaf0", letterSpacing: "0.03em",
-                          marginBottom: "0.2rem",
+                          fontSize: isMobile ? "0.72rem" : "0.82rem",
+                          fontWeight: 700, color: "#e8eaf0",
+                          letterSpacing: "0.03em",
+                          margin: "0 0 0.2rem 0",
+                          wordBreak: "break-word",
                         }}>
                           {item.name}
                         </h3>
                         <span style={{
                           fontFamily: "'Space Mono', monospace",
-                          fontSize: "0.55rem", letterSpacing: "0.15em",
+                          fontSize: "0.55rem", letterSpacing: "0.12em",
                           textTransform: "uppercase",
                           color: item.color, opacity: 0.7,
                         }}>
@@ -446,21 +565,23 @@ export default function Results() {
                         </span>
                       </div>
 
-                      {/* STATUS PILL — always Upcoming until results added */}
+                      {/* STATUS PILL */}
                       <span style={{
                         fontFamily: "'Space Mono', monospace",
-                        fontSize: "0.55rem", letterSpacing: "0.15em",
+                        fontSize: "0.52rem", letterSpacing: "0.12em",
                         textTransform: "uppercase", color: item.color,
                         background: `rgba(${rgb},0.1)`,
                         border: `1px solid rgba(${rgb},0.25)`,
-                        padding: "0.2rem 0.6rem",
+                        padding: "0.2rem 0.5rem",
                         display: "inline-flex", alignItems: "center",
-                        gap: "0.35rem", flexShrink: 0,
+                        gap: "0.3rem", flexShrink: 0,
                         clipPath: "polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)",
+                        whiteSpace: "nowrap",
                       }}>
                         <span style={{
                           width: "5px", height: "5px", borderRadius: "50%",
                           background: item.color, display: "inline-block",
+                          flexShrink: 0,
                         }} />
                         {item.status || "Upcoming"}
                       </span>
@@ -469,25 +590,30 @@ export default function Results() {
                     {/* DATE */}
                     <div style={{
                       fontFamily: "'Space Mono', monospace",
-                      fontSize: "0.63rem", color: "#7a7f99",
-                      letterSpacing: "0.08em", marginBottom: "0.5rem",
+                      fontSize: isMobile ? "0.58rem" : "0.63rem",
+                      color: "#7a7f99", letterSpacing: "0.06em",
+                      marginBottom: "0.5rem",
                     }}>
                       📅 {dateStr}
                     </div>
 
                     {/* DESC */}
                     <p style={{
-                      fontSize: "0.78rem",
+                      fontFamily: "'Space Mono', monospace",
+                      fontSize: isMobile ? "0.68rem" : "0.78rem",
                       color: "rgba(232,234,240,0.5)",
                       lineHeight: 1.7, marginBottom: "0.8rem",
+                      margin: "0 0 0.8rem 0",
                     }}>
                       {item.description}
                     </p>
 
                     {/* SHIMMER BAR */}
                     <div style={{
-                      height: "2px", background: "rgba(255,255,255,0.05)",
-                      borderRadius: "2px", overflow: "hidden", position: "relative",
+                      height: "2px",
+                      background: "rgba(255,255,255,0.05)",
+                      borderRadius: "2px",
+                      overflow: "hidden", position: "relative",
                     }}>
                       <div style={{
                         position: "absolute", top: 0, left: "-100%",
@@ -503,26 +629,32 @@ export default function Results() {
           </div>
         )}
 
-        {/* PAST RESULTS BANNER */}
+        {/* ── PAST RESULTS BANNER ── */}
         <div style={{
-          padding: "1.5rem 2rem",
+          padding: isMobile ? "1.2rem 1rem" : "1.5rem 2rem",
           background: "rgba(123,95,255,0.04)",
           border: "1px solid rgba(123,95,255,0.15)",
           clipPath: "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
-          display: "flex", alignItems: "center",
-          gap: "1.5rem", flexWrap: "wrap",
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row",
+          alignItems: isMobile ? "flex-start" : "center",
+          gap: isMobile ? "1.2rem" : "1.5rem",
+          flexWrap: "wrap",
         }}>
           <div style={{ flex: 1, minWidth: "200px" }}>
             <p style={{
               fontFamily: "'Orbitron', monospace",
-              fontSize: "0.78rem", fontWeight: 700,
-              color: "#7b5fff", marginBottom: "0.4rem", letterSpacing: "0.05em",
+              fontSize: isMobile ? "0.72rem" : "0.78rem",
+              fontWeight: 700, color: "#7b5fff",
+              margin: "0 0 0.4rem 0",
+              letterSpacing: "0.05em",
             }}>
               Looking for past results?
             </p>
             <p style={{
               fontFamily: "'Space Mono', monospace",
-              fontSize: "0.72rem", color: "#7a7f99", lineHeight: 1.7,
+              fontSize: isMobile ? "0.68rem" : "0.72rem",
+              color: "#7a7f99", lineHeight: 1.7, margin: 0,
             }}>
               Results from Sankalan 2025 and earlier editions will be
               archived here after the fest.
@@ -534,23 +666,28 @@ export default function Results() {
             target="_blank" rel="noopener noreferrer"
             style={{
               fontFamily: "'Orbitron', monospace",
-              fontSize: "0.7rem", fontWeight: 700,
-              letterSpacing: "0.12em", textTransform: "uppercase",
-              color: "#7b5fff",
+              fontSize: isMobile ? "0.62rem" : "0.7rem",
+              fontWeight: 700, letterSpacing: "0.12em",
+              textTransform: "uppercase", color: "#7b5fff",
               border: "1px solid rgba(123,95,255,0.3)",
-              padding: "0.7rem 1.5rem", textDecoration: "none",
+              padding: isMobile ? "0.7rem 1.2rem" : "0.7rem 1.5rem",
+              textDecoration: "none",
               clipPath: "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
               transition: "all 0.3s", flexShrink: 0,
+              width: isMobile ? "100%" : "auto",
+              textAlign: isMobile ? "center" : "left",
+              display: "inline-block",
+              boxSizing: "border-box",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background   = "rgba(123,95,255,0.1)";
-              e.currentTarget.style.borderColor  = "#7b5fff";
-              e.currentTarget.style.boxShadow    = "0 0 30px rgba(123,95,255,0.2)";
+              e.currentTarget.style.background  = "rgba(123,95,255,0.1)";
+              e.currentTarget.style.borderColor = "#7b5fff";
+              e.currentTarget.style.boxShadow   = "0 0 30px rgba(123,95,255,0.2)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background   = "transparent";
-              e.currentTarget.style.borderColor  = "rgba(123,95,255,0.3)";
-              e.currentTarget.style.boxShadow    = "none";
+              e.currentTarget.style.background  = "transparent";
+              e.currentTarget.style.borderColor = "rgba(123,95,255,0.3)";
+              e.currentTarget.style.boxShadow   = "none";
             }}
           >
             Follow for Updates →
@@ -564,7 +701,7 @@ export default function Results() {
           100% { left: 200%;  }
         }
         @keyframes pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
+          0%, 100% { opacity: 1; transform: scale(1);   }
           50%       { opacity: 0.4; transform: scale(1.4); }
         }
       `}</style>

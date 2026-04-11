@@ -1,9 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
+// ── custom hook ──────────────────────────────────────────────────────────────
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
+
+// ── Data ─────────────────────────────────────────────────────────────────────
 const faqs = [
   {
-    q: "When is Sankalan 2025 scheduled?",
-    a: "Sankalan 2025 will be held on November 8–9, 2025 at the Department of Computer Science, University of Delhi. The fest spans multiple events across technical and non-technical categories over two action-packed days.",
+    q: "When is Sankalan 2026 scheduled?",
+    a: "Sankalan 2026 will be held on 24–25 April 2026 at the Department of Computer Science, University of Delhi. The fest spans multiple events across technical and non-technical categories over two action-packed days.",
     tag: "General",
   },
   {
@@ -13,7 +27,7 @@ const faqs = [
   },
   {
     q: "How do I register for events?",
-    a: "Registration for Sankalan 2025 is handled through Unstop. Click the 'Register on Unstop' button on the website to access all event listings and secure your spot.",
+    a: "Registration for Sankalan 2026 is handled through Unstop. Click the 'Register on Unstop' button on the website to access all event listings and secure your spot.",
     tag: "Registration",
   },
   {
@@ -47,8 +61,8 @@ const faqs = [
     tag: "General",
   },
   {
-    q: "What is the prize pool for Sankalan 2025?",
-    a: "Sankalan 2025 has a total prize pool of ₹2L+ distributed across all competitive events. Winners also receive goodies, certificates and opportunities for recognition from industry partners.",
+    q: "What is the prize pool for Sankalan 2026?",
+    a: "Sankalan 2026 has a total prize pool of ₹2L+ distributed across all competitive events. Winners also receive goodies, certificates and opportunities for recognition from industry partners.",
     tag: "Prizes",
   },
   {
@@ -64,32 +78,31 @@ const faqs = [
 ];
 
 const tagColors = {
-  General:      { color: "#00f5c4", rgb: "0,245,196"  },
-  Eligibility:  { color: "#7b5fff", rgb: "123,95,255" },
-  Registration: { color: "#00f5c4", rgb: "0,245,196"  },
-  Events:       { color: "#7b5fff", rgb: "123,95,255" },
-  Venue:        { color: "#00f5c4", rgb: "0,245,196"  },
-  Judging:      { color: "#7b5fff", rgb: "123,95,255" },
-  Prizes:       { color: "#00f5c4", rgb: "0,245,196"  },
-  Contact:      { color: "#7b5fff", rgb: "123,95,255" },
+  General:      { color: "#00f5c4", rgb: "0,245,196"   },
+  Eligibility:  { color: "#7b5fff", rgb: "123,95,255"  },
+  Registration: { color: "#00f5c4", rgb: "0,245,196"   },
+  Events:       { color: "#7b5fff", rgb: "123,95,255"  },
+  Venue:        { color: "#00f5c4", rgb: "0,245,196"   },
+  Judging:      { color: "#7b5fff", rgb: "123,95,255"  },
+  Prizes:       { color: "#00f5c4", rgb: "0,245,196"   },
+  Contact:      { color: "#7b5fff", rgb: "123,95,255"  },
 };
 
+// ── Main Component ───────────────────────────────────────────────────────────
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeTag, setActiveTag] = useState("All");
 
-  const allTags = [
-    "All",
-    ...Array.from(new Set(faqs.map((f) => f.tag))),
-  ];
+  const width    = useWindowWidth();
+  const isMobile = width < 600;
+  const isTablet = width >= 600 && width < 1024;
+
+  const allTags = ["All", ...Array.from(new Set(faqs.map((f) => f.tag)))];
 
   const filtered =
-    activeTag === "All"
-      ? faqs
-      : faqs.filter((f) => f.tag === activeTag);
+    activeTag === "All" ? faqs : faqs.filter((f) => f.tag === activeTag);
 
-  const toggle = (i) =>
-    setOpenIndex(openIndex === i ? null : i);
+  const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
   return (
     <section id="faq" style={{ position: "relative", zIndex: 1 }}>
@@ -97,10 +110,14 @@ export default function FAQ() {
         style={{
           maxWidth: "900px",
           margin: "0 auto",
-          padding: "6rem 2rem",
+          padding: isMobile
+            ? "4rem 1rem 3rem"
+            : isTablet
+            ? "5rem 1.5rem 4rem"
+            : "6rem 2rem",
         }}
       >
-        {/* SECTION TAG */}
+        {/* ── SECTION TAG ── */}
         <p
           style={{
             display: "flex",
@@ -111,7 +128,7 @@ export default function FAQ() {
             letterSpacing: "0.3em",
             textTransform: "uppercase",
             color: "#00f5c4",
-            marginBottom: "0.8rem",
+            margin: "0 0 0.8rem 0",
           }}
         >
           <span
@@ -126,14 +143,14 @@ export default function FAQ() {
           Got Questions?
         </p>
 
-        {/* TITLE */}
+        {/* ── TITLE ── */}
         <h2
           style={{
             fontFamily: "'Orbitron', monospace",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontSize: "clamp(1.6rem, 5vw, 3.5rem)",
             fontWeight: 900,
             lineHeight: 1.1,
-            marginBottom: "1rem",
+            margin: "0 0 1rem 0",
             color: "#e8eaf0",
           }}
         >
@@ -141,16 +158,18 @@ export default function FAQ() {
           <span style={{ color: "#00f5c4" }}>Questions</span>
         </h2>
 
+        {/* ── SUBTITLE ── */}
         <p
           style={{
-            fontSize: "1rem",
+            fontFamily: "'Space Mono', monospace",
+            fontSize: isMobile ? "0.75rem" : "0.88rem",
             color: "rgba(232,234,240,0.6)",
             lineHeight: 1.8,
-            marginBottom: "3rem",
+            margin: "0 0 2.5rem 0",
             maxWidth: "600px",
           }}
         >
-          Everything you need to know about Sankalan 2025. Can't find
+          Everything you need to know about Sankalan 2026. Can't find
           your answer?{" "}
           <a
             href="#contact"
@@ -164,29 +183,28 @@ export default function FAQ() {
               (e.currentTarget.style.borderColor = "#00f5c4")
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.borderColor =
-                "rgba(0,245,196,0.3)")
+              (e.currentTarget.style.borderColor = "rgba(0,245,196,0.3)")
             }
           >
             Drop us a message.
           </a>
         </p>
 
-        {/* TAG FILTERS */}
+        {/* ── TAG FILTERS ── */}
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "0.6rem",
-            marginBottom: "3rem",
+            gap: "0.5rem",
+            marginBottom: "2.5rem",
           }}
         >
           {allTags.map((tag) => {
-            const cfg = tagColors[tag] || {
-              color: "#00f5c4",
-              rgb: "0,245,196",
-            };
+            const cfg = tagColors[tag] || { color: "#00f5c4", rgb: "0,245,196" };
             const isActive = activeTag === tag;
+            const tagRgb = tag === "All" ? "0,245,196" : cfg.rgb;
+            const tagColor = tag === "All" ? "#00f5c4" : cfg.color;
+
             return (
               <button
                 key={tag}
@@ -196,43 +214,33 @@ export default function FAQ() {
                 }}
                 style={{
                   fontFamily: "'Space Mono', monospace",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.15em",
+                  fontSize: isMobile ? "0.58rem" : "0.65rem",
+                  letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  padding: "0.4rem 1rem",
-                  border: `1px solid rgba(${
-                    tag === "All" ? "0,245,196" : cfg.rgb
-                  },${isActive ? "0.8" : "0.2"})`,
+                  padding: isMobile ? "0.35rem 0.75rem" : "0.4rem 1rem",
+                  border: `1px solid rgba(${tagRgb},${isActive ? "0.8" : "0.2"})`,
                   background: isActive
-                    ? `rgba(${
-                        tag === "All" ? "0,245,196" : cfg.rgb
-                      },0.12)`
+                    ? `rgba(${tagRgb},0.12)`
                     : "transparent",
-                  color: isActive
-                    ? tag === "All"
-                      ? "#00f5c4"
-                      : cfg.color
-                    : "#7a7f99",
+                  color: isActive ? tagColor : "#7a7f99",
                   cursor: "pointer",
                   clipPath:
                     "polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%)",
                   transition: "all 0.25s",
                   boxShadow: isActive
-                    ? `0 0 15px rgba(${
-                        tag === "All" ? "0,245,196" : cfg.rgb
-                      },0.2)`
+                    ? `0 0 15px rgba(${tagRgb},0.2)`
                     : "none",
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.color = cfg.color;
-                    e.currentTarget.style.borderColor = `rgba(${cfg.rgb},0.4)`;
+                    e.currentTarget.style.color = tagColor;
+                    e.currentTarget.style.borderColor = `rgba(${tagRgb},0.4)`;
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.color = "#7a7f99";
-                    e.currentTarget.style.borderColor = `rgba(${cfg.rgb},0.2)`;
+                    e.currentTarget.style.borderColor = `rgba(${tagRgb},0.2)`;
                   }
                 }}
               >
@@ -242,7 +250,7 @@ export default function FAQ() {
           })}
         </div>
 
-        {/* FAQ COUNT */}
+        {/* ── FAQ COUNT ── */}
         <p
           style={{
             fontFamily: "'Space Mono', monospace",
@@ -250,7 +258,7 @@ export default function FAQ() {
             letterSpacing: "0.2em",
             textTransform: "uppercase",
             color: "#7a7f99",
-            marginBottom: "1.5rem",
+            margin: "0 0 1.5rem 0",
           }}
         >
           — Showing {filtered.length} question
@@ -258,14 +266,8 @@ export default function FAQ() {
           {activeTag !== "All" ? ` in ${activeTag}` : ""}
         </p>
 
-        {/* ACCORDION */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.8rem",
-          }}
-        >
+        {/* ── ACCORDION ── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
           {filtered.map((faq, i) => {
             const cfg = tagColors[faq.tag] || {
               color: "#00f5c4",
@@ -280,9 +282,7 @@ export default function FAQ() {
                   background: isOpen
                     ? `rgba(${cfg.rgb},0.04)`
                     : "rgba(255,255,255,0.02)",
-                  border: `1px solid rgba(${cfg.rgb},${
-                    isOpen ? "0.35" : "0.12"
-                  })`,
+                  border: `1px solid rgba(${cfg.rgb},${isOpen ? "0.35" : "0.12"})`,
                   clipPath:
                     "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
                   transition: "all 0.3s",
@@ -294,31 +294,29 @@ export default function FAQ() {
                 onMouseEnter={(e) => {
                   if (!isOpen) {
                     e.currentTarget.style.borderColor = `rgba(${cfg.rgb},0.25)`;
-                    e.currentTarget.style.background =
-                      "rgba(255,255,255,0.03)";
+                    e.currentTarget.style.background = "rgba(255,255,255,0.03)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isOpen) {
                     e.currentTarget.style.borderColor = `rgba(${cfg.rgb},0.12)`;
-                    e.currentTarget.style.background =
-                      "rgba(255,255,255,0.02)";
+                    e.currentTarget.style.background = "rgba(255,255,255,0.02)";
                   }
                 }}
               >
-                {/* QUESTION BUTTON */}
+                {/* ── QUESTION BUTTON ── */}
                 <button
                   onClick={() => toggle(i)}
                   style={{
                     width: "100%",
-                    padding: "1.4rem 1.8rem",
+                    padding: isMobile ? "1rem 1rem" : "1.4rem 1.8rem",
                     background: "transparent",
                     border: "none",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    gap: "1rem",
+                    gap: isMobile ? "0.6rem" : "1rem",
                     textAlign: "left",
                   }}
                 >
@@ -326,11 +324,13 @@ export default function FAQ() {
                   <div
                     style={{
                       display: "flex",
-                      alignItems: "center",
-                      gap: "1.2rem",
+                      alignItems: isMobile ? "flex-start" : "center",
+                      gap: isMobile ? "0.7rem" : "1.2rem",
                       flex: 1,
+                      minWidth: 0,
                     }}
                   >
+                    {/* index number */}
                     <span
                       style={{
                         fontFamily: "'Orbitron', monospace",
@@ -339,31 +339,32 @@ export default function FAQ() {
                         color: isOpen ? cfg.color : "#7a7f99",
                         letterSpacing: "0.1em",
                         flexShrink: 0,
-                        minWidth: "28px",
+                        minWidth: "24px",
                         transition: "color 0.3s",
+                        paddingTop: isMobile ? "2px" : "0",
                       }}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
 
+                    {/* question text */}
                     <span
                       style={{
                         fontFamily: "'Orbitron', monospace",
-                        fontSize: "0.85rem",
+                        fontSize: isMobile ? "0.72rem" : "0.85rem",
                         fontWeight: 700,
-                        color: isOpen
-                          ? "#e8eaf0"
-                          : "rgba(232,234,240,0.8)",
+                        color: isOpen ? "#e8eaf0" : "rgba(232,234,240,0.8)",
                         letterSpacing: "0.03em",
                         lineHeight: 1.5,
                         transition: "color 0.3s",
+                        wordBreak: "break-word",
                       }}
                     >
                       {faq.q}
                     </span>
                   </div>
 
-                  {/* RIGHT — TAG + CHEVRON */}
+                  {/* RIGHT — TAG (hidden on mobile) + CHEVRON */}
                   <div
                     style={{
                       display: "flex",
@@ -372,33 +373,33 @@ export default function FAQ() {
                       flexShrink: 0,
                     }}
                   >
-                    <span
-                      className="faq-tag"
-                      style={{
-                        fontFamily: "'Space Mono', monospace",
-                        fontSize: "0.55rem",
-                        letterSpacing: "0.15em",
-                        textTransform: "uppercase",
-                        color: cfg.color,
-                        background: `rgba(${cfg.rgb},0.1)`,
-                        border: `1px solid rgba(${cfg.rgb},0.2)`,
-                        padding: "0.2rem 0.6rem",
-                        clipPath:
-                          "polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)",
-                        display: "none",
-                      }}
-                    >
-                      {faq.tag}
-                    </span>
+                    {/* tag badge — only tablet+ */}
+                    {!isMobile && (
+                      <span
+                        style={{
+                          fontFamily: "'Space Mono', monospace",
+                          fontSize: "0.52rem",
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase",
+                          color: cfg.color,
+                          background: `rgba(${cfg.rgb},0.1)`,
+                          border: `1px solid rgba(${cfg.rgb},0.2)`,
+                          padding: "0.2rem 0.55rem",
+                          clipPath:
+                            "polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {faq.tag}
+                      </span>
+                    )}
 
-                    {/* CHEVRON BOX */}
+                    {/* chevron box */}
                     <div
                       style={{
-                        width: "28px",
-                        height: "28px",
-                        border: `1px solid rgba(${cfg.rgb},${
-                          isOpen ? "0.5" : "0.2"
-                        })`,
+                        width: isMobile ? "24px" : "28px",
+                        height: isMobile ? "24px" : "28px",
+                        border: `1px solid rgba(${cfg.rgb},${isOpen ? "0.5" : "0.2"})`,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -414,8 +415,8 @@ export default function FAQ() {
                       <span
                         style={{
                           display: "block",
-                          width: "8px",
-                          height: "8px",
+                          width: "7px",
+                          height: "7px",
                           borderRight: `2px solid ${cfg.color}`,
                           borderBottom: `2px solid ${cfg.color}`,
                           transform: isOpen
@@ -429,17 +430,19 @@ export default function FAQ() {
                   </div>
                 </button>
 
-                {/* ANSWER */}
+                {/* ── ANSWER ── */}
                 <div
                   style={{
-                    maxHeight: isOpen ? "400px" : "0px",
+                    maxHeight: isOpen ? "500px" : "0px",
                     overflow: "hidden",
                     transition: "max-height 0.4s ease",
                   }}
                 >
                   <div
                     style={{
-                      padding: "0 1.8rem 1.6rem 4.4rem",
+                      padding: isMobile
+                        ? "0 1rem 1.2rem 1rem"
+                        : "0 1.8rem 1.6rem 4.4rem",
                       borderTop: `1px solid rgba(${cfg.rgb},0.1)`,
                       paddingTop: "1.2rem",
                     }}
@@ -451,10 +454,11 @@ export default function FAQ() {
                         alignItems: "flex-start",
                       }}
                     >
-                      {/* LEFT COLOR BAR */}
+                      {/* left color bar */}
                       <div
                         style={{
                           width: "2px",
+                          minHeight: "40px",
                           background: `linear-gradient(to bottom, ${cfg.color}, transparent)`,
                           flexShrink: 0,
                           marginTop: "4px",
@@ -463,10 +467,11 @@ export default function FAQ() {
                       />
                       <p
                         style={{
-                          fontSize: "0.88rem",
-                          color: "rgba(232,234,240,0.65)",
-                          lineHeight: 1.85,
                           fontFamily: "'Space Mono', monospace",
+                          fontSize: isMobile ? "0.72rem" : "0.82rem",
+                          color: "rgba(232,234,240,0.65)",
+                          lineHeight: 1.9,
+                          margin: 0,
                         }}
                       >
                         {faq.a}
@@ -479,30 +484,35 @@ export default function FAQ() {
           })}
         </div>
 
-        {/* STILL HAVE QUESTIONS */}
+        {/* ── STILL HAVE QUESTIONS CTA ── */}
         <div
           style={{
-            marginTop: "4rem",
-            padding: "2rem 2.5rem",
+            marginTop: isMobile ? "2.5rem" : "4rem",
+            padding: isMobile
+              ? "1.4rem 1.2rem"
+              : isTablet
+              ? "1.8rem 2rem"
+              : "2rem 2.5rem",
             background: "rgba(123,95,255,0.04)",
             border: "1px solid rgba(123,95,255,0.15)",
             clipPath:
               "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
             display: "flex",
-            alignItems: "center",
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: isMobile ? "flex-start" : "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: "1.5rem",
+            gap: isMobile ? "1.2rem" : "1.5rem",
           }}
         >
           <div>
             <p
               style={{
                 fontFamily: "'Orbitron', monospace",
-                fontSize: "0.85rem",
+                fontSize: isMobile ? "0.78rem" : "0.85rem",
                 fontWeight: 700,
                 color: "#e8eaf0",
-                marginBottom: "0.4rem",
+                margin: "0 0 0.4rem 0",
               }}
             >
               Still have questions?
@@ -510,17 +520,16 @@ export default function FAQ() {
             <p
               style={{
                 fontFamily: "'Space Mono', monospace",
-                fontSize: "0.72rem",
+                fontSize: isMobile ? "0.68rem" : "0.72rem",
                 color: "#7a7f99",
                 lineHeight: 1.7,
+                margin: 0,
               }}
             >
-              Use our contact form and we'll get back to you within 24
-              hours.
+              Use our contact form and we'll get back to you within 24 hours.
             </p>
           </div>
 
-          {/* SINGLE CTA — scrolls to contact form + highlights it */}
           <a
             href="#contact"
             onClick={(e) => {
@@ -532,25 +541,21 @@ export default function FAQ() {
                   const form = el.querySelector("form");
                   if (form) {
                     form.style.transition = "box-shadow 0.4s";
-                    form.style.boxShadow =
-                      "0 0 50px rgba(0,245,196,0.15)";
-                    setTimeout(
-                      () => (form.style.boxShadow = "none"),
-                      1500
-                    );
+                    form.style.boxShadow = "0 0 50px rgba(0,245,196,0.15)";
+                    setTimeout(() => (form.style.boxShadow = "none"), 1500);
                   }
                 }, 700);
               }
             }}
             style={{
               fontFamily: "'Orbitron', monospace",
-              fontSize: "0.72rem",
+              fontSize: isMobile ? "0.65rem" : "0.72rem",
               fontWeight: 900,
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               color: "#03040a",
               background: "#00f5c4",
-              padding: "0.85rem 2rem",
+              padding: isMobile ? "0.8rem 1.5rem" : "0.85rem 2rem",
               textDecoration: "none",
               clipPath:
                 "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
@@ -560,29 +565,22 @@ export default function FAQ() {
               display: "inline-flex",
               alignItems: "center",
               gap: "0.5rem",
+              width: isMobile ? "100%" : "auto",
+              justifyContent: isMobile ? "center" : "flex-start",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow =
-                "0 0 45px rgba(0,245,196,0.5)";
+              e.currentTarget.style.boxShadow = "0 0 45px rgba(0,245,196,0.5)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow =
-                "0 0 25px rgba(0,245,196,0.3)";
+              e.currentTarget.style.boxShadow = "0 0 25px rgba(0,245,196,0.3)";
             }}
           >
             Ask a Question →
           </a>
         </div>
       </div>
-
-      {/* SHOW TAG LABELS ON WIDER SCREENS */}
-      <style>{`
-        @media (min-width: 600px) {
-          .faq-tag { display: inline-block !important; }
-        }
-      `}</style>
     </section>
   );
 }
