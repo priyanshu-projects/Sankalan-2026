@@ -201,7 +201,7 @@ export default function Sponsors() {
   const [error,    setError]    = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/sponsors")
+    fetch("sankalan-2026-production.up.railway.app/api")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch sponsors");
         return res.json();

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 // ── API URL ──────────────────────────────────────────────────────────────────
-const API = "http://localhost:5000/api";
+const API = "sankalan-2026-production.up.railway.app/api";
 
 // ── Helper ───────────────────────────────────────────────────────────────────
 function getRgb(color) {
