@@ -1,285 +1,329 @@
-// src/components/pages/home/AboutDept.jsx
+import { useEffect, useRef, useState } from "react";
 
-import { useEffect, useRef } from "react";
-import deptImage from "../../../assets/dept.png"; // 👈 place your image as src/assets/dept.jpg
+// ── custom hook ──────────────────────────────────────────────────────────────
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return width;
+}
 
-export default function AboutDept() {
+// ── CountUp ──────────────────────────────────────────────────────────────────
+function CountUp({ target, suffix = "" }) {
+  const [count, setCount] = useState(0);
+  const ref     = useRef();
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const isNum = !isNaN(parseInt(target));
+          if (!isNum) { setCount(target); return; }
+
+          const end      = parseInt(target);
+          const duration = 1500;
+          const step     = Math.ceil(end / (duration / 16));
+          let current    = 0;
+
+          const timer = setInterval(() => {
+            current += step;
+            if (current >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(current);
+            }
+          }, 16);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target]);
+
+  return (
+    <span ref={ref}>
+      {typeof count === "number" ? count : target}
+      {suffix}
+    </span>
+  );
+}
+
+// ── StatCard ─────────────────────────────────────────────────────────────────
+function StatCard({ stat, isMobile }) {
+  return (
+    <div
+      style={{
+        padding: isMobile ? "1.2rem 1rem" : "1.5rem",
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(0,245,196,0.15)",
+        clipPath:
+          "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+        transition: "border-color 0.3s, box-shadow 0.3s",
+        position: "relative",
+        overflow: "hidden",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "#00f5c4";
+        e.currentTarget.style.boxShadow   = "0 0 40px rgba(0,245,196,0.18)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "rgba(0,245,196,0.15)";
+        e.currentTarget.style.boxShadow   = "none";
+      }}
+    >
+      {/* top accent */}
+      <div style={{
+        position: "absolute", top: 0, left: 0, right: 0,
+        height: "2px",
+        background: "linear-gradient(90deg, #00f5c4, transparent)",
+      }} />
+
+      <div
+        style={{
+          fontFamily:  "'Orbitron', monospace",
+          fontSize:    isMobile ? "1.8rem" : "2.5rem",
+          fontWeight:  900,
+          color:       "#00f5c4",
+          textShadow:  "0 0 20px rgba(0,245,196,0.4)",
+          lineHeight:  1,
+        }}
+      >
+        {typeof stat.num === "number" ? (
+          <CountUp target={stat.num} suffix={stat.suffix} />
+        ) : (
+          stat.num
+        )}
+      </div>
+
+      <div
+        style={{
+          fontFamily: "'Space Mono', monospace",
+          color:      "#7a7f99",
+          fontSize:   isMobile ? "0.72rem" : "0.85rem",
+          marginTop:  "0.5rem",
+          lineHeight: 1.5,
+        }}
+      >
+        {stat.desc}
+      </div>
+    </div>
+  );
+}
+
+// ── About ─────────────────────────────────────────────────────────────────────
+export default function About() {
   const sectionRef = useRef();
+  const width      = useWindowWidth();
+  const isMobile   = width < 600;
+  const isTablet   = width >= 600 && width < 1024;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            e.target.classList.add("visible");
+            e.target.style.opacity   = "1";
+            e.target.style.transform = "translateY(0)";
             observer.unobserve(e.target);
           }
         });
       },
       { threshold: 0.1 }
     );
-    const els = sectionRef.current?.querySelectorAll(".reveal");
+    const els = sectionRef.current?.querySelectorAll(".about-reveal");
     els?.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
+  const stats = [
+    { num: 500,    suffix: "+", desc: "Registered Participants" },
+    { num: 30,     suffix: "+", desc: "Colleges Across India"   },
+    { num: "₹2L+", suffix: "",  desc: "Prize Pool"              },
+    { num: "36H",  suffix: "",  desc: "Of Pure Adrenaline"      },
+  ];
+
   return (
     <section
-      id="department"
+      id="about"
       ref={sectionRef}
-      style={{
-        position: "relative",
-      }}
+      style={{ position: "relative", zIndex: 1 }}
     >
       <div
         style={{
           maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "6rem 2rem",
+          margin:   "0 auto",
+          padding:  isMobile
+            ? "4rem 1rem"
+            : isTablet
+            ? "5rem 1.5rem"
+            : "6rem 2rem",
         }}
       >
+        {/* ── MAIN GRID ── */}
         <div
-          className="reveal"
+          className="about-reveal"
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "4rem",
+            opacity:    0,
+            transform:  "translateY(30px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
+            display:    "grid",
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : isTablet
+              ? "1fr"
+              : "1fr 1fr",
+            gap:        isMobile ? "2.5rem" : isTablet ? "3rem" : "4rem",
             alignItems: "center",
           }}
         >
-          {/* LEFT — TEXT */}
+          {/* ── LEFT TEXT ── */}
           <div>
             {/* SECTION TAG */}
             <p
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.8rem",
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "0.72rem",
+                display:       "flex",
+                alignItems:    "center",
+                gap:           "0.8rem",
+                fontFamily:    "'Space Mono', monospace",
+                fontSize:      "0.72rem",
                 letterSpacing: "0.3em",
                 textTransform: "uppercase",
-                color: "#00f5c4",
-                marginBottom: "0.8rem",
+                color:         "#00f5c4",
+                margin:        "0 0 0.8rem 0",
               }}
             >
               <span
                 style={{
-                  display: "block",
-                  width: "30px",
-                  height: "1px",
+                  display:    "block",
+                  width:      "30px",
+                  height:     "1px",
                   background: "#00f5c4",
                   flexShrink: 0,
                 }}
               />
-              Our Department
+              About the Event
             </p>
 
             {/* TITLE */}
             <h2
               style={{
-                fontFamily: "'Orbitron', monospace",
-                fontSize: "clamp(1.8rem, 4vw, 3rem)",
-                fontWeight: 900,
-                lineHeight: 1.15,
-                marginBottom: "1.5rem",
-                color: "#e8eaf0",
+                fontFamily:   "'Orbitron', monospace",
+                fontSize:     "clamp(1.8rem, 5vw, 3.5rem)",
+                fontWeight:   900,
+                lineHeight:   1.1,
+                margin:       "0 0 1.5rem 0",
+                color:        "#e8eaf0",
               }}
             >
-              About Department of{" "}
-              <span style={{ color: "#00f5c4" }}>Computer Science</span>
+              The Grand{" "}
+              <span style={{ color: "#00f5c4" }}>Convergence</span>
             </h2>
 
-            {/* DESCRIPTION */}
             <p
               style={{
-                fontSize: "1.05rem",
-                lineHeight: 1.9,
-                color: "rgba(232,234,240,0.7)",
+                fontFamily:   "'Space Mono', monospace",
+                fontSize:     isMobile ? "0.8rem" : "0.95rem",
+                lineHeight:   1.9,
+                color:        "rgba(232,234,240,0.7)",
+                margin:       "0 0 1rem 0",
               }}
             >
-              The{" "}
-              <strong style={{ color: "#e8eaf0" }}>
-                Department of Computer Science Society (DUCSS)
-              </strong>{" "}
-              is proud to represent the{" "}
-              <strong style={{ color: "#e8eaf0" }}>
-                Department of Computer Science
-              </strong>{" "}
-              at the University of Delhi. We are committed to encouraging{" "}
-              <strong style={{ color: "#00f5c4" }}>innovation</strong> and{" "}
-              <strong style={{ color: "#00f5c4" }}>research</strong>, providing
-              students with valuable opportunities for{" "}
-              <strong style={{ color: "#00f5c4" }}>skill development</strong>{" "}
-              and{" "}
-              <strong style={{ color: "#00f5c4" }}>collaboration</strong>. Our
-              engaging technical events create remarkable avenues for{" "}
-              <strong style={{ color: "#7b5fff" }}>personal</strong> and{" "}
-              <strong style={{ color: "#7b5fff" }}>professional growth</strong>.
-              The annual technical fest,{" "}
-              <strong style={{ color: "#e8eaf0" }}>Sankalan</strong>, brings
-              together tech enthusiasts and talented individuals from esteemed
-              institutions across the country.
+              Sankalan is the flagship annual technical festival of the{" "}
+              <strong style={{ color: "#e8eaf0", fontWeight: 700 }}>
+                Department of Computer Science (DUCS), University of Delhi
+              </strong>
+              . It brings together the brightest minds in technology,
+              innovation, and design under one roof.
             </p>
 
-            {/* DIVIDER LINE */}
-            <div
+            <p
               style={{
-                marginTop: "2rem",
-                height: "1px",
-                background:
-                  "linear-gradient(90deg, #00f5c4 0%, rgba(123,95,255,0.3) 60%, transparent 100%)",
-                width: "80%",
-              }}
-            />
-
-            {/* TAGS */}
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "0.75rem",
-                marginTop: "1.5rem",
+                fontFamily: "'Space Mono', monospace",
+                fontSize:   isMobile ? "0.8rem" : "0.95rem",
+                lineHeight: 1.9,
+                color:      "rgba(232,234,240,0.7)",
+                margin:     "0 0 1rem 0",
               }}
             >
-              {[
-                "Innovation",
-                "Research",
-                "Skill Dev",
-                "Collaboration",
-                "Tech Fest",
-              ].map((tag) => (
-                <span
-                  key={tag}
-                  style={{
-                    fontFamily: "'Space Mono', monospace",
-                    fontSize: "0.65rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "#00f5c4",
-                    background: "rgba(0,245,196,0.08)",
-                    border: "1px solid rgba(0,245,196,0.2)",
-                    padding: "0.35rem 0.85rem",
-                    clipPath:
-                      "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
-                  }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
+              From high-octane hackathons to thought-provoking paper
+              presentations, coding contests to UI/UX challenges — Sankalan
+              is where talent meets opportunity and friendships are forged
+              in the fire of competition.
+            </p>
 
-          {/* RIGHT — IMAGE */}
-          <div
-            className="reveal"
-            style={{
-              position: "relative",
-            }}
-          >
-            {/* GLOW BEHIND IMAGE */}
-            <div
+            <p
               style={{
-                position: "absolute",
-                inset: "-2px",
-                background:
-                  "linear-gradient(135deg, rgba(0,245,196,0.25), rgba(123,95,255,0.15))",
-                clipPath:
-                  "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
-                zIndex: 0,
-                filter: "blur(1px)",
+                fontFamily: "'Space Mono', monospace",
+                fontSize:   isMobile ? "0.8rem" : "0.95rem",
+                lineHeight: 1.9,
+                color:      "rgba(232,234,240,0.7)",
+                margin:     0,
               }}
-            />
+            >
+              This year, we go bigger, faster, and more ambitious than ever
+              before. Are you ready?
+            </p>
 
-            {/* IMAGE CONTAINER */}
-            <div
+            {/* CTA */}
+            <a
+              href="https://unstop.com"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
-                position: "relative",
-                zIndex: 1,
+                display:        "inline-block",
+                marginTop:      "2rem",
+                fontFamily:     "'Orbitron', monospace",
                 clipPath:
-                  "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
-                overflow: "hidden",
-                border: "1px solid rgba(0,245,196,0.2)",
+                  "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
+                background:     "#00f5c4",
+                color:          "#03040a",
+                padding:        isMobile ? "0.85rem 1.8rem" : "1rem 2.5rem",
+                fontSize:       isMobile ? "0.7rem" : "0.8rem",
+                fontWeight:     700,
+                letterSpacing:  "0.15em",
+                textTransform:  "uppercase",
+                textDecoration: "none",
+                boxShadow:      "0 0 30px rgba(0,245,196,0.3)",
+                transition:     "all 0.3s",
+                width:          isMobile ? "100%" : "auto",
+                textAlign:      isMobile ? "center" : "left",
+                boxSizing:      "border-box",
               }}
               onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow =
-                  "0 0 60px rgba(0,245,196,0.2)";
+                  "0 0 50px rgba(0,245,196,0.5)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = "none";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 30px rgba(0,245,196,0.3)";
               }}
             >
-              <img
-                src={deptImage}
-                alt="Department of Computer Science, University of Delhi"
-                style={{
-                  width: "100%",
-                  height: "380px",
-                  objectFit: "cover",
-                  display: "block",
-                  transition: "transform 0.5s ease",
-                  filter: "brightness(0.9) saturate(0.85)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.04)";
-                  e.currentTarget.style.filter =
-                    "brightness(1) saturate(1)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.filter =
-                    "brightness(0.9) saturate(0.85)";
-                }}
-              />
+              Join the Movement →
+            </a>
+          </div>
 
-              {/* OVERLAY CORNER LABEL */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: "0.8rem 1.2rem",
-                  background:
-                    "linear-gradient(transparent, rgba(3,4,10,0.85))",
-                  fontFamily: "'Space Mono', monospace",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  color: "rgba(232,234,240,0.6)",
-                }}
-              >
-                DUCS · University of Delhi · North Campus
-              </div>
-            </div>
-
-            {/* CORNER ACCENTS */}
-            {/* Top-left */}
-            <span
-              style={{
-                position: "absolute",
-                top: "-6px",
-                left: "-6px",
-                width: "20px",
-                height: "20px",
-                borderTop: "2px solid #00f5c4",
-                borderLeft: "2px solid #00f5c4",
-                zIndex: 2,
-              }}
-            />
-            {/* Bottom-right */}
-            <span
-              style={{
-                position: "absolute",
-                bottom: "-6px",
-                right: "-6px",
-                width: "20px",
-                height: "20px",
-                borderBottom: "2px solid #7b5fff",
-                borderRight: "2px solid #7b5fff",
-                zIndex: 2,
-              }}
-            />
+          {/* ── RIGHT STATS ── */}
+          <div
+            style={{
+              display:             "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap:                 isMobile ? "0.8rem" : "1.2rem",
+            }}
+          >
+            {stats.map((stat, i) => (
+              <StatCard key={i} stat={stat} isMobile={isMobile} />
+            ))}
           </div>
         </div>
       </div>
