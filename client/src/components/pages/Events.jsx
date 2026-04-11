@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 // ── API URL ──────────────────────────────────────────────────────────────────
-const API = "sankalan-2026-production.up.railway.app/api";
+const API = "https://sankalan-2026-production.up.railway.app/api";
 
 // ── EventCard Component ──────────────────────────────────────────────────────
 function EventCard({ event, index }) {
