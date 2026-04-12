@@ -23,7 +23,6 @@ export default function Hero() {
   const isMobile = width < 600;
   const isTablet = width >= 600 && width < 1024;
 
-  // ── UPDATED: countdown to April 24, 2026 ──
   useEffect(() => {
     const target = new Date("2026-04-24T09:00:00");
     const tick = () => {
@@ -93,26 +92,26 @@ export default function Hero() {
       {/* BADGE */}
       <div
         style={{
-          display:       "inline-flex",
-          alignItems:    "center",
-          gap:           "0.6rem",
-          border:        "1px solid rgba(0,245,196,0.15)",
-          padding:       isMobile ? "0.4rem 1rem" : "0.4rem 1rem",
-          marginBottom:  isMobile ? "1.5rem" : "2rem",
-          fontFamily:    "'Space Mono', monospace",
-          fontSize:      isMobile ? "0.6rem" : "0.72rem",
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-          color:         "#00f5c4",
-          background:    "rgba(0,245,196,0.06)",
-          animation:     "fadeInDown 1s ease both",
-          position:      "relative",
-          zIndex:        1,
-          maxWidth:      "90vw",
-          textAlign:     "center",
-          lineHeight:    1.5,
-          flexWrap:      "wrap",
-          justifyContent:"center",
+          display:        "inline-flex",
+          alignItems:     "center",
+          gap:            "0.6rem",
+          border:         "1px solid rgba(0,245,196,0.15)",
+          padding:        "0.4rem 1rem",
+          marginBottom:   isMobile ? "1.5rem" : "2rem",
+          fontFamily:     "'Space Mono', monospace",
+          fontSize:       isMobile ? "0.6rem" : "0.72rem",
+          letterSpacing:  "0.12em",
+          textTransform:  "uppercase",
+          color:          "#00f5c4",
+          background:     "rgba(0,245,196,0.06)",
+          animation:      "fadeInDown 1s ease both",
+          position:       "relative",
+          zIndex:         1,
+          maxWidth:       "90vw",
+          textAlign:      "center",
+          lineHeight:     1.5,
+          flexWrap:       "wrap",
+          justifyContent: "center",
         }}
       >
         <span
@@ -129,44 +128,44 @@ export default function Hero() {
         DUCS Annual Tech Fest · University of Delhi
       </div>
 
-      {/* TITLE WRAPPER — fixed overflow on mobile */}
+      {/* TITLE WRAPPER */}
       <div
         style={{
           position:  "relative",
           zIndex:    1,
           animation: "fadeInUp 1s 0.2s ease both",
           width:     "100%",
-          maxWidth:  "100%",
-          overflow:  "hidden",          // ← prevent bleed
+          maxWidth:  "100vw",
+          overflow:  "hidden",
           textAlign: "center",
           lineHeight: 1,
+          padding:   isMobile ? "0 1rem" : 0,
+          boxSizing: "border-box",
         }}
       >
         <h1
           style={{
-            fontFamily:    "'Orbitron', monospace",
-            // ── KEY FIX: keep the title inside the viewport on small screens ──
-            fontSize:      isMobile
-              ? "clamp(2rem, 13vw, 3.5rem)"
+            fontFamily:           "'Orbitron', monospace",
+            fontSize:             isMobile
+              ? "clamp(1.8rem, 11vw, 3rem)"
               : isTablet
               ? "clamp(4rem, 12vw, 7rem)"
               : "clamp(4rem, 11vw, 9rem)",
-            fontWeight:    900,
-            letterSpacing: isMobile ? "0.04em" : "-0.02em",
-            lineHeight:    1,
+            fontWeight:           900,
+            letterSpacing:        isMobile ? "0.02em" : "-0.02em",
+            lineHeight:           1,
             background:
               "linear-gradient(135deg, #ffffff 0%, #00f5c4 40%, #7b5fff 80%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor:  "transparent",
             backgroundClip:       "text",
-            margin:        0,
-            padding:       isMobile ? "0 0.5rem" : 0,
-            position:      "relative",
-            width:         "100%",
-            display:       "block",
-            textAlign:     "center",
-            wordBreak:     "keep-all",  // ← don't break the word
-            whiteSpace:    "nowrap",    // ← keep on one line, clamp handles size
+            margin:               0,
+            padding:              0,
+            position:             "relative",
+            width:                "100%",
+            display:              "block",
+            textAlign:            "center",
+            whiteSpace:           "nowrap",
           }}
         >
           SANKALAN
@@ -175,27 +174,27 @@ export default function Hero() {
           <span
             aria-hidden="true"
             style={{
-              position:      "absolute",
-              top:           0,
-              left:          0,
-              width:         "100%",
-              textAlign:     "center",
-              fontFamily:    "'Orbitron', monospace",
-              fontSize:      isMobile
-                ? "clamp(2rem, 13vw, 3.5rem)"
+              position:             "absolute",
+              top:                  0,
+              left:                 0,
+              width:                "100%",
+              textAlign:            "center",
+              fontFamily:           "'Orbitron', monospace",
+              fontSize:             isMobile
+                ? "clamp(1.8rem, 11vw, 3rem)"
                 : isTablet
                 ? "clamp(4rem, 12vw, 7rem)"
                 : "clamp(4rem, 11vw, 9rem)",
-              fontWeight:    900,
-              letterSpacing: isMobile ? "0.04em" : "-0.02em",
-              lineHeight:    1,
-              background:    "linear-gradient(135deg, #ff3e6c, transparent)",
+              fontWeight:           900,
+              letterSpacing:        isMobile ? "0.02em" : "-0.02em",
+              lineHeight:           1,
+              background:           "linear-gradient(135deg, #ff3e6c, transparent)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor:  "transparent",
               backgroundClip:       "text",
-              animation:     "glitch 4s infinite",
-              pointerEvents: "none",
-              whiteSpace:    "nowrap",
+              animation:            "glitch 4s infinite",
+              pointerEvents:        "none",
+              whiteSpace:           "nowrap",
             }}
           >
             SANKALAN
@@ -203,7 +202,7 @@ export default function Hero() {
         </h1>
       </div>
 
-      {/* SUB HEADING — updated year to 2026 */}
+      {/* SUB HEADING */}
       <p
         style={{
           fontFamily:    "'Space Mono', monospace",
@@ -258,7 +257,7 @@ export default function Hero() {
           alignItems:     "center",
         }}
       >
-        {/* ── UPDATED: href points to Unstop registration link ── */}
+        {/* REGISTER BUTTON */}
         <a
           href="https://unstop.com/college-fests/sankalan-2026-department-of-computer-science-docs-university-of-delhi-du-458407"
           target="_blank"
@@ -294,6 +293,7 @@ export default function Hero() {
           Register Now
         </a>
 
+        {/* EXPLORE BUTTON */}
         <a
           href="#about"
           style={{

@@ -151,13 +151,14 @@ function UpdateRow({ event, index, isMobile }) {
         }}>
           {event.name}
         </div>
+        {/* ── FIX 1: always show full date + time on all screen sizes ── */}
         <div style={{
           fontFamily: "'Space Mono', monospace",
-          fontSize: isMobile ? "0.52rem" : "0.58rem",
+          fontSize: isMobile ? "0.5rem" : "0.58rem",
           color: "#7a7f99", marginTop: "0.2rem", letterSpacing: "0.05em",
           whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
         }}>
-          {isMobile ? timeStr : `${dateStr} · ${timeStr}`}
+          {dateStr} · {timeStr}
         </div>
       </div>
 
@@ -241,7 +242,7 @@ function TimelineCard({ event, index, isLast, isMobile }) {
           e.currentTarget.style.background  = "rgba(255,255,255,0.02)";
         }}
       >
-        {/* Date + status */}
+        {/* ── FIX 1: always show full date + time in timeline too ── */}
         <div style={{
           display: "flex", alignItems: "center",
           justifyContent: "space-between",
@@ -249,10 +250,10 @@ function TimelineCard({ event, index, isLast, isMobile }) {
         }}>
           <span style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: isMobile ? "0.52rem" : "0.6rem",
+            fontSize: isMobile ? "0.5rem" : "0.6rem",
             color: event.color, letterSpacing: "0.08em",
           }}>
-            {isMobile ? timeStr : `${dateStr} · ${timeStr}`}
+            {dateStr} · {timeStr}
           </span>
           <StatusBadge status={status} />
         </div>
@@ -373,6 +374,7 @@ function UpcomingBanner({ allEvents, isMobile }) {
               {next.icon} {next.name}
             </div>
 
+            {/* ── FIX 1: always show full date on mobile too ── */}
             <div style={{
               display: "flex", alignItems: "center",
               gap: "0.6rem", flexWrap: "wrap",
@@ -382,7 +384,7 @@ function UpcomingBanner({ allEvents, isMobile }) {
                 fontSize: isMobile ? "0.6rem" : "0.7rem",
                 color: "#7a7f99", letterSpacing: "0.06em",
               }}>
-                📅 {isMobile ? timeStr : `${dateStr} · ${timeStr}`}
+                📅 {dateStr} · {timeStr}
               </span>
               <span style={{
                 fontFamily: "'Space Mono', monospace",
@@ -458,6 +460,8 @@ function UpcomingBanner({ allEvents, isMobile }) {
 }
 
 // ── NotificationBanner ────────────────────────────────────────────────────────
+// !! FIX 2: Commented out — results not out yet, uncomment when ready !!
+/*
 function NotificationBanner({ isMobile }) {
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
@@ -542,6 +546,7 @@ function NotificationBanner({ isMobile }) {
     </div>
   );
 }
+*/
 
 // ── DaySeparator ──────────────────────────────────────────────────────────────
 function DaySeparator({ label, isMobile }) {
@@ -645,7 +650,6 @@ export default function Updates() {
   const [allEvents, setAllEvents] = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [error,     setError]     = useState(null);
-  // mobile: which panel is shown
   const [mobileTab, setMobileTab] = useState("updates");
   const headerRef = useRef();
 
@@ -766,6 +770,7 @@ export default function Updates() {
               Event <span style={{ color: "#00f5c4" }}>Updates</span>
             </h2>
 
+            {/* ── FIX 1: date badge always visible, no conditional hiding ── */}
             <div style={{
               fontFamily: "'Space Mono', monospace",
               fontSize: isMobile ? "0.62rem" : "0.7rem",
@@ -776,6 +781,7 @@ export default function Updates() {
               clipPath: "polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)",
               letterSpacing: "0.1em",
               whiteSpace: "nowrap",
+              alignSelf: isMobile ? "flex-start" : "auto",
             }}>
               📅 24–25 April 2026
             </div>
@@ -803,10 +809,11 @@ export default function Updates() {
           <UpcomingBanner allEvents={allEvents} isMobile={isMobile} />
         )}
 
-        {/* ── NOTIFICATION ── */}
+        {/* ── NOTIFICATION BANNER — commented out until results are ready ──
         <NotificationBanner isMobile={isMobile} />
+        */}
 
-        {/* ── MOBILE: tab switcher between Updates & Timeline ── */}
+        {/* ── MOBILE: tab switcher ── */}
         {isMobile && (
           <div style={{
             display: "flex",
@@ -851,7 +858,7 @@ export default function Updates() {
           <LoadingSkeleton isMobile={isMobile} />
         ) : (
           <>
-            {/* ── DESKTOP/TABLET: two columns ── */}
+            {/* ── DESKTOP/TABLET ── */}
             {!isMobile && (
               <div style={{
                 display: "grid",
@@ -861,7 +868,6 @@ export default function Updates() {
               }}>
                 {/* LEFT — Event Updates */}
                 <div>
-                  {/* Panel header */}
                   <div style={{
                     background: "rgba(255,255,255,0.02)",
                     border: "1px solid rgba(0,245,196,0.12)",
@@ -877,12 +883,9 @@ export default function Updates() {
                       color: "#e8eaf0", letterSpacing: "0.05em",
                       whiteSpace: "nowrap",
                     }}>Event Updates</span>
-
                     <FilterTabs
-                      filter={filter}
-                      setFilter={setFilter}
-                      counts={counts}
-                      isMobile={false}
+                      filter={filter} setFilter={setFilter}
+                      counts={counts} isMobile={false}
                     />
                   </div>
 
@@ -906,7 +909,7 @@ export default function Updates() {
                   </div>
                 </div>
 
-                {/* RIGHT — Timeline (only on desktop) */}
+                {/* RIGHT — Timeline (desktop only) */}
                 {!isTablet && (
                   <div>
                     <div style={{
@@ -947,7 +950,7 @@ export default function Updates() {
                   </div>
                 )}
 
-                {/* TABLET: timeline below updates */}
+                {/* TABLET — timeline below */}
                 {isTablet && (
                   <div>
                     <div style={{
@@ -963,7 +966,6 @@ export default function Updates() {
                       }}>Event Timeline</span>
                     </div>
 
-                    {/* tablet: 2-col timeline grid */}
                     <div style={{
                       display: "grid",
                       gridTemplateColumns: "1fr 1fr",
@@ -1005,16 +1007,12 @@ export default function Updates() {
               <>
                 {mobileTab === "updates" && (
                   <div>
-                    {/* Filter */}
                     <div style={{ marginBottom: "1rem" }}>
                       <FilterTabs
-                        filter={filter}
-                        setFilter={setFilter}
-                        counts={counts}
-                        isMobile={true}
+                        filter={filter} setFilter={setFilter}
+                        counts={counts} isMobile={true}
                       />
                     </div>
-
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                       {filteredEvents.length > 0 ? (
                         filteredEvents.map((e, i) => (
