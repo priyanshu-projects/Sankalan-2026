@@ -272,7 +272,7 @@ export default function AboutDept() {
               }} />
 
               <img
-                src="/src/assets/dept.png"
+                src="/dept.png"
                 alt="Department of Computer Science, University of Delhi"
                 style={{
                   width:      "100%",
