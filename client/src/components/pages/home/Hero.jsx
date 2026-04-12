@@ -65,9 +65,9 @@ export default function Hero() {
       {/* GRID BG */}
       <div
         style={{
-          position:        "absolute",
-          inset:           0,
-          pointerEvents:   "none",
+          position:         "absolute",
+          inset:            0,
+          pointerEvents:    "none",
           backgroundImage: `
             linear-gradient(rgba(0,245,196,0.04) 1px, transparent 1px),
             linear-gradient(90deg, rgba(0,245,196,0.04) 1px, transparent 1px)
@@ -77,7 +77,7 @@ export default function Hero() {
             "radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 100%)",
           WebkitMaskImage:
             "radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 100%)",
-          zIndex: 0,
+          zIndex:               0,
         }}
       />
 
@@ -124,29 +124,33 @@ export default function Hero() {
           position:  "relative",
           zIndex:    1,
           animation: "fadeInUp 1s 0.2s ease both",
-          lineHeight: 0.9,
+          lineHeight: 1,
           width:     "100%",
+          textAlign: "center",
         }}
       >
         <h1
           style={{
-            fontFamily:            "'Orbitron', monospace",
-            fontSize:              isMobile
+            fontFamily:           "'Orbitron', monospace",
+            fontSize:             isMobile
               ? "clamp(3rem, 18vw, 5rem)"
               : isTablet
               ? "clamp(4rem, 12vw, 7rem)"
               : "clamp(4rem, 11vw, 9rem)",
-            fontWeight:            900,
-            letterSpacing:         isMobile ? "-0.01em" : "-0.02em",
-            lineHeight:            0.9,
+            fontWeight:           900,
+            letterSpacing:        isMobile ? "-0.01em" : "-0.02em",
+            lineHeight:           1,
             background:
               "linear-gradient(135deg, #ffffff 0%, #00f5c4 40%, #7b5fff 80%)",
-            WebkitBackgroundClip:  "text",
-            WebkitTextFillColor:   "transparent",
-            backgroundClip:        "text",
-            margin:                0,
-            padding:               0,
-            position:              "relative",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor:  "transparent",
+            backgroundClip:       "text",
+            margin:               0,
+            padding:              0,
+            position:             "relative",
+            width:                "100%",
+            display:              "block",
+            textAlign:            "center",
           }}
         >
           SANKALAN
@@ -159,6 +163,7 @@ export default function Hero() {
               top:                  0,
               left:                 0,
               width:                "100%",
+              textAlign:            "center",
               fontFamily:           "'Orbitron', monospace",
               fontSize:             isMobile
                 ? "clamp(3rem, 18vw, 5rem)"
@@ -167,7 +172,7 @@ export default function Hero() {
                 : "clamp(4rem, 11vw, 9rem)",
               fontWeight:           900,
               letterSpacing:        isMobile ? "-0.01em" : "-0.02em",
-              lineHeight:           0.9,
+              lineHeight:           1,
               background:
                 "linear-gradient(135deg, #ff3e6c, transparent)",
               WebkitBackgroundClip: "text",
@@ -207,15 +212,15 @@ export default function Hero() {
       {/* DESC */}
       <p
         style={{
-          maxWidth:  isMobile ? "100%" : "600px",
-          margin:    isMobile ? "1rem auto 0" : "1.5rem auto 0",
-          fontSize:  isMobile ? "0.82rem" : "1.05rem",
+          maxWidth:   isMobile ? "100%" : "600px",
+          margin:     isMobile ? "1rem auto 0" : "1.5rem auto 0",
+          fontSize:   isMobile ? "0.82rem" : "1.05rem",
           lineHeight: 1.7,
-          color:     "rgba(232,234,240,0.7)",
-          animation: "fadeInUp 1s 0.6s ease both",
-          position:  "relative",
-          zIndex:    1,
-          padding:   isMobile ? "0 0.25rem" : 0,
+          color:      "rgba(232,234,240,0.7)",
+          animation:  "fadeInUp 1s 0.6s ease both",
+          position:   "relative",
+          zIndex:     1,
+          padding:    isMobile ? "0 0.25rem" : 0,
           fontFamily: "'Space Mono', monospace",
         }}
       >
@@ -262,13 +267,11 @@ export default function Hero() {
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow =
-              "0 0 50px rgba(0,245,196,0.5)";
+            e.currentTarget.style.boxShadow = "0 0 50px rgba(0,245,196,0.5)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 0 30px rgba(0,245,196,0.3)";
+            e.currentTarget.style.boxShadow = "0 0 30px rgba(0,245,196,0.3)";
           }}
         >
           Register Now
@@ -297,8 +300,7 @@ export default function Hero() {
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = "#7b5fff";
             e.currentTarget.style.color       = "#7b5fff";
-            e.currentTarget.style.boxShadow   =
-              "0 0 30px rgba(123,95,255,0.3)";
+            e.currentTarget.style.boxShadow   = "0 0 30px rgba(123,95,255,0.3)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
