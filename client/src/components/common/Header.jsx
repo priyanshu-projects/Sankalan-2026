@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { SANKALAN_UNSTOP_URL } from "../../constants/siteConfig";
 
 // ─── custom hook ───────────────────────────────────────────────
 function useWindowWidth() {
@@ -34,7 +35,6 @@ export default function Header() {
   const navLinks = [
     { name: "HOME",     path: "/" },
     { name: "EVENTS",   path: "/events" },
-    { name: "RESULTS",  path: "/results" },
     { name: "UPDATES",  path: "/updates" },
     { name: "SPONSORS", path: "/sponsors" },
     { name: "TEAM",     path: "/team" },
@@ -145,8 +145,10 @@ export default function Header() {
 
         {/* ── DESKTOP CTA ── */}
         {!isMobile && (
-          <Link
-            to="/events"
+          <a
+            href={SANKALAN_UNSTOP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontFamily: "'Orbitron', monospace",
               fontSize: isTablet ? "0.65rem" : "0.72rem",
@@ -171,7 +173,7 @@ export default function Header() {
             onMouseLeave={() => setCtaHovered(false)}
           >
             REGISTER NOW
-          </Link>
+          </a>
         )}
 
         {/* ── HAMBURGER (mobile only) ── */}
@@ -314,8 +316,10 @@ export default function Header() {
             ))}
 
             {/* mobile CTA */}
-            <Link
-              to="/events"
+            <a
+              href={SANKALAN_UNSTOP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               style={{
                 fontFamily: "'Orbitron', monospace",
@@ -337,7 +341,7 @@ export default function Header() {
               }}
             >
               REGISTER NOW
-            </Link>
+            </a>
           </div>
         </div>
       )}

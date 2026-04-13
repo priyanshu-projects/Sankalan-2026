@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SANKALAN_UNSTOP_URL } from "../../../constants/siteConfig";
 
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
@@ -259,7 +260,7 @@ export default function Hero() {
       >
         {/* REGISTER BUTTON */}
         <a
-          href="https://unstop.com/college-fests/sankalan-2026-department-of-computer-science-docs-university-of-delhi-du-458407"
+          href={SANKALAN_UNSTOP_URL}
           target="_blank"
           rel="noopener noreferrer"
           style={{

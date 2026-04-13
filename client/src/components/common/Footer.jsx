@@ -23,7 +23,6 @@ export default function Footer() {
   const navLinks = [
     { name: "Home",     path: "/"         },
     { name: "Events",   path: "/events"   },
-    { name: "Results",  path: "/results"  },
     { name: "Updates",  path: "/updates"  },
     { name: "Sponsors", path: "/sponsors" },
     { name: "Team",     path: "/team"     },
@@ -209,24 +208,6 @@ export default function Footer() {
             </p>
           </div>
 
-          <a
-            href="mailto:sankalan@cs.du.ac.in"
-            style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: isMobile ? "0.72rem" : "0.78rem",
-              color: "#00f5c4",
-              textDecoration: "none",
-              display: "inline-block",
-              marginTop: "1rem",
-              transition: "opacity 0.2s",
-              wordBreak: "break-all",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            ✉ sankalan@cs.du.ac.in
-          </a>
-
           {/* event dates badge */}
           <div
             style={{
@@ -288,7 +269,7 @@ export default function Footer() {
             lineHeight: 1.6,
           }}
         >
-          © 2026 Sankalan — Department of Computer Science Society
+          © 2026 Sankalan — Delhi University Computer Science Society
         </p>
 
         <div
@@ -298,27 +279,24 @@ export default function Footer() {
             flexWrap: "wrap",
           }}
         >
-          {["Privacy", "Code of Conduct"].map((item, i) => (
-            <a
-              key={i}
-              href="#"
-              style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: isMobile ? "0.68rem" : "0.75rem",
-                color: "#7a7f99",
-                textDecoration: "none",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = "#00f5c4")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "#7a7f99")
-              }
-            >
-              {item}
-            </a>
-          ))}
+          <Link
+            to="/privacy-policy"
+            style={{
+              fontFamily: "'Space Mono', monospace",
+              fontSize: isMobile ? "0.68rem" : "0.75rem",
+              color: "#7a7f99",
+              textDecoration: "none",
+              transition: "color 0.2s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "#00f5c4")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "#7a7f99")
+            }
+          >
+            Privacy Policy
+          </Link>
         </div>
       </div>
     </footer>

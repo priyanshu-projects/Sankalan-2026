@@ -72,7 +72,7 @@ const faqs = [
   },
   {
     q: "How can I contact the organising team?",
-    a: "You can reach us at sankalan@cs.du.ac.in or use the Contact form on this website. You can also follow @ducs.sankalan on Instagram for the latest updates and announcements.",
+    a: "Use the Contact form on the home page to reach the organising team. You can also follow @ducs.sankalan on Instagram for the latest updates and announcements.",
     tag: "Contact",
   },
 ];
@@ -165,28 +165,30 @@ export default function FAQ() {
             fontSize: isMobile ? "0.75rem" : "0.88rem",
             color: "rgba(232,234,240,0.6)",
             lineHeight: 1.8,
-            margin: "0 0 2.5rem 0",
+            margin: "0 0 0.8rem 0",
             maxWidth: "600px",
           }}
         >
-          Everything you need to know about Sankalan 2026. Can't find
-          your answer?{" "}
+          Everything you need to know about Sankalan 2026.
+        </p>
+
+        <p
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: isMobile ? "0.72rem" : "0.82rem",
+            color: "rgba(232,234,240,0.7)",
+            lineHeight: 1.8,
+            margin: "0 0 2.5rem 0",
+            maxWidth: "700px",
+          }}
+        >
+          If you would like to collaborate or become a sponsor, please feel free
+          to contact us at:{" "}
           <a
-            href="#contact"
-            style={{
-              color: "#00f5c4",
-              textDecoration: "none",
-              borderBottom: "1px solid rgba(0,245,196,0.3)",
-              transition: "border-color 0.2s",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.borderColor = "#00f5c4")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.borderColor = "rgba(0,245,196,0.3)")
-            }
+            href="mailto:saurabhm.mca25@cs.du.ac.in"
+            style={{ color: "#00f5c4", textDecoration: "none" }}
           >
-            Drop us a message.
+            saurabhm.mca25@cs.du.ac.in
           </a>
         </p>
 
@@ -534,18 +536,7 @@ export default function FAQ() {
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
-              const el = document.getElementById("contact");
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
-                setTimeout(() => {
-                  const form = el.querySelector("form");
-                  if (form) {
-                    form.style.transition = "box-shadow 0.4s";
-                    form.style.boxShadow = "0 0 50px rgba(0,245,196,0.15)";
-                    setTimeout(() => (form.style.boxShadow = "none"), 1500);
-                  }
-                }, 700);
-              }
+              window.location.assign("/#contact");
             }}
             style={{
               fontFamily: "'Orbitron', monospace",

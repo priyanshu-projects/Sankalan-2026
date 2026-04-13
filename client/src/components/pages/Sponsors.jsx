@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ENQUIRY_EMAIL } from "../../constants/siteConfig";
 
 const CARD_COLOR     = "#00f5c4";
 const CARD_COLOR_RGB = "0,245,196";
@@ -109,6 +110,12 @@ function SponsorCard({ sponsor, index, cardSize }) {
             <img
               src={sponsor.logo_url}
               alt={sponsor.name}
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+                if (e.currentTarget.nextSibling) {
+                  e.currentTarget.nextSibling.style.display = "flex";
+                }
+              }}
               style={{
                 width:      "100%",
                 height:     "100%",
@@ -121,7 +128,7 @@ function SponsorCard({ sponsor, index, cardSize }) {
             <div style={{
               width:          "100%",
               height:         "100%",
-              display:        "flex",
+              display:        "none",
               alignItems:     "center",
               justifyContent: "center",
               fontFamily:     "'Orbitron', monospace",
@@ -365,7 +372,7 @@ export default function Sponsors() {
           </div>
 
           <a
-            href="mailto:sankalan@cs.du.ac.in"
+            href={`mailto:${ENQUIRY_EMAIL}`}
             style={{
               fontFamily:     "'Orbitron', monospace",
               fontSize:       isMobile ? "0.65rem" : "0.72rem",

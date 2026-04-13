@@ -101,8 +101,9 @@ function SocialLinks({ linkedin, email, color, rgb }) {
 
   return (
     <div style={{ display: "flex", gap: "0.45rem", marginTop: "0.9rem" }}>
+      {linkedin && (
       <a
-        href={linkedin || "#"}
+        href={linkedin}
         target="_blank" rel="noopener noreferrer" title="LinkedIn"
         style={baseStyle}
         onMouseEnter={(e) => {
@@ -129,9 +130,11 @@ function SocialLinks({ linkedin, email, color, rgb }) {
             .774 23.2 0 22.222 0h.003z" />
         </svg>
       </a>
+      )}
 
+      {email && (
       <a
-        href={email ? `mailto:${email}` : "mailto:sankalan@cs.du.ac.in"}
+        href={`mailto:${email}`}
         title="Email" style={baseStyle}
         onMouseEnter={(e) => {
           e.currentTarget.style.borderColor = color;
@@ -151,6 +154,7 @@ function SocialLinks({ linkedin, email, color, rgb }) {
             0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
         </svg>
       </a>
+      )}
     </div>
   );
 }
@@ -719,9 +723,6 @@ export default function Team() {
     return () => obs.disconnect();
   }, []);
 
-  const namedAdmins = adminPanel.filter((m) => !m.is_tba);
-  const namedHeads  = eventHeads.filter((m) => !m.is_tba);
-
   return (
     <section id="team" style={{ position: "relative", zIndex: 1 }}>
       {/* Grid BG */}
@@ -784,32 +785,7 @@ export default function Team() {
               Meet the <span style={{ color: "#00f5c4" }}>Team</span>
             </h2>
 
-            <div style={{
-              display: "flex", gap: "1.5rem",
-              fontFamily: "'Space Mono', monospace",
-              fontSize: isMobile ? "0.65rem" : "0.72rem",
-              color: "#7a7f99",
-            }}>
-              <span>
-                <span style={{
-                  fontFamily: "'Orbitron', monospace",
-                  color: "#00f5c4", fontWeight: 700,
-                  fontSize: isMobile ? "0.9rem" : "1rem",
-                }}>
-                  {loading ? "—" : namedAdmins.length}
-                </span>{" "}Admin
-              </span>
-              <span>
-                <span style={{
-                  fontFamily: "'Orbitron', monospace",
-                  color: "#7b5fff", fontWeight: 700,
-                  fontSize: isMobile ? "0.9rem" : "1rem",
-                }}>
-                  {loading ? "—" : namedHeads.length}
-                </span>
-                {" "}/ {loading ? "—" : eventHeads.length} Heads
-              </span>
-            </div>
+            <div />
           </div>
         </div>
 
@@ -839,7 +815,7 @@ export default function Team() {
           width: isMobile ? "100%" : "fit-content",
         }}>
           {[
-            { key: "admin",  label: isMobile ? "🏛️ Admin" : "🏛️ Administrative & DUCSS", color: "#00f5c4", rgb: "0,245,196"   },
+            { key: "admin",  label: isMobile ? "🏛️ Admin" : "🏛️ Administrative Panel", color: "#00f5c4", rgb: "0,245,196"   },
             { key: "events", label: isMobile ? "⚡ Heads"  : "⚡ Event Heads",              color: "#7b5fff", rgb: "123,95,255" },
           ].map((tab, i) => (
             <button

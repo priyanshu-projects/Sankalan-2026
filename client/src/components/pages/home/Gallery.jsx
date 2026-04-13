@@ -21,7 +21,7 @@ const placeholders = [
   { id: 4, label: "Workshop Session",      span: "",    src: null, accent: "#7b5fff" },
   { id: 5, label: "Prize Distribution",    span: "col", src: null, accent: "#00f5c4" },
   { id: 6, label: "Paper Presentation",    span: "",    src: null, accent: "#7b5fff" },
-  { id: 7, label: "UI/UX Challenge",       span: "",    src: null, accent: "#00f5c4" },
+  { id: 7, label: "Product Challenge",      span: "",    src: null, accent: "#00f5c4" },
   { id: 8, label: "Team Celebration",      span: "row", src: null, accent: "#7b5fff" },
 ];
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SANKALAN_UNSTOP_URL } from "../../../constants/siteConfig";
 
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
@@ -147,7 +148,6 @@ export default function About() {
   const stats = [
     { num: 500,    suffix: "+", desc: "Registered Participants" },
     { num: 30,     suffix: "+", desc: "Colleges Across India"   },
-    { num: "₹2L+", suffix: "",  desc: "Prize Pool"              },
     { num: "36H",  suffix: "",  desc: "Of Pure Adrenaline"      },
   ];
 
@@ -255,7 +255,7 @@ export default function About() {
               }}
             >
               From high-octane hackathons to thought-provoking paper
-              presentations, coding contests to UI/UX challenges — Sankalan
+              presentations and coding contests, Sankalan
               is where talent meets opportunity and friendships are forged
               in the fire of competition.
             </p>
@@ -275,7 +275,7 @@ export default function About() {
 
             {/* CTA */}
             <a
-              href="https://unstop.com"
+              href={SANKALAN_UNSTOP_URL}
               target="_blank"
               rel="noopener noreferrer"
               style={{

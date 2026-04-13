@@ -47,7 +47,7 @@ const reasons = [
   {
     icon:  "🎨",
     title: "More Than Just Code",
-    desc:  "UI/UX battles, design sprints, paper presentations — Sankalan celebrates every dimension of technology.",
+    desc:  "Design sprints, paper presentations, and strategic challenges — Sankalan celebrates every dimension of technology.",
     color: "#7b5fff",
   },
 ];

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { SANKALAN_UNSTOP_URL } from "../../constants/siteConfig";
 
 const API = "https://sankalan-2026-production.up.railway.app/api";
 
@@ -16,7 +17,7 @@ function useWindowWidth() {
 }
 
 // ── EventCard ────────────────────────────────────────────────────────────────
-function EventCard({ event, index, isMobile }) {
+function EventCard({ event, index, isMobile, onOpen }) {
   const ref = useRef();
   const rgb = event.color === "#00f5c4" ? "0,245,196" : "123,95,255";
 
@@ -43,6 +44,7 @@ function EventCard({ event, index, isMobile }) {
   return (
     <div
       ref={ref}
+      onClick={() => onOpen(event)}
       style={{
         opacity: 0,
         transform: "translateY(30px)",
@@ -58,7 +60,7 @@ function EventCard({ event, index, isMobile }) {
         flexDirection: "column",
         position: "relative",
         overflow: "hidden",
-        cursor: "default",
+        cursor: "pointer",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = event.color;
@@ -274,6 +276,49 @@ function EventCard({ event, index, isMobile }) {
   );
 }
 
+function EventDetailsModal({ event, onClose }) {
+  if (!event) return null;
+  return (
+    <>
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(3,4,10,0.82)",
+          zIndex: 200,
+        }}
+      />
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "min(760px, 92vw)",
+          maxHeight: "80vh",
+          overflowY: "auto",
+          background: "#080a12",
+          border: "1px solid rgba(0,245,196,0.2)",
+          zIndex: 201,
+          padding: "1.5rem",
+        }}
+      >
+        <button onClick={onClose} style={{ float: "right", cursor: "pointer" }}>
+          Close
+        </button>
+        <h3 style={{ color: "#00f5c4", marginTop: 0 }}>{event.name}</h3>
+        <p style={{ color: "#e8eaf0" }}>{event.description || "Details coming soon."}</p>
+        <p style={{ color: "#7a7f99" }}>
+          {event.event_date} {event.event_time} · {event.category}
+        </p>
+        <h4 style={{ color: "#e8eaf0" }}>Rules</h4>
+        <p style={{ color: "#7a7f99" }}>{event.rules || "Rules will be published shortly."}</p>
+      </div>
+    </>
+  );
+}
+
 // ── Loading Skeleton ─────────────────────────────────────────────────────────
 function LoadingSkeleton({ isMobile, isTablet }) {
   const cols = isMobile ? "1fr" : isTablet ? "1fr 1fr" : "repeat(3, 1fr)";
@@ -318,6 +363,7 @@ export default function Events() {
   const [nonTechEvents, setNonTechEvents] = useState([]);
   const [loading,       setLoading]       = useState(true);
   const [error,         setError]         = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const width     = useWindowWidth();
   const isMobile  = width < 600;
@@ -527,6 +573,7 @@ export default function Events() {
                 event={event}
                 index={i}
                 isMobile={isMobile}
+                onOpen={setSelectedEvent}
               />
             ))}
           </div>
@@ -583,7 +630,7 @@ export default function Events() {
           </div>
 
           <a
-            href="https://unstop.com"
+            href={SANKALAN_UNSTOP_URL}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -622,6 +669,7 @@ export default function Events() {
           </a>
         </div>
       </div>
+      <EventDetailsModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
 
       <style>{`
         @keyframes pulse {

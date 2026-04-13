@@ -28,11 +28,11 @@ const testimonials = [
     name:   "Priya Nair",
     role:   "MCA 2nd Year · Delhi University",
     quote:
-      "I came in nervous and left inspired. The UI/UX challenge forced me to think from a user's perspective under real pressure. The judges gave incredibly actionable feedback — better than most internship reviews I've had.",
+      "I came in nervous and left inspired. The product challenge forced me to think from a user's perspective under real pressure. The judges gave incredibly actionable feedback — better than most internship reviews I've had.",
     avatar: "PN",
     image:  null,
     color:  "#7b5fff",
-    event:  "UI/UX Challenge — 2nd Place",
+    event:  "Product Challenge — 2nd Place",
   },
   {
     name:   "Rohan Sharma",

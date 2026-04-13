@@ -14,6 +14,7 @@ import Team     from "./components/pages/Team";
 import FAQ      from "./components/pages/FAQ";
 import Updates  from "./components/pages/Updates";
 import Results  from "./components/pages/Results";
+import PrivacyPolicy from "./components/pages/PrivacyPolicy";
 
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
@@ -200,6 +201,7 @@ function App() {
                   <Route path="/faq"      element={<PageWrapper><FAQ /></PageWrapper>}      />
                   <Route path="/updates"  element={<PageWrapper><Updates /></PageWrapper>}  />
                   <Route path="/results"  element={<PageWrapper><Results /></PageWrapper>}  />
+                  <Route path="/privacy-policy" element={<PageWrapper><PrivacyPolicy /></PageWrapper>} />
                 </Routes>
               </AnimatePresence>
             </main>

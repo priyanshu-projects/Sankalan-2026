@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Mail, Instagram, Linkedin, MessageCircle } from "lucide-react";
+import { Instagram, Phone } from "lucide-react";
+import { SANKALAN_UNSTOP_URL, ENQUIRY_EMAIL } from "../../../constants/siteConfig";
 
 const WEB3FORMS_KEY = "2f581325-df7c-41d6-8ec8-8c1a102ec31c";
 
@@ -19,24 +20,19 @@ function useWindowWidth() {
 // ── Data ─────────────────────────────────────────────────────────────────────
 const contactLinks = [
   {
-    icon:  <Mail size={16} />,
-    label: "sankalan@cs.du.ac.in",
-    href:  "mailto:sankalan@cs.du.ac.in",
-  },
-  {
     icon:  <Instagram size={16} />,
     label: "@ducs.sankalan",
     href:  "https://www.instagram.com/sankalan.ducs/",
   },
   {
-    icon:  <Linkedin size={16} />,
-    label: "Sankalan DUCS",
-    href:  "https://www.linkedin.com/school/department-of-computer-science-university-of-delhi/",
+    icon:  <Phone size={16} />,
+    label: "+91 98765 43210",
+    href:  "tel:+919876543210",
   },
   {
-    icon:  <MessageCircle size={16} />,
-    label: "Join our Discord",
-    href:  "#",
+    icon:  <Phone size={16} />,
+    label: "+91 91234 56789",
+    href:  "tel:+919123456789",
   },
 ];
 
@@ -45,7 +41,6 @@ const eventTopics = [
   "Hackathon",
   "Coding Contest",
   "Paper Presentation",
-  "UI/UX Challenge",
   "Sponsorship",
   "Volunteering",
   "Media & Press",
@@ -55,10 +50,10 @@ const eventTopics = [
 // ── Contact Link Row ──────────────────────────────────────────────────────────
 function ContactLinkRow({ item, index, isFirst, isMobile }) {
   return (
-    <a
+      <a
       href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
+      target={item.href.startsWith("tel:") ? undefined : "_blank"}
+      rel={item.href.startsWith("tel:") ? undefined : "noopener noreferrer"}
       style={{
         display:        "flex",
         alignItems:     "center",
@@ -321,7 +316,8 @@ export default function Contact() {
             }}>
               Have questions about events, sponsorships, or anything else about
               Sankalan? Drop us a message — our team will get back to you within
-              24 hours.
+              24 hours. Form submissions are delivered through Web3Forms to the
+              organiser inbox configured via the access key.
             </p>
 
             {/* ADDRESS */}
@@ -382,7 +378,7 @@ export default function Contact() {
                 secure your spot today.
               </p>
               <a
-                href="https://unstop.com"
+                href={SANKALAN_UNSTOP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -577,12 +573,12 @@ export default function Contact() {
                     letterSpacing: "0.05em",
                     lineHeight: 1.7,
                   }}>
-                    ⚠ Something went wrong. Email us at{" "}
+                    ⚠ Something went wrong. Please try again or contact us at{" "}
                     <a
-                      href="mailto:sankalan@cs.du.ac.in"
+                      href={`mailto:${ENQUIRY_EMAIL}`}
                       style={{ color: "#00f5c4", textDecoration: "none" }}
                     >
-                      sankalan@cs.du.ac.in
+                      {ENQUIRY_EMAIL}
                     </a>
                   </div>
                 )}

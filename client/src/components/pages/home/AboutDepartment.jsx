@@ -153,7 +153,7 @@ export default function AboutDept() {
             }}>
               The{" "}
               <strong style={{ color: "#e8eaf0", fontWeight: 700 }}>
-                Department of Computer Science Society (DUCSS)
+                Delhi University Computer Science Society
               </strong>{" "}
               is proud to represent the{" "}
               <strong style={{ color: "#7b5fff", fontWeight: 700 }}>
