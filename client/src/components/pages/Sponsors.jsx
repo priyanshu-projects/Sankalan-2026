@@ -199,11 +199,8 @@ export default function Sponsors() {
   const isMobile = width < 600;
   const isTablet = width >= 600 && width < 1024;
 
-  // card size responsive
   const cardSize = isMobile ? "68px" : isTablet ? "76px" : "82px";
-
-  // grid gap responsive
-  const gridGap = isMobile ? "1rem" : isTablet ? "1.2rem" : "1.5rem";
+  const gridGap  = isMobile ? "1rem" : isTablet ? "1.2rem" : "1.5rem";
 
   useEffect(() => {
     fetch("https://sankalan-2026-production.up.railway.app/api/sponsors")
@@ -313,12 +310,12 @@ export default function Sponsors() {
 
         {/* ── SUBTITLE ── */}
         <p style={{
-          fontFamily:   "'Space Mono', monospace",
-          fontSize:     isMobile ? "0.75rem" : "0.9rem",
-          color:        "rgba(232,234,240,0.6)",
-          maxWidth:     "500px",
-          lineHeight:   1.8,
-          margin:       "0 0 3rem 0",
+          fontFamily: "'Space Mono', monospace",
+          fontSize:   isMobile ? "0.75rem" : "0.9rem",
+          color:      "rgba(232,234,240,0.6)",
+          maxWidth:   "500px",
+          lineHeight: 1.8,
+          margin:     "0 0 3rem 0",
         }}>
           Sankalan 2026 is proudly supported by these amazing organisations
           who believe in the power of technology and student innovation.
@@ -364,8 +361,11 @@ export default function Sponsors() {
             </p>
           </div>
 
+          {/* ── PARTNER WITH US BUTTON → opens Gmail compose ── */}
           <a
-            href="mailto:sankalan@cs.du.ac.in"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=saurabhm.mca25@cs.du.ac.in&su=Sponsorship%20Inquiry%20-%20Sankalan%202026"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontFamily:     "'Orbitron', monospace",
               fontSize:       isMobile ? "0.65rem" : "0.72rem",
@@ -378,7 +378,7 @@ export default function Sponsors() {
               textDecoration: "none",
               clipPath:
                 "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
-              boxShadow:   "0 0 25px rgba(0,245,196,0.3)",
+              boxShadow:  "0 0 25px rgba(0,245,196,0.3)",
               transition:  "all 0.3s",
               flexShrink:  0,
               width:       isMobile ? "100%" : "auto",
@@ -493,15 +493,15 @@ export default function Sponsors() {
 
             {/* ── GRID ── */}
             <div style={{
-              display:        "grid",
+              display:             "grid",
               gridTemplateColumns: isMobile
-                ? "repeat(3, 1fr)"        // 3 cols on mobile
+                ? "repeat(3, 1fr)"
                 : isTablet
-                ? "repeat(5, 1fr)"        // 5 cols on tablet
-                : "repeat(7, 1fr)",       // 7 cols on desktop
-              gap:            gridGap,
-              justifyItems:   "center",
-              alignItems:     "start",
+                ? "repeat(5, 1fr)"
+                : "repeat(7, 1fr)",
+              gap:          gridGap,
+              justifyItems: "center",
+              alignItems:   "start",
             }}>
               {sponsors.map((sponsor, i) => (
                 <SponsorCard

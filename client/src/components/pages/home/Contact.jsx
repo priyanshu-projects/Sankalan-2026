@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, Instagram, Linkedin, MessageCircle } from "lucide-react";
+import { Mail, Instagram, MapPin, Phone, User } from "lucide-react";
 
 const WEB3FORMS_KEY = "2f581325-df7c-41d6-8ec8-8c1a102ec31c";
 
@@ -28,16 +28,6 @@ const contactLinks = [
     label: "@ducs.sankalan",
     href:  "https://www.instagram.com/sankalan.ducs/",
   },
-  {
-    icon:  <Linkedin size={16} />,
-    label: "Sankalan DUCS",
-    href:  "https://www.linkedin.com/school/department-of-computer-science-university-of-delhi/",
-  },
-  {
-    icon:  <MessageCircle size={16} />,
-    label: "Join our Discord",
-    href:  "#",
-  },
 ];
 
 const eventTopics = [
@@ -53,7 +43,7 @@ const eventTopics = [
 ];
 
 // ── Contact Link Row ──────────────────────────────────────────────────────────
-function ContactLinkRow({ item, index, isFirst, isMobile }) {
+function ContactLinkRow({ item, isFirst, isMobile }) {
   return (
     <a
       href={item.href}
@@ -145,24 +135,24 @@ function SuccessState({ onReset, isMobile }) {
       <button
         onClick={onReset}
         style={{
-          fontFamily:  "'Space Mono', monospace",
-          fontSize:    "0.72rem",
-          color:       "#00f5c4",
-          background:  "none",
-          border:      "1px solid rgba(0,245,196,0.3)",
-          padding:     "0.6rem 1.2rem",
-          cursor:      "pointer",
+          fontFamily:    "'Space Mono', monospace",
+          fontSize:      "0.72rem",
+          color:         "#00f5c4",
+          background:    "none",
+          border:        "1px solid rgba(0,245,196,0.3)",
+          padding:       "0.6rem 1.2rem",
+          cursor:        "pointer",
           letterSpacing: "0.1em",
-          transition:  "all 0.3s",
-          marginTop:   "0.5rem",
+          transition:    "all 0.3s",
+          marginTop:     "0.5rem",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background   = "rgba(0,245,196,0.08)";
-          e.currentTarget.style.borderColor  = "#00f5c4";
+          e.currentTarget.style.background  = "rgba(0,245,196,0.08)";
+          e.currentTarget.style.borderColor = "#00f5c4";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background   = "none";
-          e.currentTarget.style.borderColor  = "rgba(0,245,196,0.3)";
+          e.currentTarget.style.background  = "none";
+          e.currentTarget.style.borderColor = "rgba(0,245,196,0.3)";
         }}
       >
         Send another →
@@ -173,7 +163,7 @@ function SuccessState({ onReset, isMobile }) {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function Contact() {
-  const [form, setForm]         = useState({ name: "", email: "", topic: "", message: "" });
+  const [form, setForm]           = useState({ name: "", email: "", topic: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState(false);
@@ -231,15 +221,15 @@ export default function Contact() {
     outline:     "none",
   };
   const baseInput = {
-    width:       "100%",
-    padding:     isMobile ? "0.8rem 1rem" : "1rem 1.2rem",
-    background:  "rgba(255,255,255,0.04)",
-    border:      "1px solid rgba(0,245,196,0.15)",
-    color:       "#e8eaf0",
-    fontFamily:  "'Space Mono', monospace",
-    fontSize:    isMobile ? "0.75rem" : "0.82rem",
-    transition:  "border-color 0.3s, box-shadow 0.3s",
-    boxSizing:   "border-box",
+    width:      "100%",
+    padding:    isMobile ? "0.8rem 1rem" : "1rem 1.2rem",
+    background: "rgba(255,255,255,0.04)",
+    border:     "1px solid rgba(0,245,196,0.15)",
+    color:      "#e8eaf0",
+    fontFamily: "'Space Mono', monospace",
+    fontSize:   isMobile ? "0.75rem" : "0.82rem",
+    transition: "border-color 0.3s, box-shadow 0.3s",
+    boxSizing:  "border-box",
   };
   const labelStyle = {
     display:       "block",
@@ -287,12 +277,12 @@ export default function Contact() {
 
         {/* ── TITLE ── */}
         <h2 style={{
-          fontFamily:   "'Orbitron', monospace",
-          fontSize:     "clamp(1.8rem, 6vw, 4.5rem)",
-          fontWeight:   900,
-          lineHeight:   1.05,
-          margin:       "0 0 2.5rem 0",
-          color:        "#e8eaf0",
+          fontFamily: "'Orbitron', monospace",
+          fontSize:   "clamp(1.8rem, 6vw, 4.5rem)",
+          fontWeight: 900,
+          lineHeight: 1.05,
+          margin:     "0 0 2.5rem 0",
+          color:      "#e8eaf0",
         }}>
           Contact <span style={{ color: "#00f5c4" }}>Us</span>
         </h2>
@@ -305,19 +295,19 @@ export default function Contact() {
             : isTablet
             ? "1fr"
             : "1fr 1fr",
-          gap:   isMobile ? "2.5rem" : isTablet ? "3rem" : "4rem",
+          gap:        isMobile ? "2.5rem" : isTablet ? "3rem" : "4rem",
           alignItems: "start",
         }}>
 
           {/* ── LEFT — INFO ── */}
           <div>
             <p style={{
-              fontFamily:   "'Space Mono', monospace",
-              fontSize:     isMobile ? "0.78rem" : "0.9rem",
-              lineHeight:   1.8,
-              color:        "rgba(232,234,240,0.6)",
-              margin:       "0 0 2rem 0",
-              maxWidth:     "480px",
+              fontFamily: "'Space Mono', monospace",
+              fontSize:   isMobile ? "0.78rem" : "0.9rem",
+              lineHeight: 1.8,
+              color:      "rgba(232,234,240,0.6)",
+              margin:     "0 0 2rem 0",
+              maxWidth:   "480px",
             }}>
               Have questions about events, sponsorships, or anything else about
               Sankalan? Drop us a message — our team will get back to you within
@@ -355,16 +345,204 @@ export default function Contact() {
                 <ContactLinkRow
                   key={i}
                   item={item}
-                  index={i}
                   isFirst={i === 0}
                   isMobile={isMobile}
                 />
               ))}
             </div>
 
+            {/* ── CONTACT PERSON ── */}
+            <div
+              style={{
+                marginTop:     "1rem",
+                padding:       isMobile ? "1rem" : "1.2rem",
+                background:    "rgba(123,95,255,0.05)",
+                border:        "1px solid rgba(123,95,255,0.2)",
+                borderTop:     "none",
+                display:       "flex",
+                flexDirection: "column",
+                gap:           "0.6rem",
+              }}
+            >
+              {/* Name */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+                <User size={14} style={{ color: "#7b5fff", flexShrink: 0 }} />
+                <span style={{
+                  fontFamily:    "'Orbitron', monospace",
+                  fontSize:      isMobile ? "0.7rem" : "0.78rem",
+                  fontWeight:    700,
+                  color:         "#e8eaf0",
+                  letterSpacing: "0.05em",
+                }}>
+                  Dhruv Bhardwaj
+                </span>
+              </div>
+
+              {/* Email */}
+              <a
+                href="mailto:dhruvmca24@cs.du.ac.in"
+                style={{
+                  display:        "flex",
+                  alignItems:     "center",
+                  gap:            "0.7rem",
+                  textDecoration: "none",
+                  transition:     "opacity 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+              >
+                <Mail size={14} style={{ color: "#7b5fff", flexShrink: 0 }} />
+                <span style={{
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize:   isMobile ? "0.68rem" : "0.75rem",
+                  color:      "#7a7f99",
+                  wordBreak:  "break-all",
+                }}>
+                  dhruvmca24@cs.du.ac.in
+                </span>
+              </a>
+
+              {/* Phone */}
+              <a
+                href="tel:+917217681731"
+                style={{
+                  display:        "flex",
+                  alignItems:     "center",
+                  gap:            "0.7rem",
+                  textDecoration: "none",
+                  transition:     "opacity 0.2s",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+              >
+                <Phone size={14} style={{ color: "#7b5fff", flexShrink: 0 }} />
+                <span style={{
+                  fontFamily: "'Space Mono', monospace",
+                  fontSize:   isMobile ? "0.68rem" : "0.75rem",
+                  color:      "#7a7f99",
+                }}>
+                  +91 7217681731
+                </span>
+              </a>
+            </div>
+
+            {/* ── OUR LOCATION ── */}
+            <div
+              style={{
+                marginTop:  "1.5rem",
+                padding:    isMobile ? "1.2rem 1rem" : "1.5rem",
+                background: "rgba(0,245,196,0.03)",
+                border:     "1px solid rgba(0,245,196,0.15)",
+                clipPath:
+                  "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+              }}
+            >
+              {/* Location heading */}
+              <div style={{
+                display:      "flex",
+                alignItems:   "center",
+                gap:          "0.6rem",
+                marginBottom: "0.8rem",
+              }}>
+                <MapPin size={14} style={{ color: "#00f5c4", flexShrink: 0 }} />
+                <span style={{
+                  fontFamily:    "'Orbitron', monospace",
+                  fontSize:      isMobile ? "0.7rem" : "0.78rem",
+                  fontWeight:    700,
+                  letterSpacing: "0.1em",
+                  color:         "#00f5c4",
+                  textTransform: "uppercase",
+                }}>
+                  Our Location
+                </span>
+              </div>
+
+              {/* divider */}
+              <div style={{
+                height:       "1px",
+                background:   "linear-gradient(90deg, rgba(0,245,196,0.3), transparent)",
+                marginBottom: "0.9rem",
+              }} />
+
+              {/* Full address */}
+              <p style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize:   isMobile ? "0.68rem" : "0.75rem",
+                color:      "#7a7f99",
+                lineHeight: 2,
+                margin:     "0 0 0.8rem 0",
+              }}>
+                Department of Computer Science,{" "}
+                Faculty of Mathematical Sciences,{" "}
+                New Academic Block, University of Delhi,{" "}
+                Delhi, INDIA 110007.
+              </p>
+
+              {/* Metro info */}
+              <div style={{
+                display:      "inline-flex",
+                alignItems:   "center",
+                gap:          "0.5rem",
+                background:   "rgba(123,95,255,0.08)",
+                border:       "1px solid rgba(123,95,255,0.2)",
+                padding:      "0.35rem 0.8rem",
+                clipPath:
+                  "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
+                marginBottom: "1rem",
+              }}>
+                <span style={{ fontSize: "0.8rem" }}>🚇</span>
+                <span style={{
+                  fontFamily:    "'Space Mono', monospace",
+                  fontSize:      isMobile ? "0.62rem" : "0.7rem",
+                  color:         "#a78bfa",
+                  letterSpacing: "0.05em",
+                }}>
+                  Nearest Metro: Vishwavidyalaya
+                </span>
+              </div>
+
+              {/* Google Maps button */}
+              <div>
+                <a
+                  href="https://maps.app.goo.gl/1SNeRP6Gbhv5DN176"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display:        "inline-flex",
+                    alignItems:     "center",
+                    gap:            "0.5rem",
+                    fontFamily:     "'Space Mono', monospace",
+                    fontSize:       isMobile ? "0.62rem" : "0.7rem",
+                    color:          "#00f5c4",
+                    textDecoration: "none",
+                    border:         "1px solid rgba(0,245,196,0.25)",
+                    padding:        "0.45rem 1rem",
+                    background:     "rgba(0,245,196,0.05)",
+                    clipPath:
+                      "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
+                    transition:     "all 0.2s",
+                    letterSpacing:  "0.05em",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background  = "rgba(0,245,196,0.12)";
+                    e.currentTarget.style.borderColor = "#00f5c4";
+                    e.currentTarget.style.boxShadow   = "0 0 20px rgba(0,245,196,0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background  = "rgba(0,245,196,0.05)";
+                    e.currentTarget.style.borderColor = "rgba(0,245,196,0.25)";
+                    e.currentTarget.style.boxShadow   = "none";
+                  }}
+                >
+                  <MapPin size={12} />
+                  View on Google Maps →
+                </a>
+              </div>
+            </div>
+
             {/* REGISTER CTA */}
             <div style={{
-              marginTop:  "2.5rem",
+              marginTop:  "1.5rem",
               padding:    isMobile ? "1.2rem 1rem" : "1.5rem",
               background: "rgba(0,245,196,0.04)",
               border:     "1px solid rgba(0,245,196,0.15)",
@@ -372,17 +550,17 @@ export default function Contact() {
                 "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
             }}>
               <p style={{
-                fontFamily:   "'Space Mono', monospace",
-                fontSize:     isMobile ? "0.68rem" : "0.75rem",
-                color:        "#7a7f99",
-                lineHeight:   1.8,
-                margin:       "0 0 1rem 0",
+                fontFamily: "'Space Mono', monospace",
+                fontSize:   isMobile ? "0.68rem" : "0.75rem",
+                color:      "#7a7f99",
+                lineHeight: 1.8,
+                margin:     "0 0 1rem 0",
               }}>
                 Ready to compete? Register for Sankalan 2026 on Unstop and
                 secure your spot today.
               </p>
               <a
-                href="https://unstop.com"
+                href="https://unstop.com/college-fests/sankalan-2026-department-of-computer-science-docs-university-of-delhi-du-458407"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -438,21 +616,21 @@ export default function Contact() {
             {/* FORM HEADER */}
             <div style={{ marginBottom: isMobile ? "1.5rem" : "2rem" }}>
               <h3 style={{
-                fontFamily:   "'Orbitron', monospace",
-                fontSize:     isMobile ? "0.95rem" : "1.1rem",
-                fontWeight:   900,
-                color:        "#e8eaf0",
-                margin:       "0 0 0.5rem 0",
+                fontFamily: "'Orbitron', monospace",
+                fontSize:   isMobile ? "0.95rem" : "1.1rem",
+                fontWeight: 900,
+                color:      "#e8eaf0",
+                margin:     "0 0 0.5rem 0",
               }}>
                 Have a <span style={{ color: "#00f5c4" }}>Question?</span>
               </h3>
               <p style={{
-                fontFamily:   "'Space Mono', monospace",
-                fontSize:     isMobile ? "0.65rem" : "0.72rem",
-                color:        "#7a7f99",
+                fontFamily:    "'Space Mono', monospace",
+                fontSize:      isMobile ? "0.65rem" : "0.72rem",
+                color:         "#7a7f99",
                 letterSpacing: "0.05em",
-                lineHeight:   1.7,
-                margin:       0,
+                lineHeight:    1.7,
+                margin:        0,
               }}>
                 Ask us anything about events, schedule, eligibility or
                 sponsorship opportunities.
@@ -515,13 +693,13 @@ export default function Contact() {
                     required
                     style={{
                       ...baseInput,
-                      appearance:          "none",
-                      WebkitAppearance:    "none",
-                      cursor:              "pointer",
-                      backgroundImage:     `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2300f5c4' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")`,
-                      backgroundRepeat:    "no-repeat",
-                      backgroundPosition:  "right 1.2rem center",
-                      paddingRight:        "2.5rem",
+                      appearance:         "none",
+                      WebkitAppearance:   "none",
+                      cursor:             "pointer",
+                      backgroundImage:    `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2300f5c4' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")`,
+                      backgroundRepeat:   "no-repeat",
+                      backgroundPosition: "right 1.2rem center",
+                      paddingRight:       "2.5rem",
                       ...(focused === "topic" ? focusStyle : blurStyle),
                     }}
                     onFocus={() => setFocused("topic")}
@@ -532,7 +710,8 @@ export default function Contact() {
                     </option>
                     {eventTopics.map((t) => (
                       <option
-                        key={t} value={t}
+                        key={t}
+                        value={t}
                         style={{ background: "#03040a", color: "#e8eaf0" }}
                       >
                         {t}
@@ -553,8 +732,8 @@ export default function Contact() {
                     rows={isMobile ? 3 : 4}
                     style={{
                       ...baseInput,
-                      resize:    "vertical",
-                      minHeight: isMobile ? "90px" : "110px",
+                      resize:     "vertical",
+                      minHeight:  isMobile ? "90px" : "110px",
                       lineHeight: 1.7,
                       ...(focused === "message" ? focusStyle : blurStyle),
                     }}
@@ -566,16 +745,16 @@ export default function Contact() {
                 {/* ERROR MESSAGE */}
                 {error && (
                   <div style={{
-                    padding:    "0.8rem 1rem",
-                    background: "rgba(255,62,108,0.08)",
-                    border:     "1px solid rgba(255,62,108,0.25)",
+                    padding:       "0.8rem 1rem",
+                    background:    "rgba(255,62,108,0.08)",
+                    border:        "1px solid rgba(255,62,108,0.25)",
                     clipPath:
                       "polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)",
-                    fontFamily: "'Space Mono', monospace",
-                    fontSize:   "0.65rem",
-                    color:      "#ff3e6c",
+                    fontFamily:    "'Space Mono', monospace",
+                    fontSize:      "0.65rem",
+                    color:         "#ff3e6c",
                     letterSpacing: "0.05em",
-                    lineHeight: 1.7,
+                    lineHeight:    1.7,
                   }}>
                     ⚠ Something went wrong. Email us at{" "}
                     <a
@@ -592,31 +771,31 @@ export default function Contact() {
                   type="submit"
                   disabled={loading}
                   style={{
-                    marginTop:     "0.4rem",
-                    width:         "100%",
-                    padding:       isMobile ? "0.85rem" : "1rem",
-                    background:    loading ? "rgba(0,245,196,0.5)" : "#00f5c4",
-                    color:         "#03040a",
-                    fontFamily:    "'Orbitron', monospace",
-                    fontSize:      isMobile ? "0.7rem" : "0.78rem",
-                    fontWeight:    900,
-                    letterSpacing: "0.2em",
-                    textTransform: "uppercase",
-                    border:        "none",
-                    cursor:        loading ? "not-allowed" : "pointer",
+                    marginTop:      "0.4rem",
+                    width:          "100%",
+                    padding:        isMobile ? "0.85rem" : "1rem",
+                    background:     loading ? "rgba(0,245,196,0.5)" : "#00f5c4",
+                    color:          "#03040a",
+                    fontFamily:     "'Orbitron', monospace",
+                    fontSize:       isMobile ? "0.7rem" : "0.78rem",
+                    fontWeight:     900,
+                    letterSpacing:  "0.2em",
+                    textTransform:  "uppercase",
+                    border:         "none",
+                    cursor:         loading ? "not-allowed" : "pointer",
                     clipPath:
                       "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
-                    boxShadow:  loading ? "none" : "0 0 30px rgba(0,245,196,0.3)",
-                    transition: "all 0.3s",
-                    display:    "flex",
-                    alignItems: "center",
+                    boxShadow:      loading ? "none" : "0 0 30px rgba(0,245,196,0.3)",
+                    transition:     "all 0.3s",
+                    display:        "flex",
+                    alignItems:     "center",
                     justifyContent: "center",
-                    gap:        "0.6rem",
+                    gap:            "0.6rem",
                   }}
                   onMouseEnter={(e) => {
                     if (!loading) {
-                      e.currentTarget.style.transform  = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow  = "0 0 50px rgba(0,245,196,0.5)";
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow = "0 0 50px rgba(0,245,196,0.5)";
                     }
                   }}
                   onMouseLeave={(e) => {

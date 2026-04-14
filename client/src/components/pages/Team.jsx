@@ -406,71 +406,143 @@ function ListRow({ member, isActive, onClick, index, isMobile }) {
   );
 }
 
-// ── Mobile Member Card (replaces split panel on mobile) ───────────────────────
-function MobileMemberCard({ member, onClick }) {
+// ── Mobile Member Row (single column, image on right) ─────────────────────────
+function MobileMemberRow({ member, onClick, index }) {
+  const ref = useRef();
   const isTBA = !member.name;
   const { color, rgb } = member;
 
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+          obs.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.05 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <div
+      ref={ref}
       onClick={() => !isTBA && onClick(member)}
       style={{
-        padding: "1rem",
+        opacity: 0,
+        transform: "translateY(16px)",
+        transition: `opacity 0.45s ${Math.min(index, 10) * 0.05}s ease,
+                     transform 0.45s ${Math.min(index, 10) * 0.05}s ease,
+                     border-color 0.25s, background 0.25s`,
+        padding: "0.9rem 1rem",
         background: "rgba(255,255,255,0.025)",
-        border: `1px solid rgba(${rgb},0.15)`,
+        border: `1px solid rgba(${rgb},0.18)`,
         clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
         cursor: isTBA ? "default" : "pointer",
-        display: "flex", alignItems: "center", gap: "0.8rem",
-        position: "relative", overflow: "hidden",
-        transition: "all 0.25s",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "0.8rem",
+        position: "relative",
+        overflow: "hidden",
       }}
       onMouseEnter={(e) => {
         if (!isTBA) {
           e.currentTarget.style.borderColor = color;
-          e.currentTarget.style.background = `rgba(${rgb},0.06)`;
+          e.currentTarget.style.background = `rgba(${rgb},0.07)`;
         }
       }}
       onMouseLeave={(e) => {
         if (!isTBA) {
-          e.currentTarget.style.borderColor = `rgba(${rgb},0.15)`;
+          e.currentTarget.style.borderColor = `rgba(${rgb},0.18)`;
           e.currentTarget.style.background = "rgba(255,255,255,0.025)";
         }
       }}
     >
+      {/* top accent line */}
       <div style={{
         position: "absolute", top: 0, left: 0, right: 0,
-        height: "2px",
+        height: "1.5px",
         background: `linear-gradient(90deg, ${color}, transparent)`,
       }} />
 
-      <AvatarFrame member={member} size={48} />
-
+      {/* LEFT: name + role + tag */}
       <div style={{ flex: 1, minWidth: 0 }}>
         {isTBA ? (
           <div style={{
-            fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
-            color: "rgba(255,255,255,0.12)", letterSpacing: "0.2em",
-          }}>TBA</div>
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "0.6rem",
+            color: "rgba(255,255,255,0.12)",
+            letterSpacing: "0.2em",
+          }}>To be announced</div>
         ) : (
           <>
             <div style={{
-              fontFamily: "'Orbitron', monospace", fontSize: "0.72rem",
-              fontWeight: 700, color: "#e8eaf0",
-              whiteSpace: "nowrap", overflow: "hidden",
-              textOverflow: "ellipsis", marginBottom: "0.2rem",
+              fontFamily: "'Orbitron', monospace",
+              fontSize: "0.72rem",
+              fontWeight: 700,
+              color: "#e8eaf0",
+              letterSpacing: "0.03em",
+              marginBottom: "0.25rem",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}>{member.name}</div>
+
             <div style={{
-              fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
-              color: color, letterSpacing: "0.06em",
-              whiteSpace: "nowrap", overflow: "hidden",
+              fontFamily: "'Space Mono', monospace",
+              fontSize: "0.58rem",
+              color: color,
+              letterSpacing: "0.06em",
+              marginBottom: "0.3rem",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
               textOverflow: "ellipsis",
             }}>{member.role}</div>
+
+            {member.tag && (
+              <span style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: "0.48rem",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#7a7f99",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                padding: "0.18rem 0.5rem",
+                clipPath: "polygon(3px 0%,100% 0%,calc(100% - 3px) 100%,0% 100%)",
+                display: "inline-block",
+              }}>{member.tag}</span>
+            )}
           </>
         )}
       </div>
 
+      {/* RIGHT: large avatar */}
+      <div style={{ flexShrink: 0, position: "relative" }}>
+        <AvatarFrame member={member} size={isTBA ? 36 : 64} />
+        {!isTBA && (
+          <div style={{
+            position: "absolute", inset: -4, borderRadius: "50%",
+            border: `1px solid rgba(${rgb},0.2)`,
+            borderTopColor: color,
+            animation: "spin 8s linear infinite",
+            pointerEvents: "none",
+          }} />
+        )}
+      </div>
+
+      {/* tap hint */}
       {!isTBA && (
-        <span style={{ color: `rgba(${rgb},0.5)`, fontSize: "0.8rem" }}>›</span>
+        <div style={{
+          position: "absolute", bottom: "0.4rem", right: "0.8rem",
+          fontFamily: "'Space Mono', monospace",
+          fontSize: "0.55rem",
+          color: `rgba(${rgb}, 0.4)`,
+        }}>tap ›</div>
       )}
     </div>
   );
@@ -536,9 +608,9 @@ function MobileSheet({ member, onClose }) {
   );
 }
 
-// ── Split Panel (tablet + desktop) ───────────────────────────────────────────
+// ── Split Panel ───────────────────────────────────────────────────────────────
 function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTablet }) {
-  const [selected, setSelected] = useState(null);
+  const [selected,    setSelected]    = useState(null);
   const [sheetMember, setSheetMember] = useState(null);
 
   useEffect(() => {
@@ -557,7 +629,7 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {[...Array(5)].map((_, i) => (
             <div key={i} style={{
-              height: "60px",
+              height: isMobile ? "72px" : "60px",
               background: "rgba(255,255,255,0.02)",
               border: "1px solid rgba(0,245,196,0.06)",
               clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
@@ -584,19 +656,20 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
     );
   }
 
-  // ── MOBILE: grid of cards + bottom sheet ──
+  // ── MOBILE: single-column list, large avatar on right, bottom sheet on tap ──
   if (isMobile) {
     return (
       <>
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          display: "flex",
+          flexDirection: "column",
           gap: "0.6rem",
         }}>
-          {members.map((member) => (
-            <MobileMemberCard
+          {members.map((member, i) => (
+            <MobileMemberRow
               key={member.id}
               member={member}
+              index={i}
               onClick={(m) => setSheetMember(m)}
             />
           ))}
@@ -719,9 +792,6 @@ export default function Team() {
     return () => obs.disconnect();
   }, []);
 
-  const namedAdmins = adminPanel.filter((m) => !m.is_tba);
-  const namedHeads  = eventHeads.filter((m) => !m.is_tba);
-
   return (
     <section id="team" style={{ position: "relative", zIndex: 1 }}>
       {/* Grid BG */}
@@ -783,33 +853,6 @@ export default function Team() {
             }}>
               Meet the <span style={{ color: "#00f5c4" }}>Team</span>
             </h2>
-
-            <div style={{
-              display: "flex", gap: "1.5rem",
-              fontFamily: "'Space Mono', monospace",
-              fontSize: isMobile ? "0.65rem" : "0.72rem",
-              color: "#7a7f99",
-            }}>
-              <span>
-                <span style={{
-                  fontFamily: "'Orbitron', monospace",
-                  color: "#00f5c4", fontWeight: 700,
-                  fontSize: isMobile ? "0.9rem" : "1rem",
-                }}>
-                  {loading ? "—" : namedAdmins.length}
-                </span>{" "}Admin
-              </span>
-              <span>
-                <span style={{
-                  fontFamily: "'Orbitron', monospace",
-                  color: "#7b5fff", fontWeight: 700,
-                  fontSize: isMobile ? "0.9rem" : "1rem",
-                }}>
-                  {loading ? "—" : namedHeads.length}
-                </span>
-                {" "}/ {loading ? "—" : eventHeads.length} Heads
-              </span>
-            </div>
           </div>
         </div>
 

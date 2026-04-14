@@ -2,18 +2,20 @@ import { useState, useEffect, useRef } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-import Header   from "./components/common/Header";
-import Footer   from "./components/common/Footer";
-import Intro    from "./components/common/Intro";
+import Header      from "./components/common/Header";
+import Footer      from "./components/common/Footer";
+import Intro       from "./components/common/Intro";
 import PageWrapper from "./components/common/PageWrapper";
 
 import Home     from "./components/pages/home/Home";
+import Privacy  from "./components/pages/home/Privacy";
 import Events   from "./components/pages/Events";
 import Sponsors from "./components/pages/Sponsors";
 import Team     from "./components/pages/Team";
 import FAQ      from "./components/pages/FAQ";
 import Updates  from "./components/pages/Updates";
 import Results  from "./components/pages/Results";
+
 
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
@@ -56,7 +58,6 @@ function App() {
 
     const initStars = () => {
       stars = [];
-      // fewer stars on mobile — better performance
       const count = window.innerWidth < 600
         ? 60
         : window.innerWidth < 1024
@@ -104,7 +105,6 @@ function App() {
 
   // ── Custom cursor — desktop only ──
   useEffect(() => {
-    // no custom cursor on touch devices
     if (!introDone || isMobile) return;
 
     let mx = 0, my = 0, rx = 0, ry = 0;
@@ -178,7 +178,6 @@ function App() {
               position:  "relative",
               zIndex:    2,
               minHeight: "100vh",
-              // prevent content from going under fixed header
               paddingTop: "0",
             }}
           >
@@ -186,20 +185,20 @@ function App() {
 
             <main
               style={{
-                // push content below fixed header
                 paddingTop: isMobile ? "60px" : "72px",
                 minHeight:  "calc(100vh - 60px)",
               }}
             >
               <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
-                  <Route path="/"         element={<PageWrapper><Home /></PageWrapper>}     />
-                  <Route path="/events"   element={<PageWrapper><Events /></PageWrapper>}   />
-                  <Route path="/sponsors" element={<PageWrapper><Sponsors /></PageWrapper>} />
-                  <Route path="/team"     element={<PageWrapper><Team /></PageWrapper>}     />
-                  <Route path="/faq"      element={<PageWrapper><FAQ /></PageWrapper>}      />
-                  <Route path="/updates"  element={<PageWrapper><Updates /></PageWrapper>}  />
-                  <Route path="/results"  element={<PageWrapper><Results /></PageWrapper>}  />
+                  <Route path="/"               element={<PageWrapper><Home /></PageWrapper>}     />
+                  <Route path="/privacy-policy" element={<PageWrapper><Privacy /></PageWrapper>}  />
+                  <Route path="/events"         element={<PageWrapper><Events /></PageWrapper>}   />
+                  <Route path="/sponsors"       element={<PageWrapper><Sponsors /></PageWrapper>} />
+                  <Route path="/team"           element={<PageWrapper><Team /></PageWrapper>}     />
+                  <Route path="/faq"            element={<PageWrapper><FAQ /></PageWrapper>}      />
+                  <Route path="/updates"        element={<PageWrapper><Updates /></PageWrapper>}  />
+                  <Route path="/results"        element={<PageWrapper><Results /></PageWrapper>}  />
                 </Routes>
               </AnimatePresence>
             </main>

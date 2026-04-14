@@ -583,7 +583,7 @@ export default function Events() {
           </div>
 
           <a
-            href="https://unstop.com"
+            href="https://unstop.com/college-fests/sankalan-2026-department-of-computer-science-docs-university-of-delhi-du-458407/amp"
             target="_blank"
             rel="noopener noreferrer"
             style={{

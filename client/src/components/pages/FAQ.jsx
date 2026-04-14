@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
@@ -78,31 +79,34 @@ const faqs = [
 ];
 
 const tagColors = {
-  General:      { color: "#00f5c4", rgb: "0,245,196"   },
-  Eligibility:  { color: "#7b5fff", rgb: "123,95,255"  },
-  Registration: { color: "#00f5c4", rgb: "0,245,196"   },
-  Events:       { color: "#7b5fff", rgb: "123,95,255"  },
-  Venue:        { color: "#00f5c4", rgb: "0,245,196"   },
-  Judging:      { color: "#7b5fff", rgb: "123,95,255"  },
-  Prizes:       { color: "#00f5c4", rgb: "0,245,196"   },
-  Contact:      { color: "#7b5fff", rgb: "123,95,255"  },
+  General:      { color: "#00f5c4", rgb: "0,245,196"  },
+  Eligibility:  { color: "#7b5fff", rgb: "123,95,255" },
+  Registration: { color: "#00f5c4", rgb: "0,245,196"  },
+  Events:       { color: "#7b5fff", rgb: "123,95,255" },
+  Venue:        { color: "#00f5c4", rgb: "0,245,196"  },
+  Judging:      { color: "#7b5fff", rgb: "123,95,255" },
+  Prizes:       { color: "#00f5c4", rgb: "0,245,196"  },
+  Contact:      { color: "#7b5fff", rgb: "123,95,255" },
 };
 
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
   const [activeTag, setActiveTag] = useState("All");
+  const navigate                  = useNavigate();
 
   const width    = useWindowWidth();
   const isMobile = width < 600;
   const isTablet = width >= 600 && width < 1024;
 
-  const allTags = ["All", ...Array.from(new Set(faqs.map((f) => f.tag)))];
+  const allTags  = ["All", ...Array.from(new Set(faqs.map((f) => f.tag)))];
+  const filtered = activeTag === "All" ? faqs : faqs.filter((f) => f.tag === activeTag);
+  const toggle   = (i) => setOpenIndex(openIndex === i ? null : i);
 
-  const filtered =
-    activeTag === "All" ? faqs : faqs.filter((f) => f.tag === activeTag);
-
-  const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
+  // ── navigate to Home with state flag ────────────────────────────────────
+  function handleAskQuestion() {
+    navigate("/", { state: { scrollToContact: true } });
+  }
 
   return (
     <section id="faq" style={{ position: "relative", zIndex: 1 }}>
@@ -169,25 +173,7 @@ export default function FAQ() {
             maxWidth: "600px",
           }}
         >
-          Everything you need to know about Sankalan 2026. Can't find
-          your answer?{" "}
-          <a
-            href="#contact"
-            style={{
-              color: "#00f5c4",
-              textDecoration: "none",
-              borderBottom: "1px solid rgba(0,245,196,0.3)",
-              transition: "border-color 0.2s",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.borderColor = "#00f5c4")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.borderColor = "rgba(0,245,196,0.3)")
-            }
-          >
-            Drop us a message.
-          </a>
+          Everything you need to know about Sankalan 2026.
         </p>
 
         {/* ── TAG FILTERS ── */}
@@ -200,10 +186,10 @@ export default function FAQ() {
           }}
         >
           {allTags.map((tag) => {
-            const cfg = tagColors[tag] || { color: "#00f5c4", rgb: "0,245,196" };
+            const cfg      = tagColors[tag] || { color: "#00f5c4", rgb: "0,245,196" };
             const isActive = activeTag === tag;
-            const tagRgb = tag === "All" ? "0,245,196" : cfg.rgb;
-            const tagColor = tag === "All" ? "#00f5c4" : cfg.color;
+            const tagRgb   = tag === "All" ? "0,245,196" : cfg.rgb;
+            const tagColor = tag === "All" ? "#00f5c4"   : cfg.color;
 
             return (
               <button
@@ -219,27 +205,23 @@ export default function FAQ() {
                   textTransform: "uppercase",
                   padding: isMobile ? "0.35rem 0.75rem" : "0.4rem 1rem",
                   border: `1px solid rgba(${tagRgb},${isActive ? "0.8" : "0.2"})`,
-                  background: isActive
-                    ? `rgba(${tagRgb},0.12)`
-                    : "transparent",
+                  background: isActive ? `rgba(${tagRgb},0.12)` : "transparent",
                   color: isActive ? tagColor : "#7a7f99",
                   cursor: "pointer",
                   clipPath:
                     "polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%)",
                   transition: "all 0.25s",
-                  boxShadow: isActive
-                    ? `0 0 15px rgba(${tagRgb},0.2)`
-                    : "none",
+                  boxShadow: isActive ? `0 0 15px rgba(${tagRgb},0.2)` : "none",
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.color = tagColor;
+                    e.currentTarget.style.color       = tagColor;
                     e.currentTarget.style.borderColor = `rgba(${tagRgb},0.4)`;
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.color = "#7a7f99";
+                    e.currentTarget.style.color       = "#7a7f99";
                     e.currentTarget.style.borderColor = `rgba(${tagRgb},0.2)`;
                   }
                 }}
@@ -269,10 +251,7 @@ export default function FAQ() {
         {/* ── ACCORDION ── */}
         <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
           {filtered.map((faq, i) => {
-            const cfg = tagColors[faq.tag] || {
-              color: "#00f5c4",
-              rgb: "0,245,196",
-            };
+            const cfg    = tagColors[faq.tag] || { color: "#00f5c4", rgb: "0,245,196" };
             const isOpen = openIndex === i;
 
             return (
@@ -286,21 +265,19 @@ export default function FAQ() {
                   clipPath:
                     "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
                   transition: "all 0.3s",
-                  boxShadow: isOpen
-                    ? `0 0 30px rgba(${cfg.rgb},0.08)`
-                    : "none",
+                  boxShadow: isOpen ? `0 0 30px rgba(${cfg.rgb},0.08)` : "none",
                   overflow: "hidden",
                 }}
                 onMouseEnter={(e) => {
                   if (!isOpen) {
                     e.currentTarget.style.borderColor = `rgba(${cfg.rgb},0.25)`;
-                    e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+                    e.currentTarget.style.background  = "rgba(255,255,255,0.03)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isOpen) {
                     e.currentTarget.style.borderColor = `rgba(${cfg.rgb},0.12)`;
-                    e.currentTarget.style.background = "rgba(255,255,255,0.02)";
+                    e.currentTarget.style.background  = "rgba(255,255,255,0.02)";
                   }
                 }}
               >
@@ -330,7 +307,6 @@ export default function FAQ() {
                       minWidth: 0,
                     }}
                   >
-                    {/* index number */}
                     <span
                       style={{
                         fontFamily: "'Orbitron', monospace",
@@ -347,7 +323,6 @@ export default function FAQ() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
 
-                    {/* question text */}
                     <span
                       style={{
                         fontFamily: "'Orbitron', monospace",
@@ -364,7 +339,7 @@ export default function FAQ() {
                     </span>
                   </div>
 
-                  {/* RIGHT — TAG (hidden on mobile) + CHEVRON */}
+                  {/* RIGHT — TAG + CHEVRON */}
                   <div
                     style={{
                       display: "flex",
@@ -373,7 +348,6 @@ export default function FAQ() {
                       flexShrink: 0,
                     }}
                   >
-                    {/* tag badge — only tablet+ */}
                     {!isMobile && (
                       <span
                         style={{
@@ -394,7 +368,6 @@ export default function FAQ() {
                       </span>
                     )}
 
-                    {/* chevron box */}
                     <div
                       style={{
                         width: isMobile ? "24px" : "28px",
@@ -454,7 +427,6 @@ export default function FAQ() {
                         alignItems: "flex-start",
                       }}
                     >
-                      {/* left color bar */}
                       <div
                         style={{
                           width: "2px",
@@ -530,23 +502,9 @@ export default function FAQ() {
             </p>
           </div>
 
-          <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              const el = document.getElementById("contact");
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
-                setTimeout(() => {
-                  const form = el.querySelector("form");
-                  if (form) {
-                    form.style.transition = "box-shadow 0.4s";
-                    form.style.boxShadow = "0 0 50px rgba(0,245,196,0.15)";
-                    setTimeout(() => (form.style.boxShadow = "none"), 1500);
-                  }
-                }, 700);
-              }
-            }}
+          {/* ── ASK A QUESTION → navigates to Home → scrolls to #contact ── */}
+          <button
+            onClick={handleAskQuestion}
             style={{
               fontFamily: "'Orbitron', monospace",
               fontSize: isMobile ? "0.65rem" : "0.72rem",
@@ -556,7 +514,8 @@ export default function FAQ() {
               color: "#03040a",
               background: "#00f5c4",
               padding: isMobile ? "0.8rem 1.5rem" : "0.85rem 2rem",
-              textDecoration: "none",
+              border: "none",
+              cursor: "pointer",
               clipPath:
                 "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
               boxShadow: "0 0 25px rgba(0,245,196,0.3)",
@@ -578,7 +537,7 @@ export default function FAQ() {
             }}
           >
             Ask a Question →
-          </a>
+          </button>
         </div>
       </div>
     </section>

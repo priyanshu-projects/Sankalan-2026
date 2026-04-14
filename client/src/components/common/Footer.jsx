@@ -23,7 +23,6 @@ export default function Footer() {
   const navLinks = [
     { name: "Home",     path: "/"         },
     { name: "Events",   path: "/events"   },
-    { name: "Results",  path: "/results"  },
     { name: "Updates",  path: "/updates"  },
     { name: "Sponsors", path: "/sponsors" },
     { name: "Team",     path: "/team"     },
@@ -33,19 +32,18 @@ export default function Footer() {
   return (
     <footer
       style={{
-        position: "relative",
-        zIndex: 1,
-        borderTop: "1px solid rgba(0,245,196,0.15)",
+        position:   "relative",
+        zIndex:     1,
+        borderTop:  "1px solid rgba(0,245,196,0.15)",
         background: "rgba(3,4,10,0.97)",
       }}
     >
       {/* ── TOP ACCENT LINE ── */}
       <div
         style={{
-          height: "2px",
-          background:
-            "linear-gradient(90deg, transparent, #00f5c4, #7b5fff, transparent)",
-          width: "100%",
+          height:     "2px",
+          background: "linear-gradient(90deg, transparent, #00f5c4, #7b5fff, transparent)",
+          width:      "100%",
         }}
       />
 
@@ -53,13 +51,13 @@ export default function Footer() {
       <div
         style={{
           maxWidth: "1200px",
-          margin: "0 auto",
-          padding: isMobile
+          margin:   "0 auto",
+          padding:  isMobile
             ? "2.5rem 1.2rem"
             : isTablet
             ? "3rem 2rem"
             : "4rem 2rem",
-          display: "grid",
+          display:             "grid",
           gridTemplateColumns: isMobile
             ? "1fr"
             : isTablet
@@ -72,14 +70,13 @@ export default function Footer() {
         <div>
           <h2
             style={{
-              fontFamily: "'Orbitron', monospace",
-              fontSize: isMobile ? "1rem" : "1.1rem",
-              fontWeight: 900,
-              color: "#00f5c4",
+              fontFamily:    "'Orbitron', monospace",
+              fontSize:      isMobile ? "1rem" : "1.1rem",
+              fontWeight:    900,
+              color:         "#00f5c4",
               letterSpacing: "0.08em",
-              textShadow: "0 0 20px rgba(0,245,196,0.5)",
-              marginBottom: "1rem",
-              margin: "0 0 1rem 0",
+              textShadow:    "0 0 20px rgba(0,245,196,0.5)",
+              margin:        "0 0 1rem 0",
             }}
           >
             SANKALAN 2026
@@ -87,74 +84,38 @@ export default function Footer() {
           <p
             style={{
               fontFamily: "'Space Mono', monospace",
-              fontSize: isMobile ? "0.8rem" : "0.88rem",
-              color: "#7a7f99",
+              fontSize:   isMobile ? "0.8rem" : "0.88rem",
+              color:      "#7a7f99",
               lineHeight: 1.9,
-              maxWidth: isMobile ? "100%" : "300px",
-              margin: 0,
+              maxWidth:   isMobile ? "100%" : "300px",
+              margin:     0,
             }}
           >
             Sankalan is the annual tech fest of the Department of Computer
             Science Society, celebrating innovation, technology and creativity.
           </p>
-
-          {/* Instagram badge */}
-          <a
-            href="https://instagram.com/ducs.sankalan"
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              marginTop: "1.2rem",
-              fontFamily: "'Space Mono', monospace",
-              fontSize: "0.75rem",
-              color: "#7b5fff",
-              textDecoration: "none",
-              border: "1px solid rgba(123,95,255,0.3)",
-              padding: "0.4rem 0.9rem",
-              clipPath:
-                "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
-              transition: "all 0.2s",
-              background: "rgba(123,95,255,0.07)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(123,95,255,0.18)";
-              e.currentTarget.style.color = "#a78bfa";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(123,95,255,0.07)";
-              e.currentTarget.style.color = "#7b5fff";
-            }}
-          >
-            <span style={{ fontSize: "0.85rem" }}>◈</span>
-            @ducs.sankalan
-          </a>
         </div>
 
         {/* ── QUICK LINKS ── */}
         <div>
           <h3
             style={{
-              fontFamily: "'Orbitron', monospace",
-              fontSize: "0.72rem",
-              fontWeight: 700,
+              fontFamily:    "'Orbitron', monospace",
+              fontSize:      "0.72rem",
+              fontWeight:    700,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "#e8eaf0",
-              marginBottom: "1.2rem",
-              margin: "0 0 1.2rem 0",
+              color:         "#e8eaf0",
+              margin:        "0 0 1.2rem 0",
             }}
           >
             Quick Links
           </h3>
           <div
             style={{
-              display: "grid",
-              // on mobile show 2 columns for links to save space
+              display:             "grid",
               gridTemplateColumns: isMobile ? "1fr 1fr" : "1fr",
-              gap: isMobile ? "0.7rem 1rem" : "0.85rem",
+              gap:                 isMobile ? "0.7rem 1rem" : "0.85rem",
             }}
           >
             {navLinks.map((link, i) => (
@@ -166,20 +127,18 @@ export default function Footer() {
         {/* ── FIND US ── */}
         <div
           style={{
-            // on tablet span full width in second row
             gridColumn: isTablet ? "1 / -1" : "auto",
           }}
         >
           <h3
             style={{
-              fontFamily: "'Orbitron', monospace",
-              fontSize: "0.72rem",
-              fontWeight: 700,
+              fontFamily:    "'Orbitron', monospace",
+              fontSize:      "0.72rem",
+              fontWeight:    700,
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              color: "#e8eaf0",
-              marginBottom: "1.2rem",
-              margin: "0 0 1.2rem 0",
+              color:         "#e8eaf0",
+              margin:        "0 0 1.2rem 0",
             }}
           >
             Find Us
@@ -188,17 +147,17 @@ export default function Footer() {
           {/* address block */}
           <div
             style={{
-              borderLeft: "2px solid rgba(0,245,196,0.2)",
+              borderLeft:  "2px solid rgba(0,245,196,0.2)",
               paddingLeft: "1rem",
             }}
           >
             <p
               style={{
                 fontFamily: "'Space Mono', monospace",
-                fontSize: isMobile ? "0.78rem" : "0.85rem",
-                color: "#7a7f99",
+                fontSize:   isMobile ? "0.78rem" : "0.85rem",
+                color:      "#7a7f99",
                 lineHeight: 2,
-                margin: 0,
+                margin:     0,
               }}
             >
               Department of Computer Science Society
@@ -209,53 +168,35 @@ export default function Footer() {
             </p>
           </div>
 
-          <a
-            href="mailto:sankalan@cs.du.ac.in"
-            style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: isMobile ? "0.72rem" : "0.78rem",
-              color: "#00f5c4",
-              textDecoration: "none",
-              display: "inline-block",
-              marginTop: "1rem",
-              transition: "opacity 0.2s",
-              wordBreak: "break-all",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            ✉ sankalan@cs.du.ac.in
-          </a>
-
           {/* event dates badge */}
           <div
             style={{
-              display: "inline-flex",
+              display:    "inline-flex",
               alignItems: "center",
-              gap: "0.5rem",
-              marginTop: "1rem",
+              gap:        "0.5rem",
+              marginTop:  "1rem",
               background: "rgba(0,245,196,0.06)",
-              border: "1px solid rgba(0,245,196,0.2)",
-              padding: "0.4rem 0.9rem",
+              border:     "1px solid rgba(0,245,196,0.2)",
+              padding:    "0.4rem 0.9rem",
               clipPath:
                 "polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)",
             }}
           >
             <span
               style={{
-                width: "6px",
-                height: "6px",
+                width:        "6px",
+                height:       "6px",
                 borderRadius: "50%",
-                background: "#00f5c4",
-                boxShadow: "0 0 8px #00f5c4",
-                flexShrink: 0,
+                background:   "#00f5c4",
+                boxShadow:    "0 0 8px #00f5c4",
+                flexShrink:   0,
               }}
             />
             <span
               style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "0.7rem",
-                color: "#00f5c4",
+                fontFamily:    "'Space Mono', monospace",
+                fontSize:      "0.7rem",
+                color:         "#00f5c4",
                 letterSpacing: "0.05em",
               }}
             >
@@ -268,58 +209,43 @@ export default function Footer() {
       {/* ── BOTTOM BAR ── */}
       <div
         style={{
-          borderTop: "1px solid rgba(0,245,196,0.1)",
-          padding: isMobile ? "1.2rem 1.2rem" : "1.5rem 2rem",
-          display: "flex",
-          alignItems: "center",
+          borderTop:      "1px solid rgba(0,245,196,0.1)",
+          padding:        isMobile ? "1.2rem 1.2rem" : "1.5rem 2rem",
+          display:        "flex",
+          alignItems:     "center",
           justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "0.8rem",
-          maxWidth: "1200px",
-          margin: "0 auto",
+          flexWrap:       "wrap",
+          gap:            "0.8rem",
+          maxWidth:       "1200px",
+          margin:         "0 auto",
         }}
       >
         <p
           style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: isMobile ? "0.68rem" : "0.75rem",
-            color: "#7a7f99",
-            margin: 0,
+            fontSize:   isMobile ? "0.68rem" : "0.75rem",
+            color:      "#7a7f99",
+            margin:     0,
             lineHeight: 1.6,
           }}
         >
-          © 2026 Sankalan — Department of Computer Science Society
+          © 2026 Sankalan — Delhi University Computer Science Society
         </p>
 
-        <div
+        <Link
+          to="/privacy-policy"
           style={{
-            display: "flex",
-            gap: isMobile ? "1rem" : "1.5rem",
-            flexWrap: "wrap",
+            fontFamily:     "'Space Mono', monospace",
+            fontSize:       isMobile ? "0.68rem" : "0.75rem",
+            color:          "#7a7f99",
+            textDecoration: "none",
+            transition:     "color 0.2s",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#00f5c4")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#7a7f99")}
         >
-          {["Privacy", "Code of Conduct"].map((item, i) => (
-            <a
-              key={i}
-              href="#"
-              style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: isMobile ? "0.68rem" : "0.75rem",
-                color: "#7a7f99",
-                textDecoration: "none",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = "#00f5c4")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "#7a7f99")
-              }
-            >
-              {item}
-            </a>
-          ))}
-        </div>
+          Privacy policy
+        </Link>
       </div>
     </footer>
   );
@@ -332,24 +258,24 @@ function FooterLink({ to, name }) {
     <Link
       to={to}
       style={{
-        fontFamily: "'Space Mono', monospace",
-        fontSize: "0.78rem",
-        color: hovered ? "#00f5c4" : "#7a7f99",
+        fontFamily:     "'Space Mono', monospace",
+        fontSize:       "0.78rem",
+        color:          hovered ? "#00f5c4" : "#7a7f99",
         textDecoration: "none",
-        letterSpacing: "0.05em",
-        transition: "color 0.2s",
-        display: "flex",
-        alignItems: "center",
-        gap: "0.4rem",
+        letterSpacing:  "0.05em",
+        transition:     "color 0.2s",
+        display:        "flex",
+        alignItems:     "center",
+        gap:            "0.4rem",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <span
         style={{
-          color: "#00f5c4",
-          fontSize: "0.7rem",
-          opacity: hovered ? 1 : 0.5,
+          color:      "#00f5c4",
+          fontSize:   "0.7rem",
+          opacity:    hovered ? 1 : 0.5,
           transition: "opacity 0.2s",
         }}
       >

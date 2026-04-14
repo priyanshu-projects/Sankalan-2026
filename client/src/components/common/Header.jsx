@@ -15,6 +15,9 @@ function useWindowWidth() {
 }
 // ───────────────────────────────────────────────────────────────
 
+const REGISTER_URL =
+  "https://unstop.com/college-fests/sankalan-2026-department-of-computer-science-docs-university-of-delhi-du-458407/amp";
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -34,7 +37,7 @@ export default function Header() {
   const navLinks = [
     { name: "HOME",     path: "/" },
     { name: "EVENTS",   path: "/events" },
-    { name: "RESULTS",  path: "/results" },
+    // { name: "RESULTS",  path: "/results" },
     { name: "UPDATES",  path: "/updates" },
     { name: "SPONSORS", path: "/sponsors" },
     { name: "TEAM",     path: "/team" },
@@ -145,8 +148,10 @@ export default function Header() {
 
         {/* ── DESKTOP CTA ── */}
         {!isMobile && (
-          <Link
-            to="/events"
+          <a
+            href={REGISTER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontFamily: "'Orbitron', monospace",
               fontSize: isTablet ? "0.65rem" : "0.72rem",
@@ -171,7 +176,7 @@ export default function Header() {
             onMouseLeave={() => setCtaHovered(false)}
           >
             REGISTER NOW
-          </Link>
+          </a>
         )}
 
         {/* ── HAMBURGER (mobile only) ── */}
@@ -234,7 +239,7 @@ export default function Header() {
         <div
           style={{
             position: "fixed",
-            top: "56px", // matches mobile nav height
+            top: "56px",
             left: 0,
             right: 0,
             zIndex: 99,
@@ -313,9 +318,11 @@ export default function Header() {
               </Link>
             ))}
 
-            {/* mobile CTA */}
-            <Link
-              to="/events"
+            {/* ── MOBILE CTA ── */}
+            <a
+              href={REGISTER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               style={{
                 fontFamily: "'Orbitron', monospace",
@@ -337,7 +344,7 @@ export default function Header() {
               }}
             >
               REGISTER NOW
-            </Link>
+            </a>
           </div>
         </div>
       )}
