@@ -203,7 +203,7 @@ export default function Sponsors() {
   const gridGap  = isMobile ? "1rem" : isTablet ? "1.2rem" : "1.5rem";
 
   useEffect(() => {
-    fetch("https://sankalan-2026-production.up.railway.app/api/sponsors")
+    fetch(`${import.meta.env.VITE_API_URL}/api/sponsors`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch sponsors");
         return res.json();

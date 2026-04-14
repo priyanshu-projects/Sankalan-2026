@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const API = "https://sankalan-2026-production.up.railway.app/api";
+const API = `${import.meta.env.VITE_API_URL}/api`;
 
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
