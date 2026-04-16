@@ -32,7 +32,9 @@ function useWindowWidth() {
 
 // ── App ───────────────────────────────────────────────────────────────────────
 function App() {
-  const [introDone, setIntroDone] = useState(false);
+  const [introDone, setIntroDone] = useState(
+  () => !!sessionStorage.getItem("introSeen")
+);
   const location  = useLocation();
   const canvasRef = useRef(null);
   const cursorRef = useRef(null);
@@ -141,7 +143,12 @@ function App() {
   return (
     <>
       {/* ── INTRO ── */}
-      {!introDone && <Intro onFinish={() => setIntroDone(true)} />}
+      {!introDone && (
+  <Intro onFinish={() => {
+    sessionStorage.setItem("introSeen", "true");
+    setIntroDone(true);
+  }} />
+)}
 
       {introDone && (
         <>

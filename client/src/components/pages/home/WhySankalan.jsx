@@ -23,7 +23,7 @@ const reasons = [
   {
     icon:  "🧠",
     title: "Learn from the Best",
-    desc:  "Workshops, talks and sessions led by industry experts, researchers and senior developers from top tech companies.",
+    desc:  "Talks and sessions led by industry experts, researchers and senior developers from top tech companies.",
     color: "#7b5fff",
   },
   {
@@ -37,19 +37,7 @@ const reasons = [
     title: "Win Big",
     desc:  "A prize pool of ₹2L+ across events. Certificates, goodies, internship opportunities and recognition await.",
     color: "#7b5fff",
-  },
-  {
-    icon:  "🚀",
-    title: "Launch Your Ideas",
-    desc:  "Pitch your startup ideas, showcase projects and get feedback from mentors who've built real products.",
-    color: "#00f5c4",
-  },
-  {
-    icon:  "🎨",
-    title: "More Than Just Code",
-    desc:  "UI/UX battles, design sprints, paper presentations — Sankalan celebrates every dimension of technology.",
-    color: "#7b5fff",
-  },
+  },,
 ];
 
 // ── Reason Card ───────────────────────────────────────────────────────────────
