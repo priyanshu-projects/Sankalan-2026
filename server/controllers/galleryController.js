@@ -2,11 +2,10 @@ const cloudinary = require("../cloudinary");
 
 const getGallery = async (req, res) => {
   try {
-    const result = await cloudinary.search
-      .expression("folder:gallery")
-      .sort_by("created_at", "desc")
-      .max_results(50)
-      .execute();
+    const result = await cloudinary.api.resources({
+      type:        "upload",
+      max_results: 50,
+    });
 
     const images = result.resources.map((r, i) => ({
       id:     i + 1,
