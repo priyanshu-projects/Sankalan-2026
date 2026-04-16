@@ -4,20 +4,31 @@ const getGallery = async (req, res) => {
   try {
     const result = await cloudinary.api.resources({
       type:        "upload",
-      max_results: 50,
+      prefix:      "sankalan2026/gallery/",  
+      max_results: 60,
     });
 
-    const images = result.resources.map((r, i) => ({
-      id:     i + 1,
-      src:    r.secure_url,
-      label:  r.display_name || r.public_id.split("/").pop(),
-      accent: i % 2 === 0 ? "#00f5c4" : "#7b5fff",
-      span:   i === 0 ? "col" : i === 3 ? "row" : i === 4 ? "col" : i === 7 ? "row" : "",
+    if (!result.resources || result.resources.length === 0) {
+      return res.json({ success: true, data: [] });
+    }
+
+    const accents = ["#00f5c4", "#7b5fff"];
+    const spans   = ["col", "normal", "normal", "row", "normal", "normal"];
+
+    const data = result.resources.map((img, i) => ({
+      id:     img.public_id,
+      src:    img.secure_url,
+      label:  img.public_id
+                .replace("sankalan2026/gallery/", "")
+                .replace(/[-_]/g, " ")
+                .replace(/\.[^.]+$/, ""),
+      accent: accents[i % accents.length],
+      span:   spans[i % spans.length],
     }));
 
-    res.json({ success: true, data: images });
+    res.json({ success: true, data });
   } catch (err) {
-    console.error("Gallery error:", err);
+    console.error("Cloudinary gallery error:", err);
     res.status(500).json({ success: false, message: err.message });
   }
 };

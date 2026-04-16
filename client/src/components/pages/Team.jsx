@@ -20,7 +20,6 @@ function InitialsAvatar({ name, color, rgb, size = 90 }) {
   const initials = name
     ? name.split(" ").slice(0, 2).map((w) => w[0].toUpperCase()).join("")
     : "?";
-
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%",
@@ -42,12 +41,63 @@ function InitialsAvatar({ name, color, rgb, size = 90 }) {
 }
 
 // ── Avatar Frame ──────────────────────────────────────────────────────────────
-function AvatarFrame({ member, size = 90 }) {
+function AvatarFrame({ member, size = 90, mobileRect = false }) {
   const name  = member.name;
   const image = member.image_url || member.image;
   const color = member.color;
   const rgb   = member.rgb;
 
+  // ── MOBILE WIDE RECTANGLE MODE ──
+  if (mobileRect) {
+    const W = 110, H = 90;
+    const clip = "polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px)";
+
+    if (image) {
+      return (
+        <div style={{
+          width: W, height: H,
+          clipPath: clip,
+          overflow: "hidden", flexShrink: 0,
+          position: "relative",
+          boxShadow: `0 0 24px rgba(${rgb},0.35)`,
+        }}>
+          <img
+            src={image} alt={name}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <div style={{
+            position: "absolute", inset: 0,
+            background: `linear-gradient(180deg, transparent 50%, rgba(${rgb},0.15) 100%)`,
+            pointerEvents: "none",
+          }} />
+        </div>
+      );
+    }
+
+    const initials = name
+      ? name.split(" ").slice(0, 2).map((w) => w[0].toUpperCase()).join("")
+      : "?";
+
+    return (
+      <div style={{
+        width: W, height: H,
+        clipPath: clip,
+        background: `radial-gradient(circle at 35% 35%, rgba(${rgb},0.2) 0%, rgba(${rgb},0.04) 100%)`,
+        border: `1.5px solid rgba(${rgb},0.4)`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontFamily: "'Orbitron', monospace",
+        fontSize: "1.35rem", fontWeight: 900,
+        color: color, textShadow: `0 0 18px rgba(${rgb},0.9)`,
+        flexShrink: 0, position: "relative",
+        boxShadow: `0 0 24px rgba(${rgb},0.2)`,
+        letterSpacing: "0.05em",
+      }}>
+        {initials}
+      </div>
+    );
+  }
+
+  // ── ORIGINAL CIRCLE MODE ──
   if (image) {
     return (
       <div style={{
@@ -87,7 +137,7 @@ function AvatarFrame({ member, size = 90 }) {
   );
 }
 
-// ── Social Links ──────────────────────────────────────────────────────────────
+// ── Social Links (desktop detail card) ───────────────────────────────────────
 function SocialLinks({ linkedin, email, color, rgb }) {
   const baseStyle = {
     display: "inline-flex", alignItems: "center", justifyContent: "center",
@@ -95,7 +145,7 @@ function SocialLinks({ linkedin, email, color, rgb }) {
     border: `1px solid rgba(${rgb},0.22)`,
     background: `rgba(${rgb},0.06)`,
     clipPath: "polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%)",
-    textDecoration: "none", fontSize: "0.78rem",
+    textDecoration: "none",
     transition: "all 0.25s", color: "#7a7f99",
   };
 
@@ -155,6 +205,84 @@ function SocialLinks({ linkedin, email, color, rgb }) {
   );
 }
 
+// ── Inline Social Icons (mobile row, next to tag) ─────────────────────────────
+function InlineSocials({ linkedin, email, color, rgb }) {
+  const btnStyle = {
+    display: "inline-flex", alignItems: "center", justifyContent: "center",
+    width: "20px", height: "20px",
+    border: `1px solid rgba(${rgb},0.22)`,
+    background: `rgba(${rgb},0.06)`,
+    clipPath: "polygon(3px 0%,100% 0%,calc(100% - 3px) 100%,0% 100%)",
+    textDecoration: "none",
+    color: `rgba(${rgb},0.5)`,
+    flexShrink: 0,
+    transition: "all 0.2s",
+  };
+
+  return (
+    <div style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem" }}>
+      <a
+        href={linkedin || "#"}
+        target="_blank" rel="noopener noreferrer"
+        title="LinkedIn"
+        style={btnStyle}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => {
+          e.currentTarget.style.color = color;
+          e.currentTarget.style.background = `rgba(${rgb},0.18)`;
+          e.currentTarget.style.borderColor = color;
+        }}
+        onTouchEnd={(e) => {
+          setTimeout(() => {
+            if (e.currentTarget) {
+              e.currentTarget.style.color = `rgba(${rgb},0.5)`;
+              e.currentTarget.style.background = `rgba(${rgb},0.06)`;
+              e.currentTarget.style.borderColor = `rgba(${rgb},0.22)`;
+            }
+          }, 300);
+        }}
+      >
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853
+            0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9
+            1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337
+            7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063
+            2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225
+            0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24
+            1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24
+            .774 23.2 0 22.222 0h.003z" />
+        </svg>
+      </a>
+
+      <a
+        href={email ? `mailto:${email}` : "mailto:sankalan@cs.du.ac.in"}
+        title={email || "sankalan@cs.du.ac.in"}
+        style={btnStyle}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => {
+          e.currentTarget.style.color = color;
+          e.currentTarget.style.background = `rgba(${rgb},0.18)`;
+          e.currentTarget.style.borderColor = color;
+        }}
+        onTouchEnd={(e) => {
+          setTimeout(() => {
+            if (e.currentTarget) {
+              e.currentTarget.style.color = `rgba(${rgb},0.5)`;
+              e.currentTarget.style.background = `rgba(${rgb},0.06)`;
+              e.currentTarget.style.borderColor = `rgba(${rgb},0.22)`;
+            }
+          }, 300);
+        }}
+      >
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1
+            0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+        </svg>
+      </a>
+    </div>
+  );
+}
+
 // ── Detail Card ───────────────────────────────────────────────────────────────
 function DetailCard({ member, isMobile }) {
   const { name, role, tag, color, rgb } = member;
@@ -169,32 +297,22 @@ function DetailCard({ member, isMobile }) {
       position: "relative", overflow: "hidden",
       animation: "fadeInUp 0.45s ease both",
     }}>
-      {/* Top accent */}
       <div style={{
-        position: "absolute", top: 0, left: 0, right: 0,
-        height: "2px",
+        position: "absolute", top: 0, left: 0, right: 0, height: "2px",
         background: `linear-gradient(90deg, ${color}, transparent)`,
       }} />
-
-      {/* Corner TL */}
       <div style={{
-        position: "absolute", top: 12, left: 12,
-        width: 18, height: 18,
+        position: "absolute", top: 12, left: 12, width: 18, height: 18,
         borderTop: `1px solid rgba(${rgb},0.3)`,
         borderLeft: `1px solid rgba(${rgb},0.3)`,
         pointerEvents: "none",
       }} />
-
-      {/* Corner BR */}
       <div style={{
-        position: "absolute", bottom: 12, right: 12,
-        width: 18, height: 18,
+        position: "absolute", bottom: 12, right: 12, width: 18, height: 18,
         borderBottom: `1px solid rgba(${rgb},0.3)`,
         borderRight: `1px solid rgba(${rgb},0.3)`,
         pointerEvents: "none",
       }} />
-
-      {/* Ambient glow */}
       <div style={{
         position: "absolute", top: "40%", left: "50%",
         transform: "translate(-50%,-50%)",
@@ -208,7 +326,6 @@ function DetailCard({ member, isMobile }) {
         display: "flex", flexDirection: "column",
         alignItems: "center", textAlign: "center",
       }}>
-        {/* Avatar + spinning ring */}
         <div style={{ position: "relative", marginBottom: "1.5rem" }}>
           <AvatarFrame member={member} size={isMobile ? 90 : 120} />
           <div style={{
@@ -243,17 +360,14 @@ function DetailCard({ member, isMobile }) {
               fontFamily: "'Orbitron', monospace",
               fontSize: isMobile ? "0.95rem" : "1.15rem",
               fontWeight: 900, color: "#e8eaf0",
-              letterSpacing: "0.04em",
-              margin: "0 0 0.5rem 0",
-              lineHeight: 1.2,
+              letterSpacing: "0.04em", margin: "0 0 0.5rem 0", lineHeight: 1.2,
             }}>{name}</h3>
 
             <p style={{
               fontFamily: "'Space Mono', monospace",
               fontSize: isMobile ? "0.6rem" : "0.68rem",
               color: color, letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              margin: "0 0 0.6rem 0",
+              textTransform: "uppercase", margin: "0 0 0.6rem 0",
             }}>{role}</p>
 
             <span style={{
@@ -291,7 +405,7 @@ function DetailCard({ member, isMobile }) {
   );
 }
 
-// ── List Row ──────────────────────────────────────────────────────────────────
+// ── List Row (tablet / desktop) ───────────────────────────────────────────────
 function ListRow({ member, isActive, onClick, index, isMobile }) {
   const ref = useRef();
 
@@ -356,8 +470,7 @@ function ListRow({ member, isActive, onClick, index, isMobile }) {
     >
       {isActive && (
         <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0,
-          width: "3px",
+          position: "absolute", left: 0, top: 0, bottom: 0, width: "3px",
           background: `linear-gradient(180deg, ${color}, transparent)`,
         }} />
       )}
@@ -379,8 +492,7 @@ function ListRow({ member, isActive, onClick, index, isMobile }) {
               fontSize: isMobile ? "0.65rem" : "0.75rem",
               fontWeight: 700, color: isActive ? color : "#e8eaf0",
               letterSpacing: "0.04em",
-              whiteSpace: "nowrap", overflow: "hidden",
-              textOverflow: "ellipsis",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               transition: "color 0.25s",
             }}>{member.name}</div>
             <div style={{
@@ -388,8 +500,7 @@ function ListRow({ member, isActive, onClick, index, isMobile }) {
               fontSize: isMobile ? "0.52rem" : "0.58rem",
               color: "#7a7f99", marginTop: "0.18rem",
               letterSpacing: "0.05em",
-              whiteSpace: "nowrap", overflow: "hidden",
-              textOverflow: "ellipsis",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>{member.role}</div>
           </>
         )}
@@ -406,11 +517,14 @@ function ListRow({ member, isActive, onClick, index, isMobile }) {
   );
 }
 
-// ── Mobile Member Row (single column, image on right) ─────────────────────────
+// ── Mobile Member Row ─────────────────────────────────────────────────────────
 function MobileMemberRow({ member, onClick, index }) {
-  const ref = useRef();
+  const ref   = useRef();
   const isTBA = !member.name;
   const { color, rgb } = member;
+
+  // avatar dimensions — wide rectangle
+  const AW = 110, AH = 90;
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -437,7 +551,7 @@ function MobileMemberRow({ member, onClick, index }) {
         transition: `opacity 0.45s ${Math.min(index, 10) * 0.05}s ease,
                      transform 0.45s ${Math.min(index, 10) * 0.05}s ease,
                      border-color 0.25s, background 0.25s`,
-        padding: "0.9rem 1rem",
+        padding: "0.85rem 0.9rem",
         background: "rgba(255,255,255,0.025)",
         border: `1px solid rgba(${rgb},0.18)`,
         clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
@@ -445,9 +559,10 @@ function MobileMemberRow({ member, onClick, index }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        gap: "0.8rem",
+        gap: "0.9rem",
         position: "relative",
         overflow: "hidden",
+        minHeight: `${AH + 20}px`,
       }}
       onMouseEnter={(e) => {
         if (!isTBA) {
@@ -462,87 +577,122 @@ function MobileMemberRow({ member, onClick, index }) {
         }
       }}
     >
-      {/* top accent line */}
+      {/* top accent */}
       <div style={{
-        position: "absolute", top: 0, left: 0, right: 0,
-        height: "1.5px",
+        position: "absolute", top: 0, left: 0, right: 0, height: "1.5px",
         background: `linear-gradient(90deg, ${color}, transparent)`,
       }} />
 
-      {/* LEFT: name + role + tag */}
+      {/* ── LEFT: name + role + tag + socials ── */}
       <div style={{ flex: 1, minWidth: 0 }}>
         {isTBA ? (
           <div style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: "0.6rem",
-            color: "rgba(255,255,255,0.12)",
-            letterSpacing: "0.2em",
+            fontFamily: "'Space Mono', monospace", fontSize: "0.6rem",
+            color: "rgba(255,255,255,0.12)", letterSpacing: "0.2em",
           }}>To be announced</div>
         ) : (
           <>
             <div style={{
-              fontFamily: "'Orbitron', monospace",
-              fontSize: "0.72rem",
-              fontWeight: 700,
-              color: "#e8eaf0",
-              letterSpacing: "0.03em",
-              marginBottom: "0.25rem",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
+              fontFamily: "'Orbitron', monospace", fontSize: "0.72rem",
+              fontWeight: 700, color: "#e8eaf0", letterSpacing: "0.03em",
+              marginBottom: "0.22rem",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>{member.name}</div>
 
             <div style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: "0.58rem",
-              color: color,
-              letterSpacing: "0.06em",
-              marginBottom: "0.3rem",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
+              fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
+              color: color, letterSpacing: "0.06em", marginBottom: "0.4rem",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>{member.role}</div>
 
-            {member.tag && (
-              <span style={{
-                fontFamily: "'Space Mono', monospace",
-                fontSize: "0.48rem",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "#7a7f99",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                padding: "0.18rem 0.5rem",
-                clipPath: "polygon(3px 0%,100% 0%,calc(100% - 3px) 100%,0% 100%)",
-                display: "inline-block",
-              }}>{member.tag}</span>
-            )}
+            {/* tag + inline socials */}
+            <div style={{
+              display: "flex", alignItems: "center",
+              gap: "0.4rem", flexWrap: "wrap",
+            }}>
+              {member.tag && (
+                <span style={{
+                  fontFamily: "'Space Mono', monospace", fontSize: "0.46rem",
+                  letterSpacing: "0.12em", textTransform: "uppercase",
+                  color: "#7a7f99", background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  padding: "0.16rem 0.45rem",
+                  clipPath: "polygon(3px 0%,100% 0%,calc(100% - 3px) 100%,0% 100%)",
+                  display: "inline-block", flexShrink: 0,
+                }}>{member.tag}</span>
+              )}
+              <InlineSocials
+                linkedin={member.linkedin}
+                email={member.email}
+                color={color} rgb={rgb}
+              />
+            </div>
           </>
         )}
       </div>
 
-      {/* RIGHT: large avatar */}
-      <div style={{ flexShrink: 0, position: "relative" }}>
-        <AvatarFrame member={member} size={isTBA ? 36 : 64} />
-        {!isTBA && (
-          <div style={{
-            position: "absolute", inset: -4, borderRadius: "50%",
-            border: `1px solid rgba(${rgb},0.2)`,
-            borderTopColor: color,
-            animation: "spin 8s linear infinite",
-            pointerEvents: "none",
-          }} />
-        )}
-      </div>
-
-      {/* tap hint */}
+      {/* ── RIGHT: wide rectangle avatar + corner brackets ── */}
       {!isTBA && (
         <div style={{
-          position: "absolute", bottom: "0.4rem", right: "0.8rem",
-          fontFamily: "'Space Mono', monospace",
-          fontSize: "0.55rem",
-          color: `rgba(${rgb}, 0.4)`,
-        }}>tap ›</div>
+          flexShrink: 0,
+          position: "relative",
+          width: AW,
+          height: AH,
+        }}>
+          <AvatarFrame member={member} mobileRect={true} />
+
+          {/* TL bracket */}
+          <div style={{
+            position: "absolute", top: -5, left: -5,
+            width: 16, height: 16,
+            borderTop: `2px solid ${color}`,
+            borderLeft: `2px solid ${color}`,
+            animation: "bracketPulse 2s ease-in-out infinite",
+            pointerEvents: "none",
+          }} />
+          {/* TR bracket */}
+          <div style={{
+            position: "absolute", top: -5, right: -5,
+            width: 16, height: 16,
+            borderTop: `2px solid ${color}`,
+            borderRight: `2px solid ${color}`,
+            animation: "bracketPulse 2s ease-in-out infinite 0.5s",
+            pointerEvents: "none",
+          }} />
+          {/* BL bracket */}
+          <div style={{
+            position: "absolute", bottom: -5, left: -5,
+            width: 16, height: 16,
+            borderBottom: `2px solid ${color}`,
+            borderLeft: `2px solid ${color}`,
+            animation: "bracketPulse 2s ease-in-out infinite 1s",
+            pointerEvents: "none",
+          }} />
+          {/* BR bracket */}
+          <div style={{
+            position: "absolute", bottom: -5, right: -5,
+            width: 16, height: 16,
+            borderBottom: `2px solid ${color}`,
+            borderRight: `2px solid ${color}`,
+            animation: "bracketPulse 2s ease-in-out infinite 1.5s",
+            pointerEvents: "none",
+          }} />
+          {/* outer glow border */}
+          <div style={{
+            position: "absolute", inset: -8,
+            border: `1px solid rgba(${rgb},0.12)`,
+            clipPath: "polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px)",
+            animation: "glowPulse 3s ease-in-out infinite",
+            pointerEvents: "none",
+          }} />
+        </div>
+      )}
+
+      {/* TBA right side */}
+      {isTBA && (
+        <div style={{ flexShrink: 0 }}>
+          <AvatarFrame member={member} size={36} />
+        </div>
       )}
     </div>
   );
@@ -554,40 +704,30 @@ function MobileSheet({ member, onClose }) {
 
   return (
     <>
-      {/* overlay */}
       <div
         onClick={onClose}
         style={{
           position: "fixed", inset: 0,
-          background: "rgba(3,4,10,0.8)",
+          background: "rgba(3,4,10,0.85)",
           backdropFilter: "blur(4px)",
           WebkitBackdropFilter: "blur(4px)",
           zIndex: 200,
         }}
       />
-
-      {/* sheet */}
       <div style={{
-        position: "fixed",
-        bottom: 0, left: 0, right: 0,
-        zIndex: 201,
-        maxHeight: "80vh",
-        overflowY: "auto",
+        position: "fixed", bottom: 0, left: 0, right: 0,
+        zIndex: 201, maxHeight: "80vh", overflowY: "auto",
         background: "#0a0c14",
         borderTop: `1px solid rgba(${member.rgb},0.3)`,
         borderRadius: "16px 16px 0 0",
         padding: "1.5rem 1.2rem 2rem",
         animation: "slideUp 0.3s ease",
       }}>
-        {/* drag handle */}
         <div style={{
           width: "40px", height: "3px",
           background: "rgba(255,255,255,0.15)",
-          borderRadius: "2px",
-          margin: "0 auto 1.5rem",
+          borderRadius: "2px", margin: "0 auto 1.5rem",
         }} />
-
-        {/* close btn */}
         <button
           onClick={onClose}
           style={{
@@ -595,13 +735,11 @@ function MobileSheet({ member, onClose }) {
             background: "rgba(255,255,255,0.05)",
             border: "1px solid rgba(255,255,255,0.1)",
             color: "#7a7f99", cursor: "pointer",
-            width: "28px", height: "28px",
-            borderRadius: "50%", fontSize: "0.75rem",
-            display: "flex", alignItems: "center",
-            justifyContent: "center",
+            width: "28px", height: "28px", borderRadius: "50%",
+            fontSize: "0.75rem", display: "flex",
+            alignItems: "center", justifyContent: "center",
           }}
         >✕</button>
-
         <DetailCard member={member} isMobile={true} />
       </div>
     </>
@@ -629,7 +767,7 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {[...Array(5)].map((_, i) => (
             <div key={i} style={{
-              height: isMobile ? "72px" : "60px",
+              height: isMobile ? "110px" : "60px",
               background: "rgba(255,255,255,0.02)",
               border: "1px solid rgba(0,245,196,0.06)",
               clipPath: "polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)",
@@ -656,15 +794,10 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
     );
   }
 
-  // ── MOBILE: single-column list, large avatar on right, bottom sheet on tap ──
   if (isMobile) {
     return (
       <>
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.6rem",
-        }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
           {members.map((member, i) => (
             <MobileMemberRow
               key={member.id}
@@ -674,7 +807,6 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
             />
           ))}
         </div>
-
         <MobileSheet
           member={sheetMember}
           onClose={() => setSheetMember(null)}
@@ -683,7 +815,6 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
     );
   }
 
-  // ── TABLET / DESKTOP: split panel ──
   return (
     <div style={{
       display: "grid",
@@ -691,7 +822,6 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
       gap: isTablet ? "1.5rem" : "2rem",
       alignItems: "start",
     }}>
-      {/* Left list */}
       <div>
         <div style={{
           fontFamily: "'Space Mono', monospace", fontSize: "0.58rem",
@@ -723,7 +853,6 @@ function SplitPanel({ members, accentColor, accentRgb, loading, isMobile, isTabl
         </div>
       </div>
 
-      {/* Right detail */}
       <div style={{ position: "sticky", top: "6rem" }}>
         <div style={{
           height: "2px",
@@ -794,7 +923,6 @@ export default function Team() {
 
   return (
     <section id="team" style={{ position: "relative", zIndex: 1 }}>
-      {/* Grid BG */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
         backgroundImage: `
@@ -811,13 +939,11 @@ export default function Team() {
         maxWidth: "1200px", margin: "0 auto",
         padding: isMobile
           ? "4rem 1rem 3rem"
-          : isTablet
-          ? "5rem 1.5rem 4rem"
-          : "6rem 2rem",
+          : isTablet ? "5rem 1.5rem 4rem" : "6rem 2rem",
         position: "relative", zIndex: 1,
       }}>
 
-        {/* ── HEADER ── */}
+        {/* HEADER */}
         <div ref={headerRef} style={{
           opacity: 0, transform: "translateY(30px)",
           transition: "opacity 0.7s ease, transform 0.7s ease",
@@ -856,7 +982,7 @@ export default function Team() {
           </div>
         </div>
 
-        {/* ── ERROR ── */}
+        {/* ERROR */}
         {error && (
           <div style={{
             padding: isMobile ? "1rem" : "2rem",
@@ -872,7 +998,7 @@ export default function Team() {
           </div>
         )}
 
-        {/* ── TAB SWITCHER ── */}
+        {/* TAB SWITCHER */}
         <div style={{
           display: "flex",
           marginBottom: isMobile ? "2rem" : "3rem",
@@ -883,7 +1009,7 @@ export default function Team() {
         }}>
           {[
             { key: "admin",  label: isMobile ? "🏛️ Admin" : "🏛️ Administrative & DUCSS", color: "#00f5c4", rgb: "0,245,196"   },
-            { key: "events", label: isMobile ? "⚡ Heads"  : "⚡ Event Heads",              color: "#7b5fff", rgb: "123,95,255" },
+            { key: "events", label: isMobile ? "⚡ Heads"  : "⚡ Event Heads",             color: "#7b5fff", rgb: "123,95,255" },
           ].map((tab, i) => (
             <button
               key={tab.key}
@@ -891,24 +1017,18 @@ export default function Team() {
               style={{
                 fontFamily: "'Orbitron', monospace",
                 fontSize: isMobile ? "0.58rem" : "0.68rem",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
+                fontWeight: 700, letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 padding: isMobile ? "0.8rem 1rem" : "0.9rem 1.8rem",
                 border: "none",
                 flex: isMobile ? 1 : "none",
-                cursor: "pointer",
-                transition: "all 0.3s",
+                cursor: "pointer", transition: "all 0.3s",
                 background: activeTab === tab.key
-                  ? `rgba(${tab.rgb},0.12)`
-                  : "transparent",
+                  ? `rgba(${tab.rgb},0.12)` : "transparent",
                 color: activeTab === tab.key ? tab.color : "#7a7f99",
-                borderRight: i === 0
-                  ? "1px solid rgba(0,245,196,0.15)"
-                  : "none",
+                borderRight: i === 0 ? "1px solid rgba(0,245,196,0.15)" : "none",
                 boxShadow: activeTab === tab.key
-                  ? `inset 0 -2px 0 ${tab.color}`
-                  : "none",
+                  ? `inset 0 -2px 0 ${tab.color}` : "none",
                 whiteSpace: "nowrap",
               }}
             >
@@ -917,25 +1037,19 @@ export default function Team() {
           ))}
         </div>
 
-        {/* ── PANELS ── */}
+        {/* PANELS */}
         {activeTab === "admin" && (
           <SplitPanel
             members={adminPanel}
-            accentColor="#00f5c4"
-            accentRgb="0,245,196"
-            loading={loading}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            accentColor="#00f5c4" accentRgb="0,245,196"
+            loading={loading} isMobile={isMobile} isTablet={isTablet}
           />
         )}
         {activeTab === "events" && (
           <SplitPanel
             members={eventHeads}
-            accentColor="#7b5fff"
-            accentRgb="123,95,255"
-            loading={loading}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            accentColor="#7b5fff" accentRgb="123,95,255"
+            loading={loading} isMobile={isMobile} isTablet={isTablet}
           />
         )}
       </div>
@@ -956,6 +1070,14 @@ export default function Team() {
         @keyframes slideUp {
           from { transform: translateY(100%); }
           to   { transform: translateY(0); }
+        }
+        @keyframes bracketPulse {
+          0%, 100% { opacity: 0.3; }
+          50%      { opacity: 1;   }
+        }
+        @keyframes glowPulse {
+          0%, 100% { opacity: 0.25; }
+          50%      { opacity: 0.75; }
         }
         #team ::-webkit-scrollbar { width: 3px; }
         #team ::-webkit-scrollbar-track { background: transparent; }
