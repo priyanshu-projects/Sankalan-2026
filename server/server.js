@@ -7,6 +7,7 @@ const eventsRouter   = require("./routes/events");
 const teamRouter     = require("./routes/team");
 const resultsRouter  = require("./routes/results");
 const sponsorsRouter = require('./routes/sponsors');
+const galleryRoutes = require("./routes/gallery");
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -29,7 +30,7 @@ app.use("/api/events",   eventsRouter);
 app.use("/api/team",     teamRouter);
 app.use("/api/results",  resultsRouter);
 app.use("/api/sponsors", sponsorsRouter);
-
+app.use("/api/gallery", galleryRoutes);
 // Test Routes
 app.get("/", (req, res) => {
   res.json({ message: "Sankalan 2026 API running!" });

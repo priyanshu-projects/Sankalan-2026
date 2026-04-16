@@ -3,7 +3,6 @@ import ReactMarkdown from "react-markdown";
 
 const API = `${import.meta.env.VITE_API_URL}/api`;
 
-// ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
   const [width, setWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200
@@ -16,27 +15,34 @@ function useWindowWidth() {
   return width;
 }
 
-// ── Description Popup ────────────────────────────────────────────────────────
 function DescriptionPopup({ event, onClose, isMobile }) {
   const rgb = event.color === "#00f5c4" ? "0,245,196" : "123,95,255";
 
-  // Close on backdrop click
   const handleBackdrop = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
 
-  // Close on Escape key
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onClose]);
 
-  // Prevent body scroll when popup open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
   }, []);
+
+  const cleanDescription = (text) => {
+    if (!text) return "";
+    let t = text;
+    t = t.replace(/\\n/g, "\n");
+    t = t.replace(/(#{1,6} )/g, "\n\n\$1");
+    t = t.replace(/---/g, "\n\n---\n\n");
+    t = t.replace(/ (- )/g, "\n\$1");
+    t = t.replace(/\n{3,}/g, "\n\n");
+    return t.trim();
+  };
 
   return (
     <div
@@ -83,15 +89,22 @@ function DescriptionPopup({ event, onClose, isMobile }) {
           borderBottom: `1px solid rgba(${rgb},0.1)`,
           flexShrink: 0,
         }}>
-          {/* Icon + Name + Tag */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flex: 1, minWidth: 0 }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.8rem",
+            flex: 1,
+            minWidth: 0,
+          }}>
             <div style={{
               width: isMobile ? "36px" : "44px",
               height: isMobile ? "36px" : "44px",
               borderRadius: "50%",
               background: `rgba(${rgb},0.1)`,
               border: `1px solid rgba(${rgb},0.25)`,
-              display: "flex", alignItems: "center", justifyContent: "center",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               fontSize: isMobile ? "1rem" : "1.3rem",
               flexShrink: 0,
             }}>
@@ -120,7 +133,6 @@ function DescriptionPopup({ event, onClose, isMobile }) {
             </div>
           </div>
 
-          {/* Close Button */}
           <button
             onClick={onClose}
             style={{
@@ -148,7 +160,7 @@ function DescriptionPopup({ event, onClose, isMobile }) {
           </button>
         </div>
 
-        {/* POPUP BODY — Scrollable */}
+        {/* POPUP BODY */}
         <div style={{
           overflowY: "auto",
           flex: 1,
@@ -162,9 +174,16 @@ function DescriptionPopup({ event, onClose, isMobile }) {
             marginBottom: "1.5rem",
           }}>
             {[
-              { label: "Day", value: `Day ${event.day}` },
-              { label: "Date", value: event.event_date ? new Date(event.event_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "TBA" },
-              { label: "Time", value: event.event_time ? event.event_time.slice(0,5) : "TBA" },
+              { label: "Day",      value: `Day ${event.day}` },
+              {
+                label: "Date",
+                value: event.event_date
+                  ? new Date(event.event_date).toLocaleDateString("en-IN", {
+                      day: "numeric", month: "short", year: "numeric",
+                    })
+                  : "TBA",
+              },
+              { label: "Time",     value: event.event_time ? event.event_time.slice(0, 5) : "TBA" },
               { label: "Category", value: event.category === "tech" ? "Technical" : "Non-Technical" },
             ].map((item, i) => (
               <div key={i} style={{
@@ -202,7 +221,7 @@ function DescriptionPopup({ event, onClose, isMobile }) {
             marginBottom: "1.5rem",
           }} />
 
-          {/* Full Description — Markdown */}
+          {/* Full Description */}
           <div style={{
             fontFamily: "'Space Mono', monospace",
             fontSize: isMobile ? "0.72rem" : "0.78rem",
@@ -212,6 +231,19 @@ function DescriptionPopup({ event, onClose, isMobile }) {
             {event.full_description ? (
               <ReactMarkdown
                 components={{
+                  h1: ({ children }) => (
+                    <h1 style={{
+                      fontFamily: "'Orbitron', monospace",
+                      fontSize: isMobile ? "1rem" : "1.1rem",
+                      fontWeight: 900,
+                      color: event.color,
+                      marginBottom: "1rem",
+                      marginTop: "0.5rem",
+                      letterSpacing: "0.05em",
+                      borderBottom: `1px solid rgba(${rgb},0.2)`,
+                      paddingBottom: "0.4rem",
+                    }}>{children}</h1>
+                  ),
                   h2: ({ children }) => (
                     <h2 style={{
                       fontFamily: "'Orbitron', monospace",
@@ -219,8 +251,10 @@ function DescriptionPopup({ event, onClose, isMobile }) {
                       fontWeight: 900,
                       color: event.color,
                       marginBottom: "1rem",
-                      marginTop: "0.5rem",
+                      marginTop: "1.5rem",
                       letterSpacing: "0.05em",
+                      borderBottom: `1px solid rgba(${rgb},0.15)`,
+                      paddingBottom: "0.4rem",
                     }}>{children}</h2>
                   ),
                   h3: ({ children }) => (
@@ -234,9 +268,22 @@ function DescriptionPopup({ event, onClose, isMobile }) {
                       letterSpacing: "0.05em",
                     }}>{children}</h3>
                   ),
+                  h4: ({ children }) => (
+                    <h4 style={{
+                      fontFamily: "'Orbitron', monospace",
+                      fontSize: isMobile ? "0.7rem" : "0.75rem",
+                      fontWeight: 700,
+                      color: event.color,
+                      marginBottom: "0.5rem",
+                      marginTop: "1rem",
+                      letterSpacing: "0.05em",
+                      opacity: 0.85,
+                    }}>{children}</h4>
+                  ),
                   p: ({ children }) => (
                     <p style={{
                       marginBottom: "0.8rem",
+                      marginTop: 0,
                       color: "rgba(232,234,240,0.75)",
                       fontFamily: "'Space Mono', monospace",
                       fontSize: isMobile ? "0.7rem" : "0.75rem",
@@ -248,12 +295,25 @@ function DescriptionPopup({ event, onClose, isMobile }) {
                       {children}
                     </strong>
                   ),
+                  em: ({ children }) => (
+                    <em style={{ color: event.color, fontStyle: "italic", opacity: 0.85 }}>
+                      {children}
+                    </em>
+                  ),
                   ul: ({ children }) => (
                     <ul style={{
-                      paddingLeft: "1.2rem",
+                      paddingLeft: "0",
                       marginBottom: "0.8rem",
+                      marginTop: 0,
                       listStyle: "none",
                     }}>{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol style={{
+                      paddingLeft: "1.2rem",
+                      marginBottom: "0.8rem",
+                      marginTop: 0,
+                    }}>{children}</ol>
                   ),
                   li: ({ children }) => (
                     <li style={{
@@ -264,31 +324,57 @@ function DescriptionPopup({ event, onClose, isMobile }) {
                       display: "flex",
                       alignItems: "flex-start",
                       gap: "0.5rem",
+                      lineHeight: 1.7,
                     }}>
-                      <span style={{ color: event.color, flexShrink: 0 }}>▸</span>
+                      <span style={{ color: event.color, flexShrink: 0, marginTop: "0.15rem" }}>▸</span>
                       <span>{children}</span>
                     </li>
                   ),
                   hr: () => (
                     <div style={{
                       height: "1px",
-                      background: `linear-gradient(90deg, rgba(${rgb},0.3), transparent)`,
-                      margin: "1rem 0",
+                      background: `linear-gradient(90deg, rgba(${rgb},0.35), transparent)`,
+                      margin: "1.2rem 0",
                     }} />
+                  ),
+                  code: ({ children }) => (
+                    <code style={{
+                      background: "rgba(0,0,0,0.4)",
+                      color: event.color,
+                      padding: "0.1rem 0.4rem",
+                      borderRadius: "2px",
+                      fontSize: "0.75em",
+                      fontFamily: "'Space Mono', monospace",
+                      border: `1px solid rgba(${rgb},0.2)`,
+                    }}>{children}</code>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote style={{
+                      borderLeft: `3px solid ${event.color}`,
+                      paddingLeft: "1rem",
+                      margin: "0.8rem 0",
+                      opacity: 0.75,
+                      fontStyle: "italic",
+                    }}>{children}</blockquote>
                   ),
                 }}
               >
-                {event.full_description}
+                {cleanDescription(event.full_description)}
               </ReactMarkdown>
             ) : (
-              <p style={{ color: "#7a7f99", fontStyle: "italic" }}>
+              <p style={{
+                color: "#7a7f99",
+                fontStyle: "italic",
+                fontFamily: "'Space Mono', monospace",
+                fontSize: "0.75rem",
+              }}>
                 Description coming soon...
               </p>
             )}
           </div>
         </div>
 
-        {/* POPUP FOOTER — Register Now */}
+        {/* POPUP FOOTER */}
         <div style={{
           padding: isMobile ? "1rem 1.2rem" : "1.2rem 2rem",
           borderTop: `1px solid rgba(${rgb},0.1)`,
@@ -358,7 +444,6 @@ function DescriptionPopup({ event, onClose, isMobile }) {
   );
 }
 
-// ── EventCard ────────────────────────────────────────────────────────────────
 function EventCard({ event, index, isMobile }) {
   const ref = useRef();
   const [showPopup, setShowPopup] = useState(false);
@@ -402,7 +487,6 @@ function EventCard({ event, index, isMobile }) {
           display: "flex",
           flexDirection: "column",
           position: "relative",
-          overflow: "hidden",
           cursor: "default",
         }}
         onMouseEnter={(e) => {
@@ -442,7 +526,6 @@ function EventCard({ event, index, isMobile }) {
           gap: "0.5rem",
           flexWrap: isMobile ? "wrap" : "nowrap",
         }}>
-          {/* ICON + NAME */}
           <div style={{
             display: "flex", alignItems: "center",
             gap: "0.7rem", flex: 1, minWidth: 0,
@@ -474,7 +557,6 @@ function EventCard({ event, index, isMobile }) {
             </h3>
           </div>
 
-          {/* TAG */}
           <span style={{
             fontFamily: "'Space Mono', monospace",
             fontSize: "0.52rem",
@@ -505,7 +587,7 @@ function EventCard({ event, index, isMobile }) {
           {desc}
         </p>
 
-        {/* ACTION ROW — Register button + Arrow */}
+        {/* ACTION ROW */}
         <div style={{
           display: "flex",
           alignItems: "center",
@@ -513,7 +595,6 @@ function EventCard({ event, index, isMobile }) {
           gap: "0.8rem",
           marginBottom: "1.2rem",
         }}>
-          {/* SMALL REGISTER BUTTON */}
           {event.registration_link ? (
             <a
               href={event.registration_link}
@@ -559,7 +640,6 @@ function EventCard({ event, index, isMobile }) {
             </span>
           )}
 
-          {/* ARROW BUTTON — Open Popup */}
           <button
             onClick={() => setShowPopup(true)}
             title="View full details"
@@ -660,10 +740,7 @@ function EventCard({ event, index, isMobile }) {
                     {head.phone ? (
                       <a
                         href={`tel:${head.phone}`}
-                        style={{
-                          color: "#e8eaf0", textDecoration: "none",
-                          transition: "color 0.2s",
-                        }}
+                        style={{ color: "#e8eaf0", textDecoration: "none", transition: "color 0.2s" }}
                         onMouseEnter={(e) => (e.currentTarget.style.color = event.color)}
                         onMouseLeave={(e) => (e.currentTarget.style.color = "#e8eaf0")}
                       >
@@ -694,7 +771,6 @@ function EventCard({ event, index, isMobile }) {
         </div>
       </div>
 
-      {/* POPUP */}
       {showPopup && (
         <DescriptionPopup
           event={event}
@@ -706,7 +782,6 @@ function EventCard({ event, index, isMobile }) {
   );
 }
 
-// ── Loading Skeleton ─────────────────────────────────────────────────────────
 function LoadingSkeleton({ isMobile, isTablet }) {
   const cols = isMobile ? "1fr" : isTablet ? "1fr 1fr" : "repeat(3, 1fr)";
   return (
@@ -743,7 +818,6 @@ function LoadingSkeleton({ isMobile, isTablet }) {
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────────────────
 export default function Events() {
   const [activeTab,     setActiveTab]     = useState("tech");
   const [techEvents,    setTechEvents]    = useState([]);
@@ -751,9 +825,9 @@ export default function Events() {
   const [loading,       setLoading]       = useState(true);
   const [error,         setError]         = useState(null);
 
-  const width     = useWindowWidth();
-  const isMobile  = width < 600;
-  const isTablet  = width >= 600 && width < 1024;
+  const width    = useWindowWidth();
+  const isMobile = width < 600;
+  const isTablet = width >= 600 && width < 1024;
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -779,7 +853,7 @@ export default function Events() {
     fetchEvents();
   }, []);
 
-  const events = activeTab === "tech" ? techEvents : nonTechEvents;
+  const events   = activeTab === "tech" ? techEvents : nonTechEvents;
   const gridCols = isMobile ? "1fr" : isTablet ? "1fr 1fr" : "repeat(3, 1fr)";
 
   return (
@@ -794,7 +868,6 @@ export default function Events() {
           : "6rem 2rem",
       }}>
 
-        {/* SECTION TAG */}
         <p style={{
           display: "flex", alignItems: "center", gap: "0.8rem",
           fontFamily: "'Space Mono', monospace",
@@ -809,7 +882,6 @@ export default function Events() {
           Compete
         </p>
 
-        {/* TITLE + COUNTS */}
         <div style={{
           display: "flex",
           alignItems: isMobile ? "flex-start" : "flex-end",
@@ -838,23 +910,19 @@ export default function Events() {
                 fontFamily: "'Orbitron', monospace",
                 color: "#00f5c4", fontWeight: 700,
                 fontSize: isMobile ? "0.9rem" : "1rem",
-              }}>
-                {techEvents.length}
-              </span>{" "}Tech
+              }}>{techEvents.length}</span>{" "}Tech
             </span>
             <span>
               <span style={{
                 fontFamily: "'Orbitron', monospace",
                 color: "#7b5fff", fontWeight: 700,
                 fontSize: isMobile ? "0.9rem" : "1rem",
-              }}>
-                {nonTechEvents.length}
-              </span>{" "}Non-Tech
+              }}>{nonTechEvents.length}</span>{" "}Non-Tech
             </span>
           </div>
         </div>
 
-        {/* TAB SWITCHER */}
+        {/* TABS */}
         <div style={{
           display: "flex",
           marginBottom: "2.5rem",
@@ -881,16 +949,10 @@ export default function Events() {
                 flex: isMobile ? 1 : "none",
                 cursor: "pointer",
                 transition: "all 0.3s",
-                background: activeTab === tab.key
-                  ? `rgba(${tab.rgb},0.15)`
-                  : "transparent",
+                background: activeTab === tab.key ? `rgba(${tab.rgb},0.15)` : "transparent",
                 color: activeTab === tab.key ? tab.color : "#7a7f99",
-                borderRight: tab.key === "tech"
-                  ? "1px solid rgba(0,245,196,0.15)"
-                  : "none",
-                boxShadow: activeTab === tab.key
-                  ? `inset 0 -2px 0 ${tab.color}`
-                  : "none",
+                borderRight: tab.key === "tech" ? "1px solid rgba(0,245,196,0.15)" : "none",
+                boxShadow: activeTab === tab.key ? `inset 0 -2px 0 ${tab.color}` : "none",
                 whiteSpace: "nowrap",
               }}
             >
@@ -899,11 +961,8 @@ export default function Events() {
           ))}
         </div>
 
-        {/* ACTIVE TAB STATUS */}
-        <div style={{
-          display: "flex", alignItems: "center",
-          gap: "1rem", marginBottom: "2rem",
-        }}>
+        {/* STATUS */}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "2rem" }}>
           <div style={{
             width: "8px", height: "8px", borderRadius: "50%",
             background: activeTab === "tech" ? "#00f5c4" : "#7b5fff",
@@ -936,7 +995,7 @@ export default function Events() {
           </div>
         )}
 
-        {/* EVENT GRID */}
+        {/* GRID */}
         {loading ? (
           <LoadingSkeleton isMobile={isMobile} isTablet={isTablet} />
         ) : (
@@ -946,17 +1005,12 @@ export default function Events() {
             gap: isMobile ? "1rem" : "1.2rem",
           }}>
             {events.map((event, i) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                index={i}
-                isMobile={isMobile}
-              />
+              <EventCard key={event.id} event={event} index={i} isMobile={isMobile} />
             ))}
           </div>
         )}
 
-        {/* REGISTER CTA */}
+        {/* BOTTOM CTA */}
         <div style={{
           marginTop: isMobile ? "2.5rem" : "4rem",
           padding: isMobile ? "1.5rem 1.2rem" : isTablet ? "2rem 2rem" : "2.5rem 3rem",
@@ -1040,7 +1094,7 @@ export default function Events() {
 
       <style>{`
         @keyframes pulse {
-          0%, 100% { opacity: 1; }
+          0%, 100% { opacity: 1;   }
           50%       { opacity: 0.4; }
         }
       `}</style>
