@@ -32,6 +32,7 @@ app.use("/api/team",     teamRouter);
 app.use("/api/results",  resultsRouter);
 app.use("/api/sponsors", sponsorsRouter);
 app.use("/api/gallery", galleryRoutes);
+
 // Test Routes
 app.get("/", (req, res) => {
   res.json({ message: "Sankalan 2026 API running!" });
@@ -41,6 +42,9 @@ app.get("/api", (req, res) => {
   res.json({ message: "Sankalan 2026 API running!" });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
