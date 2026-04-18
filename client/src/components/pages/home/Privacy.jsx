@@ -447,7 +447,7 @@ function PolicySection({ section, isMobile, isLast }) {
             >
               Email:{" "}
               <a
-                href="mailto:sankalan@cs.du.ac.in"
+                href="mailto:ducss@cs.du.ac.in"
                 style={{
                   color: "#00f5c4",
                   textDecoration: "none",
@@ -456,7 +456,7 @@ function PolicySection({ section, isMobile, isLast }) {
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
-                sankalan@cs.du.ac.in
+                ducss@cs.du.ac.in
               </a>
             </span>
             <span

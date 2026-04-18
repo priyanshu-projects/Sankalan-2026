@@ -73,7 +73,7 @@ const faqs = [
   },
   {
     q: "How can I contact the organising team?",
-    a: "You can reach us at sankalan@cs.du.ac.in or use the Contact form on this website. You can also follow @ducs.sankalan on Instagram for the latest updates and announcements.",
+    a: "You can reach us at ducss@cs.du.ac.in or use the Contact form on this website. You can also follow @ducs.sankalan on Instagram for the latest updates and announcements.",
     tag: "Contact",
   },
 ];

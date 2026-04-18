@@ -181,7 +181,7 @@ function SocialLinks({ linkedin, email, color, rgb }) {
       </a>
 
       <a
-        href={email ? `mailto:${email}` : "mailto:sankalan@cs.du.ac.in"}
+        href={email ? `mailto:${email}` : "mailto:ducss@cs.du.ac.in"}
         title="Email" style={baseStyle}
         onMouseEnter={(e) => {
           e.currentTarget.style.borderColor = color;
@@ -255,8 +255,8 @@ function InlineSocials({ linkedin, email, color, rgb }) {
       </a>
 
       <a
-        href={email ? `mailto:${email}` : "mailto:sankalan@cs.du.ac.in"}
-        title={email || "sankalan@cs.du.ac.in"}
+        href={email ? `mailto:${email}` : "mailto:ducss@cs.du.ac.in"}
+        title={email || "ducss@cs.du.ac.in"}
         style={btnStyle}
         onClick={(e) => e.stopPropagation()}
         onTouchStart={(e) => {

@@ -20,8 +20,8 @@ function useWindowWidth() {
 const contactLinks = [
   {
     icon:  <Mail size={16} />,
-    label: "sankalan@cs.du.ac.in",
-    href:  "mailto:sankalan@cs.du.ac.in",
+    label: "ducss@cs.du.ac.in",
+    href:  "mailto:ducss@cs.du.ac.in",
   },
   {
     icon:  <Instagram size={16} />,
@@ -35,7 +35,6 @@ const eventTopics = [
   "Hackathon",
   "Coding Contest",
   "Paper Presentation",
-  "UI/UX Challenge",
   "Sponsorship",
   "Volunteering",
   "Media & Press",
@@ -758,10 +757,10 @@ export default function Contact() {
                   }}>
                     ⚠ Something went wrong. Email us at{" "}
                     <a
-                      href="mailto:sankalan@cs.du.ac.in"
+                      href="mailto:ducss@cs.du.ac.in"
                       style={{ color: "#00f5c4", textDecoration: "none" }}
                     >
-                      sankalan@cs.du.ac.in
+                      ducss@cs.du.ac.in
                     </a>
                   </div>
                 )}

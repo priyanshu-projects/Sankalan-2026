@@ -254,9 +254,7 @@ export default function About() {
                 margin:     "0 0 1rem 0",
               }}
             >
-              From high-octane hackathons to thought-provoking paper
-              presentations, coding contests to UI/UX challenges — Sankalan
-              is where talent meets opportunity and friendships are forged
+              Sankalan is where talent meets opportunity and friendships are forged
               in the fire of competition.
             </p>
 
