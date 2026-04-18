@@ -4,7 +4,7 @@ const getGallery = async (req, res) => {
   try {
     const result = await cloudinary.api.resources({
       type:        "upload",
-      folder:      "gallery",  
+      folder:      "sankalan/gallery",  
       max_results: 60,
     });
 
