@@ -288,15 +288,15 @@ export default function Gallery() {
         {/* ERROR */}
         {error && (
           <div style={{
-            padding:    "1.5rem",
+            padding:      "1.5rem",
             marginBottom: "2rem",
-            background: "rgba(255,62,108,0.05)",
-            border:     "1px solid rgba(255,62,108,0.2)",
-            clipPath:   "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
-            fontFamily: "'Space Mono', monospace",
-            fontSize:   "0.75rem",
-            color:      "#ff3e6c",
-            textAlign:  "center",
+            background:   "rgba(255,62,108,0.05)",
+            border:       "1px solid rgba(255,62,108,0.2)",
+            clipPath:     "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
+            fontFamily:   "'Space Mono', monospace",
+            fontSize:     "0.75rem",
+            color:        "#ff3e6c",
+            textAlign:    "center",
           }}>
             ⚠ {error}
           </div>
@@ -323,43 +323,6 @@ export default function Gallery() {
             ))}
           </div>
         )}
-
-        {/* VIEW ALL */}
-        <div style={{ textAlign: "center", marginTop: isMobile ? "2rem" : "3rem" }}>
-          <a
-            href={`https://cloudinary.com/console/media_library/folders/gallery`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display:        "inline-block",
-              fontFamily:     "'Orbitron', monospace",
-              clipPath:       "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
-              border:         "1.5px solid rgba(255,255,255,0.15)",
-              color:          "#e8eaf0",
-              padding:        isMobile ? "0.85rem 1.8rem" : "1rem 2.5rem",
-              fontSize:       isMobile ? "0.7rem" : "0.78rem",
-              fontWeight:     700,
-              letterSpacing:  "0.15em",
-              textTransform:  "uppercase",
-              textDecoration: "none",
-              transition:     "all 0.3s",
-              width:          isMobile ? "100%" : "auto",
-              boxSizing:      "border-box",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "#00f5c4";
-              e.currentTarget.style.color       = "#00f5c4";
-              e.currentTarget.style.boxShadow   = "0 0 30px rgba(0,245,196,0.2)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)";
-              e.currentTarget.style.color       = "#e8eaf0";
-              e.currentTarget.style.boxShadow   = "none";
-            }}
-          >
-            View Full Gallery →
-          </a>
-        </div>
       </div>
 
       {lightbox && (
