@@ -34,10 +34,8 @@ const eventTopics = [
   "General Inquiry",
   "Hackathon",
   "Coding Contest",
-  "Paper Presentation",
   "Sponsorship",
-  "Volunteering",
-  "Media & Press",
+  "Non-tech event",
   "Other",
 ];
 
