@@ -3,6 +3,37 @@ import { useEffect, useRef, useState } from "react";
 const CARD_COLOR     = "#00f5c4";
 const CARD_COLOR_RGB = "0,245,196";
 
+// ── Sponsors Data ─────────────────────────────────────────────────────────────
+const SPONSORS = [
+  {
+    id: 1,
+    name: ".XYZ",
+    logo_url: "/sponsors/xyz.webp",
+    website_url: "https://gen.xyz",
+  },
+  {
+    id: 2,
+    name: "Unstop",
+    logo_url: "/sponsors/unstop.png",
+    website_url: "https://unstop.com",
+  },
+  {
+    id: 3,
+    name: "Interview Cake",
+    logo_url: "/sponsors/interviewcake.png",
+    website_url: "https://www.interviewcake.com",
+  },
+];
+
+const COMMUNITY_PARTNERS = [
+  {
+    id: 4,
+    name: "Worldclass Tech Talent",
+    logo_url: "/sponsors/wtt.png",
+    website_url: "https://worldclasstechtalent.com/",
+  },
+];
+
 // ── custom hook ──────────────────────────────────────────────────────────────
 function useWindowWidth() {
   const [width, setWidth] = useState(
@@ -41,12 +72,10 @@ function SponsorCard({ sponsor, index, cardSize }) {
     if (boxRef.current) {
       boxRef.current.style.borderColor = CARD_COLOR;
       boxRef.current.style.background  = `rgba(${CARD_COLOR_RGB},0.08)`;
-      boxRef.current.style.boxShadow   = `0 0 25px rgba(${CARD_COLOR_RGB},0.2)`;
-      boxRef.current.style.transform   = "translateY(-3px)";
+      boxRef.current.style.boxShadow   = `0 0 30px rgba(${CARD_COLOR_RGB},0.25)`;
+      boxRef.current.style.transform   = "translateY(-4px)";
     }
-    if (nameRef.current) {
-      nameRef.current.style.color = CARD_COLOR;
-    }
+    if (nameRef.current) nameRef.current.style.color = CARD_COLOR;
   };
 
   const handleLeave = () => {
@@ -56,9 +85,7 @@ function SponsorCard({ sponsor, index, cardSize }) {
       boxRef.current.style.boxShadow   = "none";
       boxRef.current.style.transform   = "translateY(0)";
     }
-    if (nameRef.current) {
-      nameRef.current.style.color = "#7a7f99";
-    }
+    if (nameRef.current) nameRef.current.style.color = "#7a7f99";
   };
 
   const Tag = sponsor.website_url ? "a" : "div";
@@ -69,8 +96,11 @@ function SponsorCard({ sponsor, index, cardSize }) {
       style={{
         opacity:    0,
         transform:  "translateY(20px) scale(0.95)",
-        transition: `opacity 0.5s ${index * 0.04}s ease,
-                     transform 0.5s ${index * 0.04}s ease`,
+        transition: `opacity 0.5s ${index * 0.1}s ease,
+                     transform 0.5s ${index * 0.1}s ease`,
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
       }}
     >
       <Tag
@@ -83,9 +113,10 @@ function SponsorCard({ sponsor, index, cardSize }) {
           display:        "flex",
           flexDirection:  "column",
           alignItems:     "center",
-          gap:            "0.7rem",
+          gap:            "1rem",
           textDecoration: "none",
           cursor:         sponsor.website_url ? "pointer" : "default",
+          width:          cardSize,
         }}
       >
         {/* LOGO BOX */}
@@ -96,13 +127,14 @@ function SponsorCard({ sponsor, index, cardSize }) {
             height:         cardSize,
             background:     "rgba(255,255,255,0.03)",
             border:         `1px solid rgba(${CARD_COLOR_RGB},0.2)`,
-            clipPath:       "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+            clipPath:       "polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)",
             display:        "flex",
             alignItems:     "center",
             justifyContent: "center",
-            padding:        "0.8rem",
-            transition:     "all 0.3s",
+            padding:        "1.2rem",
+            transition:     "all 0.3s ease",
             overflow:       "hidden",
+            boxSizing:      "border-box",
           }}
         >
           {sponsor.logo_url ? (
@@ -110,34 +142,24 @@ function SponsorCard({ sponsor, index, cardSize }) {
               src={sponsor.logo_url}
               alt={sponsor.name}
               style={{
-                width:      "100%",
-                height:     "100%",
-                objectFit:  "contain",
-                filter:     "brightness(0.9)",
+                width:     "100%",
+                height:    "100%",
+                objectFit: "contain",
+                filter:    "brightness(0.9)",
                 transition: "filter 0.3s",
               }}
             />
           ) : (
             <div style={{
-              width:          "100%",
-              height:         "100%",
-              display:        "flex",
-              alignItems:     "center",
-              justifyContent: "center",
-              fontFamily:     "'Orbitron', monospace",
-              fontSize:       "0.5rem",
-              fontWeight:     700,
-              color:          `rgba(${CARD_COLOR_RGB},0.35)`,
-              letterSpacing:  "0.1em",
-              textAlign:      "center",
-              textTransform:  "uppercase",
-              lineHeight:     1.4,
+              fontFamily:    "'Orbitron', monospace",
+              fontSize:      "0.65rem",
+              fontWeight:    700,
+              color:         `rgba(${CARD_COLOR_RGB},0.35)`,
+              letterSpacing: "0.1em",
+              textAlign:     "center",
+              textTransform: "uppercase",
             }}>
-              {sponsor.name
-                .split(" ")
-                .map((w) => w[0])
-                .join("")
-                .slice(0, 3)}
+              {sponsor.name.split(" ").map((w) => w[0]).join("").slice(0, 3)}
             </div>
           )}
         </div>
@@ -147,12 +169,12 @@ function SponsorCard({ sponsor, index, cardSize }) {
           ref={nameRef}
           style={{
             fontFamily:    "'Space Mono', monospace",
-            fontSize:      "0.62rem",
+            fontSize:      "0.72rem",
             color:         "#7a7f99",
             letterSpacing: "0.05em",
             textAlign:     "center",
-            lineHeight:    1.4,
-            maxWidth:      cardSize,
+            lineHeight:    1.5,
+            width:         "100%",
             transition:    "color 0.2s",
           }}
         >
@@ -163,68 +185,66 @@ function SponsorCard({ sponsor, index, cardSize }) {
   );
 }
 
-// ── Skeleton ─────────────────────────────────────────────────────────────────
-function SponsorSkeleton({ index, cardSize }) {
+// ── Section Label ─────────────────────────────────────────────────────────────
+function SectionLabel({ label, count, color, colorRgb, isMobile }) {
   return (
     <div style={{
-      display:       "flex",
-      flexDirection: "column",
-      alignItems:    "center",
-      gap:           "0.7rem",
-      animation:     `sponsorPulse 1.5s ${index * 0.04}s ease-in-out infinite`,
+      display:      "flex",
+      alignItems:   "center",
+      gap:          "1rem",
+      marginBottom: "2.5rem",
+      flexWrap:     "wrap",
     }}>
       <div style={{
-        width:      cardSize,
-        height:     cardSize,
-        background: "rgba(0,245,196,0.06)",
-        clipPath:   "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+        width:        "10px",
+        height:       "10px",
+        borderRadius: "50%",
+        background:   color,
+        boxShadow:    `0 0 15px ${color}`,
+        flexShrink:   0,
       }} />
+      <span style={{
+        fontFamily:    "'Orbitron', monospace",
+        fontSize:      isMobile ? "0.65rem" : "0.75rem",
+        fontWeight:    700,
+        letterSpacing: "0.25em",
+        textTransform: "uppercase",
+        color:         color,
+        whiteSpace:    "nowrap",
+      }}>
+        {label}
+      </span>
       <div style={{
-        width:        "60px",
-        height:       "8px",
-        background:   "rgba(0,245,196,0.06)",
-        borderRadius: "2px",
+        flex:       1,
+        height:     "1px",
+        background: `linear-gradient(90deg, rgba(${colorRgb},0.4), transparent)`,
+        minWidth:   "20px",
       }} />
+      <span style={{
+        fontFamily:    "'Space Mono', monospace",
+        fontSize:      isMobile ? "0.58rem" : "0.65rem",
+        color:         "#7a7f99",
+        letterSpacing: "0.1em",
+        whiteSpace:    "nowrap",
+      }}>
+        {count}
+      </span>
     </div>
   );
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 export default function Sponsors() {
-  const [sponsors, setSponsors] = useState([]);
-  const [loading,  setLoading]  = useState(true);
-  const [error,    setError]    = useState(null);
-
   const width    = useWindowWidth();
   const isMobile = width < 600;
   const isTablet = width >= 600 && width < 1024;
 
-  const cardSize = isMobile ? "68px" : isTablet ? "76px" : "82px";
-  const gridGap  = isMobile ? "1rem" : isTablet ? "1.2rem" : "1.5rem";
-
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/sponsors`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch sponsors");
-        return res.json();
-      })
-      .then((data) => {
-        setSponsors(data.data ?? data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+  const cardSize = isMobile ? "120px" : isTablet ? "150px" : "180px";
+  const gridGap  = isMobile ? "1.2rem" : isTablet ? "1.8rem" : "2.5rem";
 
   return (
     <section id="sponsors" style={{ position: "relative", zIndex: 1 }}>
       <style>{`
-        @keyframes sponsorPulse {
-          0%, 100% { opacity: 1;   }
-          50%       { opacity: 0.4; }
-        }
         @keyframes glitch {
           0%, 90%, 100% { opacity: 0;    clip-path: none; transform: none; }
           92%           { opacity: 0.06; clip-path: inset(20% 0 60% 0); transform: translateX(-3px); }
@@ -237,9 +257,9 @@ export default function Sponsors() {
         maxWidth: "1200px",
         margin:   "0 auto",
         padding:  isMobile
-          ? "4rem 1rem 3rem"
+          ? "4rem 1.2rem 3rem"
           : isTablet
-          ? "5rem 1.5rem 4rem"
+          ? "5rem 2rem 4rem"
           : "6rem 2rem",
       }}>
 
@@ -275,8 +295,7 @@ export default function Sponsors() {
           lineHeight:    1,
           margin:        "0 0 1rem 0",
           letterSpacing: "-0.02em",
-          background:
-            "linear-gradient(135deg, #ffffff 0%, #00f5c4 40%, #7b5fff 80%)",
+          background:    "linear-gradient(135deg, #ffffff 0%, #00f5c4 40%, #7b5fff 80%)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor:  "transparent",
           backgroundClip:       "text",
@@ -284,26 +303,22 @@ export default function Sponsors() {
           wordBreak:            "break-word",
         }}>
           SPONSORS
-          {/* GLITCH LAYER */}
-          <span
-            aria-hidden="true"
-            style={{
-              position:      "absolute",
-              top:           0,
-              left:          0,
-              fontFamily:    "'Orbitron', monospace",
-              fontSize:      "inherit",
-              fontWeight:    900,
-              lineHeight:    1,
-              letterSpacing: "-0.02em",
-              background:    "linear-gradient(135deg, #ff3e6c, transparent)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor:  "transparent",
-              backgroundClip:       "text",
-              animation:     "glitch 4s infinite",
-              pointerEvents: "none",
-            }}
-          >
+          <span aria-hidden="true" style={{
+            position:      "absolute",
+            top:           0,
+            left:          0,
+            fontFamily:    "'Orbitron', monospace",
+            fontSize:      "inherit",
+            fontWeight:    900,
+            lineHeight:    1,
+            letterSpacing: "-0.02em",
+            background:    "linear-gradient(135deg, #ff3e6c, transparent)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor:  "transparent",
+            backgroundClip:       "text",
+            animation:     "glitch 4s infinite",
+            pointerEvents: "none",
+          }}>
             SPONSORS
           </span>
         </h2>
@@ -323,18 +338,17 @@ export default function Sponsors() {
 
         {/* ── BECOME A SPONSOR CTA ── */}
         <div style={{
-          padding:    isMobile ? "1.2rem 1rem" : "1.5rem 2rem",
-          background: "rgba(0,245,196,0.03)",
-          border:     "1px solid rgba(0,245,196,0.15)",
-          clipPath:
-            "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
+          padding:        isMobile ? "1.2rem 1rem" : "1.5rem 2rem",
+          background:     "rgba(0,245,196,0.03)",
+          border:         "1px solid rgba(0,245,196,0.15)",
+          clipPath:       "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
           display:        "flex",
           flexDirection:  isMobile ? "column" : "row",
           alignItems:     isMobile ? "flex-start" : "center",
           justifyContent: "space-between",
           flexWrap:       "wrap",
           gap:            isMobile ? "1.2rem" : "1.5rem",
-          marginBottom:   isMobile ? "3rem" : "5rem",
+          marginBottom:   isMobile ? "3.5rem" : "5rem",
         }}>
           <div>
             <p style={{
@@ -361,7 +375,6 @@ export default function Sponsors() {
             </p>
           </div>
 
-          {/* ── PARTNER WITH US BUTTON → opens Gmail compose ── */}
           <a
             href="https://mail.google.com/mail/?view=cm&fs=1&to=saurabhm.mca25@cs.du.ac.in&su=Sponsorship%20Inquiry%20-%20Sankalan%202026"
             target="_blank"
@@ -376,15 +389,14 @@ export default function Sponsors() {
               background:     "#00f5c4",
               padding:        isMobile ? "0.8rem 1.2rem" : "0.8rem 1.8rem",
               textDecoration: "none",
-              clipPath:
-                "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
-              boxShadow:  "0 0 25px rgba(0,245,196,0.3)",
-              transition:  "all 0.3s",
-              flexShrink:  0,
-              width:       isMobile ? "100%" : "auto",
-              textAlign:   isMobile ? "center" : "left",
-              display:     "inline-block",
-              boxSizing:   "border-box",
+              clipPath:       "polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)",
+              boxShadow:      "0 0 25px rgba(0,245,196,0.3)",
+              transition:     "all 0.3s",
+              flexShrink:     0,
+              width:          isMobile ? "100%" : "auto",
+              textAlign:      isMobile ? "center" : "left",
+              display:        "inline-block",
+              boxSizing:      "border-box",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-2px)";
@@ -399,121 +411,67 @@ export default function Sponsors() {
           </a>
         </div>
 
-        {/* ── LOADING ── */}
-        {loading && (
-          <div style={{
-            display:        "flex",
-            flexWrap:       "wrap",
-            gap:            gridGap,
-            justifyContent: "flex-start",
-            alignItems:     "flex-start",
-          }}>
-            {Array.from({ length: 12 }).map((_, i) => (
-              <SponsorSkeleton key={i} index={i} cardSize={cardSize} />
-            ))}
-          </div>
-        )}
+        {/* ── OUR SPONSORS ── */}
+        <SectionLabel
+          label="Our Sponsors"
+          count={`${SPONSORS.length} sponsors`}
+          color={CARD_COLOR}
+          colorRgb={CARD_COLOR_RGB}
+          isMobile={isMobile}
+        />
 
-        {/* ── ERROR ── */}
-        {!loading && error && (
-          <div style={{
-            border:     "1px solid rgba(255,62,108,0.3)",
-            background: "rgba(255,62,108,0.07)",
-            color:      "#ff3e6c",
-            padding:    isMobile ? "1rem" : "1.2rem 1.8rem",
-            clipPath:
-              "polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)",
-            fontFamily: "'Space Mono', monospace",
-            fontSize:   "0.8rem",
-          }}>
-            ⚠ Could not load sponsors — {error}
-          </div>
-        )}
+        <div style={{
+          display:             "grid",
+          gridTemplateColumns: isMobile
+            ? "repeat(2, 1fr)"
+            : isTablet
+            ? "repeat(3, 1fr)"
+            : "repeat(4, 1fr)",
+          gap:          gridGap,
+          justifyItems: "center",
+          alignItems:   "start",
+          marginBottom: isMobile ? "3.5rem" : "5rem",
+        }}>
+          {SPONSORS.map((sponsor, i) => (
+            <SponsorCard
+              key={sponsor.id}
+              sponsor={sponsor}
+              index={i}
+              cardSize={cardSize}
+            />
+          ))}
+        </div>
 
-        {/* ── EMPTY ── */}
-        {!loading && !error && sponsors.length === 0 && (
-          <p style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize:   "0.8rem",
-            color:      "#7a7f99",
-            textAlign:  "center",
-            padding:    "4rem 0",
-            margin:     0,
-          }}>
-            — Sponsors will be announced soon —
-          </p>
-        )}
+        {/* ── TECH COMMUNITY PARTNER ── */}
+        <SectionLabel
+          label="Tech Community Partner"
+          count="1 partner"
+          color="#7b5fff"
+          colorRgb="123,95,255"
+          isMobile={isMobile}
+        />
 
-        {/* ── SPONSOR GRID ── */}
-        {!loading && !error && sponsors.length > 0 && (
-          <>
-            {/* SECTION HEADER */}
-            <div style={{
-              display:      "flex",
-              alignItems:   "center",
-              gap:          "1rem",
-              marginBottom: "2rem",
-              flexWrap:     "wrap",
-            }}>
-              <div style={{
-                width:        "10px",
-                height:       "10px",
-                borderRadius: "50%",
-                background:   CARD_COLOR,
-                boxShadow:    `0 0 15px ${CARD_COLOR}`,
-                flexShrink:   0,
-              }} />
-              <span style={{
-                fontFamily:    "'Orbitron', monospace",
-                fontSize:      isMobile ? "0.65rem" : "0.75rem",
-                fontWeight:    700,
-                letterSpacing: "0.25em",
-                textTransform: "uppercase",
-                color:         CARD_COLOR,
-                whiteSpace:    "nowrap",
-              }}>
-                Our Sponsors
-              </span>
-              <div style={{
-                flex:       1,
-                height:     "1px",
-                background: `linear-gradient(90deg, rgba(${CARD_COLOR_RGB},0.4), transparent)`,
-                minWidth:   "20px",
-              }} />
-              <span style={{
-                fontFamily:    "'Space Mono', monospace",
-                fontSize:      isMobile ? "0.58rem" : "0.65rem",
-                color:         "#7a7f99",
-                letterSpacing: "0.1em",
-                whiteSpace:    "nowrap",
-              }}>
-                {sponsors.length} sponsors
-              </span>
-            </div>
+        <div style={{
+          display:             "grid",
+          gridTemplateColumns: isMobile
+            ? "repeat(2, 1fr)"
+            : isTablet
+            ? "repeat(3, 1fr)"
+            : "repeat(4, 1fr)",
+          gap:          gridGap,
+          justifyItems: "center",
+          alignItems:   "start",
+        }}>
+          {COMMUNITY_PARTNERS.map((sponsor, i) => (
+            <SponsorCard
+              key={sponsor.id}
+              sponsor={sponsor}
+              index={i}
+              cardSize={cardSize}
+            />
+          ))}
+        </div>
 
-            {/* ── GRID ── */}
-            <div style={{
-              display:             "grid",
-              gridTemplateColumns: isMobile
-                ? "repeat(3, 1fr)"
-                : isTablet
-                ? "repeat(5, 1fr)"
-                : "repeat(7, 1fr)",
-              gap:          gridGap,
-              justifyItems: "center",
-              alignItems:   "start",
-            }}>
-              {sponsors.map((sponsor, i) => (
-                <SponsorCard
-                  key={sponsor.id}
-                  sponsor={sponsor}
-                  index={i}
-                  cardSize={cardSize}
-                />
-              ))}
-            </div>
-          </>
-        )}
       </div>
     </section>
   );
