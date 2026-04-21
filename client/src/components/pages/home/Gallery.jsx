@@ -14,14 +14,14 @@ function useWindowWidth() {
   return width;
 }
 
-function GalleryCard({ item, isMobile, isTablet, onClick }) {
+function GalleryCard({ item, index, isMobile, isTablet, onClick }) {
   const colSpan = isMobile ? 1 : item.span === "col" ? 2 : 1;
   const rowSpan = isMobile || isTablet ? 1 : item.span === "row" ? 2 : 1;
   const accentRGB = item.accent === "#00f5c4" ? "0,245,196" : "123,95,255";
 
   return (
     <div
-      onClick={() => onClick(item)}
+      onClick={() => onClick({ ...item, index })}
       style={{
         gridColumn: `span ${colSpan}`,
         gridRow:    `span ${rowSpan}`,
@@ -54,7 +54,7 @@ function GalleryCard({ item, isMobile, isTablet, onClick }) {
       {/* IMAGE */}
       <img
         src={item.src}
-        alt={item.label}
+        alt={`Photo ${index}`}
         loading="lazy"
         style={{
           width:      "100%",
@@ -86,7 +86,7 @@ function GalleryCard({ item, isMobile, isTablet, onClick }) {
           color:         item.accent,
           textTransform: "uppercase",
         }}>
-          {item.label}
+          Photo {index}
         </span>
       </div>
     </div>
@@ -164,7 +164,7 @@ function Lightbox({ item, onClose, isMobile }) {
       >
         <img
           src={item.src}
-          alt={item.label}
+          alt={`Photo ${item.index}`}
           style={{
             width:    "100%",
             border:   `1px solid ${item.accent}44`,
@@ -181,7 +181,7 @@ function Lightbox({ item, onClose, isMobile }) {
           marginTop:     "1rem",
           textAlign:     "center",
         }}>
-          {item.label}
+          Photo {item.index}
         </p>
 
         <button
@@ -312,10 +312,11 @@ export default function Gallery() {
             gridAutoRows:        isMobile ? "140px" : "200px",
             gap:                 isMobile ? "0.6rem" : "1rem",
           }}>
-            {images.map((item) => (
+            {images.map((item, index) => (
               <GalleryCard
                 key={item.id}
                 item={item}
+                index={index + 1}
                 isMobile={isMobile}
                 isTablet={isTablet}
                 onClick={setLightbox}
